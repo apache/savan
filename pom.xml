@@ -1,461 +1,210 @@
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <groupId>org.apache.savan</groupId>
-    <modelVersion>4.0.0</modelVersion>
-    <artifactId>savan</artifactId>
-    <packaging>jar</packaging>
-    <version>1.2-SNAPSHOT</version>
-    <name>Apache Savan</name>
+	<groupId>org.apache.savan</groupId>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>savan</artifactId>
+	<packaging>jar</packaging>
+	<version>1.2-SNAPSHOT</version>
+	<name>Apache Savan</name>
 
-    <dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-addressing</artifactId>
+			<version>${addressing.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-kernel</artifactId>
+			<version>${axis2.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-adb</artifactId>
+			<version>${axis2.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.ws.commons.axiom</groupId>
+			<artifactId>axiom-impl</artifactId>
+			<version>${axiom.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.ws.commons.axiom</groupId>
+			<artifactId>axiom-api</artifactId>
+			<version>${axiom.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${stax.impl.groupid}</groupId>
+			<artifactId>${stax.impl.artifactid}</artifactId>
+			<version>${stax.impl.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>stax</groupId>
+			<artifactId>stax-api</artifactId>
+			<version>${stax.api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>wsdl4j</groupId>
+			<artifactId>wsdl4j</artifactId>
+			<version>${wsdl4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.ws.commons.schema</groupId>
+			<artifactId>XmlSchema</artifactId>
+			<version>${XmlSchema.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.neethi</groupId>
+			<artifactId>neethi</artifactId>
+			<version>${neethi.version}</version>
+		</dependency>
+	</dependencies>
 
-        
-        <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-addressing</artifactId>
-            <version>${addressing.version}</version>
-        </dependency>
-	
-        <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-kernel</artifactId>
-            <version>${axis2.version}</version>
-        </dependency>
-	<!--
-        <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-xmlbeans</artifactId>
-            <version>${axis2.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-rahas</artifactId>
-            <version>${axis2.version}</version>
-        </dependency>
-	-->
-	
-        <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-adb</artifactId>
-            <version>${axis2.version}</version>
-        </dependency>
-	
-	
-	<!--
-        <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-adb-codegen</artifactId>
-            <version>${axis2.version}</version>
-        </dependency>
-	
-        <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-codegen</artifactId>
-            <version>${axis2.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-security</artifactId>
-            <version>${axis2.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-secpolicy</artifactId>
-            <version>${axis2.version}</version>
-        </dependency>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0</version>
+				<configuration>
+					<source>1.4</source>
+					<target>1.4</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.2</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.1</version>
+				<executions>
+					<execution>
+						<id>mar</id>
+						<phase>package</phase>
+						<configuration>
+							<tasks>
+								<copy file="target/savan-${savan.version}.jar"
+										tofile="target/savan-${savan.version}.mar"/>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.0</version>
+				<executions>
+					<execution>
+						<id>mar</id>
+						<phase>package</phase>
+						<goals>
+							<goal>attach-artifact</goal>
+						</goals>
+						<configuration>
+							<artifacts>
+								<artifact>
+									<file>target/savan-${savan.version}.mar</file>
+									<type>mar</type>
+								</artifact>
+							</artifacts>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<repositories>
+		<repository>
+			<id>maven-snapshots</id>
+			<name>Maven Central Development Repository</name>
+			<url>http://snapshots.maven.codehaus.org/maven2</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>dist-wso2</id>
+			<name>WSO2 Standard Repository</name>
+			<url>http://dist.wso2.org/maven</url>
+			<layout>legacy</layout>
+		</repository>
+		<repository>
+			<id>apache-zones</id>
+			<url>http://ws.zones.apache.org/repository</url>
+			<layout>legacy</layout>
+		</repository>
+	</repositories>
 
-        <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-java2wsdl</artifactId>
-            <version>${axis2.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.axis2</groupId>
-            <artifactId>axis2-spring</artifactId>
-            <version>${axis2.version}</version>
-        </dependency>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>snapshot-apache</id>
+			<name>Apache Snapshot repository</name>
+			<url>http://people.apache.org/repo/m2-snapshot-repository</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</pluginRepository>
+		<pluginRepository>
+			<id>snapshot</id>
+			<name>Snapshot repository</name>
+			<url>http://snapshots.maven.codehaus.org/maven2</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
 
-	-->
+	<properties>
 
-        <!-- AIOM Dependencies -->
-        <dependency>
-            <groupId>org.apache.ws.commons.axiom</groupId>
-            <artifactId>axiom-impl</artifactId>
-            <version>${axiom.version}</version>
-        </dependency>
+		<axis2.version>1.1.1-SNAPSHOT</axis2.version>
 
-        <dependency>
-            <groupId>org.apache.ws.commons.axiom</groupId>
-            <artifactId>axiom-api</artifactId>
-            <version>${axiom.version}</version>
-        </dependency>
-	
-	<!--
+		<addressing.version>1.1.1-SNAPSHOT</addressing.version>
 
-        <dependency>
-            <groupId>org.apache.ws.commons.axiom</groupId>
-            <artifactId>axiom-dom</artifactId>
-            <version>${axiom.version}</version>
-        </dependency>
-	-->
+		<savan.version>1.2-SNAPSHOT</savan.version>
 
-        <!--
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>${commons.logging.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xmlunit</groupId>
-            <artifactId>xmlunit</artifactId>
-            <version>${xmlunit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <version>${commons.httpclient.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-            <version>${commons.collections.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-discovery</groupId>
-            <artifactId>commons-discovery</artifactId>
-            <version>${commons.discovery.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>${commons.codec.version}</version>
-        </dependency>
+		<axiom.version>1.2.1</axiom.version>
 
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
-	-->
-        <dependency>
-            <groupId>${stax.impl.groupid}</groupId>
-            <artifactId>${stax.impl.artifactid}</artifactId>
-            <version>${stax.impl.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>stax</groupId>
-            <artifactId>stax-api</artifactId>
-            <version>${stax.api.version}</version>
-        </dependency>
-	<!--
-        <dependency>
-            <groupId>xml-apis</groupId>
-            <artifactId>xml-apis</artifactId>
-            <version>${xml.apis.version}</version>
-        </dependency>
+		<neethi.version>2.0</neethi.version>
 
-        <dependency>
-            <groupId>incubator-woden</groupId>
-            <artifactId>woden</artifactId>
-            <version>${woden.version}</version>
-        </dependency>
-	-->
-	
-        <dependency>
-            <groupId>wsdl4j</groupId>
-            <artifactId>wsdl4j</artifactId>
-            <version>${wsdl4j.version}</version>
-        </dependency>
-        <!--
-	<dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>${javamail.version}</version>
-        </dependency>
+		<wsdl4j.version>1.6.1</wsdl4j.version>
 
-        
-        <dependency>
-            <groupId>org.mortbay.jetty</groupId>
-            <artifactId>jetty</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
+		<xml_schema.version>1.2</xml_schema.version>
 
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
+		<stax.impl.groupid>woodstox</stax.impl.groupid>
 
+		<stax.impl.artifactid>wstx-asl</stax.impl.artifactid>
 
-        <dependency>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
-            <version>${activation.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xmlbeans</groupId>
-            <artifactId>xbean</artifactId>
-            <version>${xbean.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>wss4j</groupId>
-            <artifactId>wss4j</artifactId>
-            <version>${wss4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>xml-security</groupId>
-            <artifactId>xmlsec</artifactId>
-            <version>${xmlsec.version}</version>
-        </dependency>
-	-->
+		<stax.impl.version>3.1.0</stax.impl.version>
 
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-        </dependency>
-	<!--
-        <dependency>
-            <groupId>jaxen</groupId>
-            <artifactId>jaxen</artifactId>
-            <version>${jaxen.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>backport-util-concurrent</groupId>
-            <artifactId>backport-util-concurrent</artifactId>
-            <version>${backport_util_concurrent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>${servletapi.version}</version>
-        </dependency>
+		<stax.api.version>1.0.1</stax.api.version>
 
-	-->
-	
-        <dependency>
-            <groupId>org.apache.ws.commons.schema</groupId>
-            <artifactId>XmlSchema</artifactId>
-            <version>${XmlSchema.version}</version>
-        </dependency>
-	<!--
-        
-	<dependency>
-            <groupId>annogen</groupId>
-            <artifactId>annogen</artifactId>
-            <version>${annogen.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ant</groupId>
-            <artifactId>ant</artifactId>
-            <version>${ant.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ant</groupId>
-            <artifactId>ant-nodeps</artifactId>
-            <version>${ant.version}</version>
-        </dependency> -->
-	
-        <dependency>
-            <groupId>org.apache.neethi</groupId>
-            <artifactId>neethi</artifactId>
-            <version>${neethi.version}</version>
-        </dependency>
+		<junit.version>3.8.2</junit.version>
 
+		<XmlSchema.version>SNAPSHOT</XmlSchema.version>
 
-	<!--
-        <dependency>
-            <groupId>httpcomponents-httpcore</groupId>
-            <artifactId>jakarta-httpcore</artifactId>
-            <version>${jakarta.httpcore.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
+		<ant.version>1.6.5</ant.version>
 
-        <dependency>
-            <groupId>xalan</groupId>
-            <artifactId>xalan</artifactId>
-            <version>${xalan.version}</version>
-        </dependency>
-	-->
-    </dependencies>
-    
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0</version>
-                <configuration>
-                    <source>1.4</source>
-                    <target>1.4</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.2</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.1</version>
-                <executions>
-                    <execution>
-                        <id>mar</id>
-                        <phase>package</phase>
-                        <configuration>
-                            <tasks>
-                                <copy file="target/savan-${savan.version}.jar"
-                                      tofile="target/savan-${savan.version}.mar"/>
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.0</version>
-                <executions>
-                    <execution>
-                        <id>mar</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>attach-artifact</goal>
-                        </goals>
-                        <configuration>
-                            <artifacts>
-                                <artifact>
-                                    <file>target/savan-${savan.version}.mar</file>
-                                    <type>mar</type>
-                                </artifact>
-                            </artifacts>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-<repositories>
-        <repository>
-            <id>maven-snapshots</id>
-            <name>Maven Central Development Repository</name>
-            <url>http://snapshots.maven.codehaus.org/maven2</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </repository>
-        <repository>
-            <id>dist-wso2</id>
-            <name>WSO2 Standard Repository</name>
-            <url>http://dist.wso2.org/maven</url>
-            <layout>legacy</layout>
-        </repository>
-        <repository>
-            <id>apache-zones</id>
-            <url>http://ws.zones.apache.org/repository</url>
-            <layout>legacy</layout>
-        </repository>
-        <!-- Others are available from http://repo1.maven.org/maven2 -->
-    </repositories>
-
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>snapshot-apache</id>
-            <name>Apache Snapshot repository</name>
-            <url>http://people.apache.org/repo/m2-snapshot-repository</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </pluginRepository>
-
-        <pluginRepository>
-            <id>snapshot</id>
-            <name>Snapshot repository</name>
-            <url>http://snapshots.maven.codehaus.org/maven2</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </pluginRepository>
-
-    </pluginRepositories>
-
-
-     <properties>
-        <axis2.version>1.1.1-SNAPSHOT</axis2.version>
-
-        <addressing.version>1.1.1-SNAPSHOT</addressing.version>
-        <savan.version>1.2-SNAPSHOT</savan.version>
-
-        <axiom.version>1.2.1</axiom.version>
-
-        <xbean.version>2.1.0</xbean.version>
-        <bsf.version>2.4.0</bsf.version>
-
-        <neethi.version>2.0</neethi.version>
-
-
-        <woden.version>1.0.0M6</woden.version>
-        <wsdl4j.version>1.6.1</wsdl4j.version>
-        <annogen.version>0.1.0</annogen.version>
-        <xml_schema.version>1.2</xml_schema.version>
-
-        <activation.version>1.1</activation.version>
-        <javamail.version>1.4</javamail.version>
-
-        <jaxen.version>1.1-beta-10</jaxen.version>
-
-        <stax.impl.groupid>woodstox</stax.impl.groupid>
-        <stax.impl.artifactid>wstx-asl</stax.impl.artifactid>
-        <stax.impl.version>3.1.0</stax.impl.version>
-        <stax.api.version>1.0.1</stax.api.version>
-        <xml.apis.version>1.3.03</xml.apis.version>
-
-        <wss4j.version>SNAPSHOT</wss4j.version>
-        <xmlsec.version>1.3.0</xmlsec.version>
-        <bcprov.jdk13.version>132</bcprov.jdk13.version>
-        <bcprov.jdk15.version>132</bcprov.jdk15.version>
-
-        <commons.codec.version>1.3</commons.codec.version>
-        <commons.httpclient.version>3.0.1</commons.httpclient.version>
-        <commons.logging.version>1.1</commons.logging.version>
-        <backport_util_concurrent.version>2.1</backport_util_concurrent.version>
-
-        <jetty.version>6.1.1</jetty.version>
-        <slf4j.version>1.0.1</slf4j.version>
-        <servletapi.version>2.3</servletapi.version>
-
-        <junit.version>3.8.2</junit.version>
-        <xmlunit.version>1.0</xmlunit.version>
-        <log4j.version>1.2.13</log4j.version>
-
-        <jakarta.httpcore.version>4.0-alpha2</jakarta.httpcore.version>
-        <commons.collections.version>3.1</commons.collections.version>
-        <commons.discovery.version>0.2</commons.discovery.version>
-
-        <XmlSchema.version>SNAPSHOT</XmlSchema.version>
-
-        <ant.version>1.6.5</ant.version>
-
-        <spring.version>1.2.6</spring.version>
-
-        <xalan.version>2.7.0</xalan.version>
-    </properties>
+	</properties>
 </project>
 
