@@ -2,14 +2,85 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+	
 	<groupId>org.apache.savan</groupId>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>savan</artifactId>
 	<packaging>jar</packaging>
 	<version>1.2-SNAPSHOT</version>
+	
 	<name>Apache Savan</name>
-
+	<url>http://ws.apache.org/savan/</url>
+	
+	<developers>
+		<developer>
+			<name>Davanam Srinivas</name>
+			<email>dims@wso2.com</email>
+		</developer>
+		<developer>
+			<name>Chamikara Jayalath</name>
+			<email>chamikara@wso2.com</email>
+		</developer>
+	</developers>
+	
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	
+	<issueManagement>
+		<system>JRIA</system>
+		<url>https://issues.apache.org/jira/</url>
+	</issueManagement>
+	
+	<mailingLists>
+		<mailingList>
+			<name>Apache Savan project mailing list</name>
+			<subscribe>savan-dev-subscribe@ws.apache.org</subscribe>
+			<unsubscribe>savan-dev-unsubscribe@ws.apache.org</unsubscribe>
+			<post>savan-dev@ws.apache.org</post>
+		</mailingList>
+	</mailingLists>
+	
+	<scm>
+		<connection>scm:svn:http://svn.apache.org/repos/asf/webservices/savan</connection>
+		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/webservices/savan</developerConnection>
+		<url>http://svn.apache.org/viewvc/webservices/savan</url>
+	</scm>
+	
+	<reporting>
+		<plugins>
+			<plugin>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jxr-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</reporting>
+	
+	<distributionManagement>
+		<repository>
+			<id>apache-repo</id>
+			<name>Maven Central Repository</name>
+			<url>scpexe://people.apache.org/www/www.apache.org/dist/maven-repository</url>
+		</repository>
+		<snapshotRepository>
+			<id>apache-snapshots</id>
+			<name>Apache Development Repository</name>
+			<url>scpexe://minotaur.apache.org/www/cvs.apache.org/maven-snapshot-repository</url>
+		</snapshotRepository>
+		<site>
+			<id>website</id>
+			<url>scpexe://people.apache.org/www/ws.apache.org/savan</url>
+		</site>
+	
+	</distributionManagement>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.axis2</groupId>
@@ -67,7 +138,7 @@
 			<version>${neethi.version}</version>
 		</dependency>
 	</dependencies>
-
+	
 	<build>
 		<plugins>
 			<plugin>
@@ -149,7 +220,7 @@
 			<layout>legacy</layout>
 		</repository>
 	</repositories>
-
+	
 	<pluginRepositories>
 		<pluginRepository>
 			<id>snapshot-apache</id>
@@ -174,37 +245,37 @@
 			</releases>
 		</pluginRepository>
 	</pluginRepositories>
-
+	
 	<properties>
-
+		
 		<axis2.version>1.1.1-SNAPSHOT</axis2.version>
-
+		
 		<addressing.version>1.1.1-SNAPSHOT</addressing.version>
-
+		
 		<savan.version>1.2-SNAPSHOT</savan.version>
-
+		
 		<axiom.version>1.2.1</axiom.version>
-
+		
 		<neethi.version>2.0</neethi.version>
-
+		
 		<wsdl4j.version>1.6.1</wsdl4j.version>
-
+		
 		<xml_schema.version>1.2</xml_schema.version>
-
+		
 		<stax.impl.groupid>woodstox</stax.impl.groupid>
-
+		
 		<stax.impl.artifactid>wstx-asl</stax.impl.artifactid>
-
+		
 		<stax.impl.version>3.1.0</stax.impl.version>
-
+		
 		<stax.api.version>1.0.1</stax.api.version>
-
+		
 		<junit.version>3.8.2</junit.version>
-
+		
 		<XmlSchema.version>SNAPSHOT</XmlSchema.version>
-
+		
 		<ant.version>1.6.5</ant.version>
-
+	
 	</properties>
 </project>
 
