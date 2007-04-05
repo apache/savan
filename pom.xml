@@ -46,8 +46,8 @@
 	</mailingLists>
 	
 	<scm>
-		<connection>scm:svn:http://svn.apache.org/repos/asf/webservices/savan</connection>
-		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/webservices/savan</developerConnection>
+		<connection>scm:svn:http://svn.apache.org/repos/asf/webservices/savan/trunk/java</connection>
+		<developerConnection>scm:svn:https://svn.apache.org/repos/asf/webservices/savan/trunk/java</developerConnection>
 		<url>http://svn.apache.org/viewvc/webservices/savan</url>
 	</scm>
 	
