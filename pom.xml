@@ -248,15 +248,15 @@
 	
 	<properties>
 		
-		<axis2.version>1.1.1-SNAPSHOT</axis2.version>
+		<axis2.version>SNAPSHOT</axis2.version>
 		
-		<addressing.version>1.1.1-SNAPSHOT</addressing.version>
+		<addressing.version>SNAPSHOT</addressing.version>
 		
 		<savan.version>1.2-SNAPSHOT</savan.version>
 		
-		<axiom.version>1.2.1</axiom.version>
+		<axiom.version>SNAPSHOT</axiom.version>
 		
-		<neethi.version>2.0</neethi.version>
+		<neethi.version>SNAPSHOT</neethi.version>
 		
 		<wsdl4j.version>1.6.1</wsdl4j.version>
 		
@@ -266,7 +266,7 @@
 		
 		<stax.impl.artifactid>wstx-asl</stax.impl.artifactid>
 		
-		<stax.impl.version>3.1.0</stax.impl.version>
+		<stax.impl.version>3.2.1</stax.impl.version>
 		
 		<stax.api.version>1.0.1</stax.api.version>
 		
