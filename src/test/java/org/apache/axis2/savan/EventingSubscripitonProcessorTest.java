@@ -16,6 +16,7 @@
 
 package org.apache.axis2.savan;
 
+import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
@@ -98,7 +99,7 @@ public class EventingSubscripitonProcessorTest extends TestCase {
         File baseDir = new File("");
         String testRource = baseDir.getAbsolutePath() + File.separator + "src" + File.separator + "test" + File.separator + "resources";
 
-		SOAPEnvelope envelope = CommonUtil.getTestEnvelopeFromFile(testRource,"eventing-subscription.xml");
+		SOAPEnvelope envelope = CommonUtil.getTestEnvelopeFromFile(testRource,"eventing-subscription.xml", OMAbstractFactory.getSOAP12Factory());
 		
 		AxisConfiguration axisConfiguration = new AxisConfiguration ();
 		ConfigurationContext configurationContext = new ConfigurationContext (axisConfiguration);
@@ -141,7 +142,7 @@ public class EventingSubscripitonProcessorTest extends TestCase {
         File baseDir = new File("");
         String testRource = baseDir.getAbsolutePath() + File.separator + "src" + File.separator + "test" + File.separator + "resources";
 
-		SOAPEnvelope envelope = CommonUtil.getTestEnvelopeFromFile(testRource,"eventing-renew-datetime.xml");
+		SOAPEnvelope envelope = CommonUtil.getTestEnvelopeFromFile(testRource,"eventing-renew-datetime.xml", OMAbstractFactory.getSOAP12Factory());
 		
 		MessageContext mc = new MessageContext ();
 		SavanMessageContext smc = new SavanMessageContext (mc);

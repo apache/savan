@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.util.Date;
 import javax.xml.namespace.QName;
 import junit.framework.TestCase;
+
+import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
@@ -58,9 +60,9 @@ public class EventingExpirationTypesTest extends TestCase {
 	
 	private SavanMessageContext getRenewMessage (String name) throws IOException {
         File baseDir = new File("");
-	String testRource = baseDir.getAbsolutePath() + File.separator + "src" + File.separator + "test" + File.separator + "resources";
+        String testRource = baseDir.getAbsolutePath() + File.separator + "src" + File.separator + "test" + File.separator + "resources";
 	
-		SOAPEnvelope envelope = CommonUtil.getTestEnvelopeFromFile(testRource,name);
+		SOAPEnvelope envelope = CommonUtil.getTestEnvelopeFromFile(testRource,name, OMAbstractFactory.getSOAP12Factory());
 		
 		MessageContext mc = new MessageContext ();
 		SavanMessageContext smc = new SavanMessageContext (mc);

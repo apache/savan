@@ -29,6 +29,7 @@ import javax.xml.stream.XMLStreamReader;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.impl.llom.factory.OMXMLBuilderFactory;
 import org.apache.axiom.soap.SOAPEnvelope;
+import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axiom.soap.impl.builder.StAXSOAPModelBuilder;
 import org.apache.axis2.databinding.types.Duration;
 import org.apache.axis2.description.AxisService;
@@ -60,14 +61,14 @@ public class CommonUtil {
 	 * @param name
 	 * @return
 	 */
-	public static SOAPEnvelope getTestEnvelopeFromFile (String path, String name) throws IOException {
+	public static SOAPEnvelope getTestEnvelopeFromFile (String path, String name, SOAPFactory factory) throws IOException {
         try {
         	String fullName = path + File.separator + name;
             FileReader reader = new FileReader(fullName);
             XMLStreamReader streamReader = XMLInputFactory.newInstance().createXMLStreamReader(
                     reader);
             StAXSOAPModelBuilder builder = OMXMLBuilderFactory.createStAXSOAPModelBuilder(
-                    OMAbstractFactory.getSOAP11Factory(), streamReader);
+            		factory, streamReader);
             return builder.getSOAPEnvelope();
         } catch (XMLStreamException e) {
             throw new RuntimeException(e);
