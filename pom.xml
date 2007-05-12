@@ -7,7 +7,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>savan</artifactId>
 	<packaging>jar</packaging>
-	<version>1.2-SNAPSHOT</version>
+	<version>SNAPSHOT</version>
 	
 	<name>Apache Savan</name>
 	<url>http://ws.apache.org/savan/</url>
@@ -85,7 +85,7 @@
 		<dependency>
 			<groupId>org.apache.axis2</groupId>
 			<artifactId>axis2-addressing</artifactId>
-			<version>${addressing.version}</version>
+			<version>${axis2.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.axis2</groupId>
@@ -97,46 +97,7 @@
 			<artifactId>axis2-adb</artifactId>
 			<version>${axis2.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.ws.commons.axiom</groupId>
-			<artifactId>axiom-impl</artifactId>
-			<version>${axiom.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.ws.commons.axiom</groupId>
-			<artifactId>axiom-api</artifactId>
-			<version>${axiom.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>${stax.impl.groupid}</groupId>
-			<artifactId>${stax.impl.artifactid}</artifactId>
-			<version>${stax.impl.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>stax</groupId>
-			<artifactId>stax-api</artifactId>
-			<version>${stax.api.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>wsdl4j</groupId>
-			<artifactId>wsdl4j</artifactId>
-			<version>${wsdl4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.ws.commons.schema</groupId>
-			<artifactId>XmlSchema</artifactId>
-			<version>${XmlSchema.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.neethi</groupId>
-			<artifactId>neethi</artifactId>
-			<version>${neethi.version}</version>
-		</dependency>
+		
 	</dependencies>
 	
 	<build>
@@ -247,35 +208,9 @@
 	</pluginRepositories>
 	
 	<properties>
-		
-		<axis2.version>SNAPSHOT</axis2.version>
-		
-		<addressing.version>SNAPSHOT</addressing.version>
-		
-		<savan.version>1.2-SNAPSHOT</savan.version>
-		
-		<axiom.version>SNAPSHOT</axiom.version>
-		
-		<neethi.version>SNAPSHOT</neethi.version>
-		
-		<wsdl4j.version>1.6.1</wsdl4j.version>
-		
-		<xml_schema.version>1.2</xml_schema.version>
-		
-		<stax.impl.groupid>woodstox</stax.impl.groupid>
-		
-		<stax.impl.artifactid>wstx-asl</stax.impl.artifactid>
-		
-		<stax.impl.version>3.2.1</stax.impl.version>
-		
-		<stax.api.version>1.0.1</stax.api.version>
-		
-		<junit.version>3.8.2</junit.version>
-		
-		<XmlSchema.version>SNAPSHOT</XmlSchema.version>
-		
-		<ant.version>1.6.5</ant.version>
-	
+		<axis2.version>1.2</axis2.version>
+		<savan.version>SNAPSHOT</savan.version>
 	</properties>
+	
 </project>
 
