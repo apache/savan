@@ -40,7 +40,7 @@ public class XPathBasedFilterTest extends TestCase {
 		Filter filter = new XPathBasedFilter ();
 		filter.setUp(filterNode);
 		
-		assertTrue (filter.checkEnvelopeCompliance(envelope));
+		assertTrue (filter.checkCompliance(envelope));
 	}
 	
 	private SOAPEnvelope createTestEnvelope () {

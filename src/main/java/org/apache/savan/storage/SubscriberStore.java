@@ -17,10 +17,12 @@
 package org.apache.savan.storage;
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.savan.SavanException;
 import org.apache.savan.subscribers.Subscriber;
+import org.apache.savan.subscribers.SubscriberGroup;
 
 /**
  * Defines the Storage for storing subscribers. 
@@ -58,7 +60,9 @@ public interface SubscriberStore {
 	 * @return
 	 * @throws SavanException
 	 */
-	Iterator retrieveAll () throws SavanException;
+	Iterator retrieveAllSubscribers () throws SavanException;
+
+	Iterator retrieveAllSubscriberGroups () throws SavanException;
 	
 	/**
 	 * To delete a previously stored subscriber.
@@ -67,4 +71,11 @@ public interface SubscriberStore {
 	 * @throws SavanException
 	 */
 	void delete (String subscriberID) throws SavanException;
+	
+	SubscriberGroup getSubscriberGroup (String groupId) throws SavanException;
+	
+	void addSubscriberGroup (String subscriberList) throws SavanException;
+	
+	void addSubscriberToGroup (String groupId, Subscriber subscriber) throws SavanException;
+	
 }

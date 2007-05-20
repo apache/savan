@@ -17,6 +17,8 @@
 
 package org.apache.savan.eventing;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -47,7 +49,7 @@ import org.apache.savan.configuration.Protocol;
 import org.apache.savan.configuration.SubscriberBean;
 import org.apache.savan.eventing.subscribers.EventingSubscriber;
 import org.apache.savan.filters.Filter;
-import org.apache.savan.subscribers.AbstractSubscriber;
+import org.apache.savan.subscribers.Subscriber;
 import org.apache.savan.subscribers.Subscriber;
 import org.apache.savan.subscription.ExpirationBean;
 import org.apache.savan.subscription.SubscriptionProcessor;
@@ -86,7 +88,7 @@ public class EventingSubscriptionProcessor extends SubscriptionProcessor {
 		String subscriberName = protocol.getDefaultSubscriber();
 		SubscriberBean subscriberBean = configurationManager.getSubscriberBean(subscriberName);
 		
-		AbstractSubscriber subscriber = configurationManager.getSubscriberInstance(subscriberName);
+		Subscriber subscriber = configurationManager.getSubscriberInstance(subscriberName);
 		
 		if (!(subscriber instanceof EventingSubscriber)) {
 			String message = "Eventing protocol only support implementations of eventing subscriber as Subscribers";
@@ -96,8 +98,12 @@ public class EventingSubscriptionProcessor extends SubscriptionProcessor {
 		EventingSubscriber eventingSubscriber = (EventingSubscriber) subscriber;
 		String id = UUIDGenerator.getUUID();
 		smc.setProperty(EventingConstants.TransferedProperties.SUBSCRIBER_UUID,id);
-	
-		eventingSubscriber.setId(id);
+		try {
+			URI uri = new URI (id);
+			eventingSubscriber.setId(uri);
+		} catch (URISyntaxException e) {
+			throw new SavanException (e);
+		}
 		
 		SOAPBody body = envelope.getBody();
 		OMElement subscribeElement = body.getFirstChildWithName(new QName (EventingConstants.EVENTING_NAMESPACE,EventingConstants.ElementNames.Subscribe));
@@ -304,22 +310,6 @@ public class EventingSubscriptionProcessor extends SubscriptionProcessor {
 		return bean;
 	}
 
-	public void doProtocolSpecificEndSubscription(Subscriber subscriber, String reason, ConfigurationContext configurationContext) throws SavanException {
-		String SOAPVersion = (String) subscriber.getProperty(EventingConstants.Properties.SOAPVersion);
-		if (SOAPVersion==null) 
-			throw new SavanException ("Cant find the SOAP version of the subscriber");
-		
-		SOAPFactory factory = null;
-		if (SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(SOAPVersion))
-			factory = OMAbstractFactory.getSOAP11Factory();
-		else if (SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(SOAPVersion))
-			factory = OMAbstractFactory.getSOAP12Factory();
-		else
-			throw new SavanException ("The subscriber has a unknown SOAP version property set");
-		
-		SOAPEnvelope envelope = factory.getDefaultEnvelope();
-	}
-	
 	private boolean deliveryModesupported() {
 		return true;
 	}

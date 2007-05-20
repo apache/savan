@@ -17,10 +17,14 @@
 
 package org.apache.savan.util;
 
+import java.util.HashMap;
+import java.util.Iterator;
+
 import org.apache.savan.SavanConstants;
 import org.apache.savan.SavanException;
 import org.apache.savan.SavanMessageContext;
 import org.apache.savan.configuration.ConfigurationManager;
+import org.apache.savan.configuration.MappingRules;
 import org.apache.savan.configuration.Protocol;
 
 /**
@@ -35,8 +39,20 @@ public class ProtocolManager {
 		if (configurationManager==null)
 			throw new SavanException ("Cant find the Configuration Manager");
 		
-		return (Protocol) configurationManager.getProtocolMap().get("eventing");
+		String action = smc.getMessageContext().getOptions().getAction();
+		if (action!=null) {
+			HashMap map = configurationManager.getProtocolMap();
+			Iterator iter = map.values().iterator();
+			while (iter.hasNext()) {
+				Protocol protocol = (Protocol) iter.next();
+				MappingRules mappingRules = protocol.getMappingRules();
+				if (mappingRules.ruleMatched (MappingRules.MAPPING_TYPE_ACTION, action)) {
+					return protocol;
+				}
+			}
+		}
 		
+		return null;
 	}
 	
 }

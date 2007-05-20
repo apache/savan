@@ -31,6 +31,10 @@ public class Protocol {
 	private String defaultSubscriber;
 	private String defaultFilter;
 	
+	public Protocol () {
+		this.mappingRules = new MappingRules ();
+	}
+
 	public String getDefaultFilter() {
 		return defaultFilter;
 	}
@@ -67,7 +71,4 @@ public class Protocol {
 		return mappingRules;
 	}
 
-	public void setMappingRules(MappingRules mappingRule) {
-		this.mappingRules = mappingRule;
-	}
 }

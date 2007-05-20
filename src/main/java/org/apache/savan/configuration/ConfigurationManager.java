@@ -38,7 +38,7 @@ import org.apache.savan.SavanConstants;
 import org.apache.savan.SavanException;
 import org.apache.savan.filters.Filter;
 import org.apache.savan.storage.SubscriberStore;
-import org.apache.savan.subscribers.AbstractSubscriber;
+import org.apache.savan.subscribers.Subscriber;
 import org.apache.savan.subscribers.Subscriber;
 import org.apache.savan.util.UtilFactory;
 
@@ -59,8 +59,7 @@ public class ConfigurationManager {
 	private final String NAME = "name";
 	private final String UTIL_FACTORY = "utilFactory";
 	private final String MAPPING_RULES = "mapping-rules";
-	private final String ACTION = "mapping-rules";
-	private final String SOAP_ACTION = "mapping-rules";
+	private final String ACTION = "action";
 	private final String SUBSCRIBER_STORES = "subscriberStores";
 	private final String SUBSCRIBER_STORE = "subscriberStore";
 	private final String FILTERS = "filters";
@@ -227,21 +226,15 @@ public class ConfigurationManager {
 	
 	private void processMappingRules (OMElement element, Protocol protocol) {
 		
-		MappingRules mappingRules = new MappingRules ();
+		MappingRules mappingRules = protocol.getMappingRules();
 		
 		Iterator actionsIterator = element.getChildrenWithName(new QName (ACTION));
 		while (actionsIterator.hasNext()) {
 			OMElement actionElement = (OMElement) actionsIterator.next();
 			String action = actionElement.getText();
-			mappingRules.addAction(action);
+			mappingRules.addRule(MappingRules.MAPPING_TYPE_ACTION, action);
 		}
 		
-		Iterator SOAPActionsIterator = element.getChildrenWithName(new QName (SOAP_ACTION));
-		while (SOAPActionsIterator.hasNext()) {
-			OMElement SOAPactionElement = (OMElement) SOAPActionsIterator.next();
-			String SOAPaction = SOAPactionElement.getText();
-			mappingRules.addAction(SOAPaction);
-		}
 	}
 	
 	private void processSubscriberStores (OMElement element) throws SavanException {
@@ -410,14 +403,14 @@ public class ConfigurationManager {
 		return (SubscriberBean) subscribersMap.get(subscriberName);
 	}
 	
-	public AbstractSubscriber getSubscriberInstance (String subscriberName) throws SavanException {
+	public Subscriber getSubscriberInstance (String subscriberName) throws SavanException {
 		SubscriberBean subscriberBean = (SubscriberBean) subscribersMap.get(subscriberName);
 		if (subscriberBean==null) {
 			String message = "A subscriber with the name '" + subscriberName + "' was not found.";
 			throw new SavanException (message);
 		}
 		
-		return (AbstractSubscriber) getObject(subscriberBean.getClazz());
+		return (Subscriber) getObject(subscriberBean.getClazz());
 	}
 	
 }

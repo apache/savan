@@ -45,16 +45,8 @@
     
     <subscribers>
     	<subscriber>
-    		<name>composite</name>
-    		<class>org.apache.savan.subscribers.CompositeSubscriber</class>
-    	</subscriber>
-    	<subscriber>
     		<name>eventing-leaf</name>
-    		<class>org.apache.savan.eventing.subscribers.EventingLeafSubscriber</class>
-    	</subscriber>
-    	 <subscriber>
-    		<name>eventing-topic</name>
-    		<class>org.apache.savan.eventing.subscribers.EventingTopicSubscriber</class>
+    		<class>org.apache.savan.eventing.subscribers.EventingSubscriber</class>
     	</subscriber>
     </subscribers>
     

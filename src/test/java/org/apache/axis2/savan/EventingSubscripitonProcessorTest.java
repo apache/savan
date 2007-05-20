@@ -31,7 +31,7 @@ import org.apache.savan.configuration.ConfigurationManager;
 import org.apache.savan.configuration.Protocol;
 import org.apache.savan.eventing.EventingConstants;
 import org.apache.savan.eventing.EventingSubscriptionProcessor;
-import org.apache.savan.eventing.subscribers.EventingLeafSubscriber;
+import org.apache.savan.eventing.subscribers.EventingSubscriber;
 import org.apache.savan.storage.DefaultSubscriberStore;
 import org.apache.savan.storage.SubscriberStore;
 import org.apache.savan.subscription.ExpirationBean;
@@ -65,7 +65,7 @@ public class EventingSubscripitonProcessorTest extends TestCase {
 		smc.setSubscriberStore(store);
 		
 		EventingSubscriptionProcessor esp = new EventingSubscriptionProcessor ();
-		EventingLeafSubscriber eventingSubscriber = (EventingLeafSubscriber) esp.getSubscriberFromMessage(smc);
+		EventingSubscriber eventingSubscriber = (EventingSubscriber) esp.getSubscriberFromMessage(smc);
 		assertNotNull(eventingSubscriber);
 		
 		assertNotNull(eventingSubscriber.getDelivery());

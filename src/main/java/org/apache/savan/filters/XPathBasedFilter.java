@@ -48,7 +48,7 @@ import org.jaxen.JaxenException;
  * A filter that does filtering of messages based on a XPath string.
  * 
  */
-public class XPathBasedFilter extends Filter {
+public class XPathBasedFilter implements Filter {
 
 	private String XPathString = null;
 	
@@ -63,17 +63,14 @@ public class XPathBasedFilter extends Filter {
 	/**
 	 * This method may fail due to the JIRA issues WS-Commons(40) amd WS-Commons (41)
 	 */
-	public boolean checkEnvelopeCompliance(SOAPEnvelope envelope) throws SavanException {
-		OMElement firstChild = envelope.getBody().getFirstElement();
-		if (firstChild==null)
-			return false;
+	public boolean checkCompliance (OMElement element) throws SavanException {
 		
 		if (XPathString==null)
 			return true;
 		
 		try {
 			AXIOMXPath xpath = new AXIOMXPath (XPathString);
-			List resultList = xpath.selectNodes(firstChild);
+			List resultList = xpath.selectNodes(element);
 
             return resultList.size() > 0;
 		} catch (JaxenException e) {

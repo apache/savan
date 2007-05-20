@@ -56,7 +56,7 @@ public class SavanModule implements Module  {
 		ConfigurationManager configurationManager = new ConfigurationManager ();
 		try {
 			ClassLoader moduleClassLoader = module.getModuleClassLoader();
-			configurationManager.configure(moduleClassLoader);
+			configurationManager.configure(getClass().getClassLoader());
 		} catch (SavanException e) {
 			log.error ("Exception thrown while trying to configure the Savan module",e);
 		}

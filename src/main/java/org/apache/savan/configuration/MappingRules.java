@@ -25,28 +25,24 @@ import java.util.ArrayList;
  */
 public class MappingRules {
 
-	private ArrayList actionMap = null;
-	private ArrayList SOAPActionMap = null;
+	public static final int MAPPING_TYPE_ACTION = 1;
+	
+	private ArrayList actionList = null;
 	
 	public MappingRules () {
-		actionMap = new ArrayList ();
-		SOAPActionMap = new ArrayList ();
+		actionList = new ArrayList ();
 	}
 	
-	public void addAction (String action) {
-		actionMap.add(action);
+	public void addRule (int type,String value) {
+		if (type==MAPPING_TYPE_ACTION)
+			actionList.add(value);
 	}
 	
-	public boolean isActionPresent (String action) {
-		return actionMap.contains(action);
-	}
-	
-	public void addSOAPAction (String SOAPAction) {
-		SOAPActionMap.add(SOAPAction);
-	}
-	
-	public boolean isSOAPActionPresent (String SOAPAction) {
-		return SOAPActionMap.contains(SOAPAction);
+	public boolean ruleMatched (int type, String value) {
+		if (type==MAPPING_TYPE_ACTION)
+			return actionList.contains(value);
+		
+		return false;
 	}
 	
 }

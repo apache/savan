@@ -17,12 +17,10 @@
 
 package org.apache.savan.subscription;
 
-import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ServiceContext;
 import org.apache.savan.SavanException;
 import org.apache.savan.SavanMessageContext;
 import org.apache.savan.storage.SubscriberStore;
-import org.apache.savan.subscribers.AbstractSubscriber;
 import org.apache.savan.subscribers.Subscriber;
 import org.apache.savan.util.CommonUtil;
 
@@ -54,7 +52,7 @@ public abstract class SubscriptionProcessor {
 			throw new SavanException ("AbstractSubscriber store not found");
 			
 		ExpirationBean bean = getExpirationBean(renewMessage);
-		AbstractSubscriber subscriber = (AbstractSubscriber) store.retrieve(bean.getSubscriberID());
+		Subscriber subscriber = (Subscriber) store.retrieve(bean.getSubscriberID());
 		if (subscriber==null) {
 			throw new SavanException ("Given subscriber is not present");
 		}
@@ -82,7 +80,7 @@ public abstract class SubscriptionProcessor {
 		}
 		
 		Subscriber subscriber = store.retrieve(subscriberID);
-		doProtocolSpecificEndSubscription(subscriber,reason,serviceContext.getConfigurationContext());
+//		doProtocolSpecificEndSubscription(subscriber,reason,serviceContext.getConfigurationContext());
 		
 		store.delete(subscriberID);
 	}
@@ -97,6 +95,5 @@ public abstract class SubscriptionProcessor {
 	
 	public abstract String getSubscriberID (SavanMessageContext smc) throws SavanException;
 	
-	public abstract void doProtocolSpecificEndSubscription (Subscriber subscriber,String reason,ConfigurationContext configurationContext) throws SavanException;
 
 }

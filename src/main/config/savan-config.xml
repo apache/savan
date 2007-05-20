@@ -10,7 +10,7 @@
                 <action>http://schemas.xmlsoap.org/ws/2004/08/eventing/GetStatus</action>
                 <action>http://schemas.xmlsoap.org/ws/2004/08/eventing/Unsubscribe</action>
         	</mapping-rules>
-        	<defaultSubscriber>eventing-leaf</defaultSubscriber>
+        	<defaultSubscriber>eventing</defaultSubscriber>
         	<defaultFilter>empty</defaultFilter>
         	<!--
         	<parameters>
@@ -45,16 +45,8 @@
     
     <subscribers>
     	<subscriber>
-    		<name>composite</name>
-    		<class>org.apache.savan.subscribers.CompositeSubscriber</class>
-    	</subscriber>
-    	<subscriber>
-    		<name>eventing-leaf</name>
-    		<class>org.apache.savan.eventing.subscribers.EventingLeafSubscriber</class>
-    	</subscriber>
-    	 <subscriber>
-    		<name>eventing-topic</name>
-    		<class>org.apache.savan.eventing.subscribers.EventingTopicSubscriber</class>
+    		<name>eventing</name>
+    		<class>org.apache.savan.eventing.subscribers.EventingSubscriber</class>
     	</subscriber>
     </subscribers>
     

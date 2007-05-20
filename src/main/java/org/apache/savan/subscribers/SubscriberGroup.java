@@ -18,21 +18,43 @@
 package org.apache.savan.subscribers;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.savan.SavanException;
-import org.apache.savan.subscription.ExpirationBean;
 
 /**
- * Defines a subscriber which is the entity that define a specific subscription 
- * in savan. Independent of the protocol type.
+ * Defines a set of subscribers that are acting as a group or a Topic.
  *
  */
-public interface Subscriber  {
+public class SubscriberGroup  {
+
+	protected ArrayList subscribers = null;
 	
-	public URI getId();
-	public void setId(URI id);
-	public void sendEventData (OMElement eventData) throws SavanException;
-	public void renewSubscription (ExpirationBean bean);
+	private URI id;
+	
+	public URI getId() {
+		return id;
+	}
+
+	public void setId(URI id) {
+		this.id = id;
+	}
+
+	public SubscriberGroup (){
+		subscribers = new ArrayList ();
+	}
+	
+	public void addSubscriber (Subscriber subscriber) throws SavanException {
+		subscribers.add(subscriber);
+	}
+
+	public void sendEventDataToGroup(OMElement eventData) throws SavanException {
+		for (Iterator it = subscribers.iterator();it.hasNext();) {
+			Subscriber subscriber = (Subscriber) it.next();
+			subscriber.sendEventData(eventData);
+		}
+	}
 	
 }

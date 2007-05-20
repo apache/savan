@@ -19,10 +19,11 @@ package org.apache.savan.eventing;
 
 import org.apache.axis2.context.MessageContext;
 import org.apache.savan.SavanConstants;
+import org.apache.savan.SavanException;
 import org.apache.savan.SavanMessageContext;
-import org.apache.savan.eventing.subscribers.EventingLeafSubscriber;
+import org.apache.savan.eventing.subscribers.EventingSubscriber;
 import org.apache.savan.messagereceiver.MessageReceiverDeligater;
-import org.apache.savan.subscribers.AbstractSubscriber;
+import org.apache.savan.subscribers.Subscriber;
 import org.apache.savan.subscription.SubscriptionProcessor;
 import org.apache.savan.util.UtilFactory;
 
@@ -64,8 +65,8 @@ public class EventingUtilFactory implements UtilFactory {
 		return new EventingMessageReceiverDeligater ();
 	}
 
-	public AbstractSubscriber createSubscriber() {
-		return new EventingLeafSubscriber ();
+	public Subscriber createSubscriber() {
+		return new EventingSubscriber ();
 	}
 	
 }

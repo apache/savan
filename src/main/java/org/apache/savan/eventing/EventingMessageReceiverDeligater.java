@@ -33,17 +33,30 @@ import org.apache.axis2.databinding.utils.ConverterUtil;
 import org.apache.savan.SavanConstants;
 import org.apache.savan.SavanException;
 import org.apache.savan.SavanMessageContext;
-import org.apache.savan.eventing.subscribers.EventingLeafSubscriber;
+import org.apache.savan.eventing.subscribers.EventingSubscriber;
 import org.apache.savan.messagereceiver.MessageReceiverDeligater;
 import org.apache.savan.storage.SubscriberStore;
-import org.apache.savan.subscribers.AbstractSubscriber;
+import org.apache.savan.subscribers.Subscriber;
 import org.apache.savan.subscribers.Subscriber;
 import org.apache.savan.util.CommonUtil;
 
 
-public class EventingMessageReceiverDeligater implements MessageReceiverDeligater {
+public class EventingMessageReceiverDeligater extends MessageReceiverDeligater {
+	
+	public void doProtocolSpecificProcessing (SavanMessageContext inSavanMessage, MessageContext outMessage) throws SavanException {
+		int messageType = inSavanMessage.getMessageType();
+		if (messageType==SavanConstants.MessageTypes.SUBSCRIPTION_MESSAGE) {
+			handleSubscriptionRequest(inSavanMessage,outMessage);
+		} else if (messageType==SavanConstants.MessageTypes.RENEW_MESSAGE) {
+			handleRenewRequest (inSavanMessage,outMessage);
+		} else if (messageType==SavanConstants.MessageTypes.UNSUBSCRIPTION_MESSAGE) {
+			handleEndSubscriptionRequest (inSavanMessage,outMessage);
+		} else if (messageType==SavanConstants.MessageTypes.GET_STATUS_MESSAGE) {
+			handleGetStatusRequest (inSavanMessage,outMessage);
+		}		
+	}
 
-	public void handleSubscriptionRequest(SavanMessageContext subscriptionMessage, MessageContext outMessage) throws SavanException {
+	private void handleSubscriptionRequest(SavanMessageContext subscriptionMessage, MessageContext outMessage) throws SavanException {
 		
 		if (outMessage==null)
 			throw new SavanException ("Eventing protocol need to sent the SubscriptionResponseMessage. But the outMessage is null");
@@ -98,7 +111,7 @@ public class EventingMessageReceiverDeligater implements MessageReceiverDeligate
 	
 	}
 	
-	public void handleRenewRequest(SavanMessageContext renewMessage, MessageContext outMessage) throws SavanException {
+	private void handleRenewRequest(SavanMessageContext renewMessage, MessageContext outMessage) throws SavanException {
 		
 		if (outMessage==null)
 			throw new SavanException ("Eventing protocol need to sent the SubscriptionResponseMessage. But the outMessage is null");
@@ -136,7 +149,7 @@ public class EventingMessageReceiverDeligater implements MessageReceiverDeligate
 
 		SubscriberStore store = CommonUtil.getSubscriberStore(renewMessage.getMessageContext().getAxisService());
 		Subscriber subscriber = store.retrieve(subscriberID);
-		EventingLeafSubscriber eventingSubscriber = (EventingLeafSubscriber) subscriber;
+		EventingSubscriber eventingSubscriber = (EventingSubscriber) subscriber;
 		if (eventingSubscriber==null) {
 			String message = "Cannot find the AbstractSubscriber with the given ID";
 			throw new SavanException (message);
@@ -159,7 +172,7 @@ public class EventingMessageReceiverDeligater implements MessageReceiverDeligate
 		outMessage.setProperty(SavanConstants.MESSAGE_TYPE,new Integer (SavanConstants.MessageTypes.RENEW_RESPONSE_MESSAGE));
 	}
 
-	public void handleEndSubscriptionRequest(SavanMessageContext renewMessage, MessageContext outMessage) throws SavanException {
+	private void handleEndSubscriptionRequest(SavanMessageContext renewMessage, MessageContext outMessage) throws SavanException {
 		
 		if (outMessage==null)
 			throw new SavanException ("Eventing protocol need to sent the SubscriptionResponseMessage. But the outMessage is null");
@@ -226,7 +239,7 @@ public class EventingMessageReceiverDeligater implements MessageReceiverDeligate
 			throw new SavanException ("AbstractSubscriber Store was not found");
 		}
 		
-		EventingLeafSubscriber subscriber = (EventingLeafSubscriber) store.retrieve(id);
+		EventingSubscriber subscriber = (EventingSubscriber) store.retrieve(id);
 		if (subscriber==null) {
 			throw new SavanException ("AbstractSubscriber not found");
 		}
@@ -250,6 +263,8 @@ public class EventingMessageReceiverDeligater implements MessageReceiverDeligate
 		outMessage.setProperty(SavanConstants.MESSAGE_TYPE,new Integer (SavanConstants.MessageTypes.GET_STATUS_RESPONSE_MESSAGE));
 	}
 	
-	
+	public void doProtocolSpecificProcessing(SavanMessageContext inSavanMessage) throws SavanException {
+		
+	}
 
 }

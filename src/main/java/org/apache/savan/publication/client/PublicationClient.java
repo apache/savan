@@ -17,6 +17,10 @@
 
 package org.apache.savan.publication.client;
 
+import java.net.URI;
+import java.net.URL;
+import java.util.Iterator;
+
 import javax.xml.namespace.QName;
 
 import org.apache.axiom.om.OMAbstractFactory;
@@ -30,11 +34,15 @@ import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
+import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
 import org.apache.savan.SavanConstants;
 import org.apache.savan.SavanException;
+import org.apache.savan.publication.PublicationReport;
 import org.apache.savan.storage.SubscriberStore;
+import org.apache.savan.subscribers.Subscriber;
+import org.apache.savan.subscribers.SubscriberGroup;
 import org.apache.savan.util.CommonUtil;
 
 /**
@@ -50,58 +58,67 @@ public class PublicationClient {
 	public PublicationClient (ConfigurationContext configurationContext) {
 		this.configurationContext = configurationContext;
 	}
-	
+
 	/**
 	 * This can be used by the Publishers in the same JVM (e.g. a service deployed in the same Axis2 instance).
 	 * 
-	 * @param publication - the XML message to be published
+	 * @param eventData - The XML message to be published
 	 * @param service - The service to which this publication is bound to (i.e. this will be only sent to the subscribers of this service)
+	 * @param eventName - The name of the event, this can be a action which represents an out only operation or a Topic ID.
+	 * 
 	 * @throws SavanException
 	 */
-	public void sendPublication (OMElement publication, AxisService service) throws SavanException {
+	public void sendPublication (OMElement eventData, AxisService service, URI eventName) throws SavanException {
 		
 		try {
-			ServiceClient sc = new ServiceClient (configurationContext,null);
-			Options options = new Options ();
-			sc.setOptions(options);
 			
-			//Just a matter of getting it to the SavanOutHandler
-			options.setTo(new EndpointReference ("http://temp.publication.URI"));
+			SubscriberStore subscriberStore = CommonUtil.getSubscriberStore(service);
+			if (subscriberStore==null)
+				throw new SavanException ("Cannot find the Subscriber Store");
+				
+			PublicationReport report = new PublicationReport();
+			if (eventName!=null) {
+				//there should be a valid operation or a SubscriberGroup to match this event.
+				AxisOperation operation = getAxisOperationFromEventName (eventName);
+				if (operation!=null) {
+					//send to all subscribers with this operation.
+					throw new UnsupportedOperationException ("Not implemented");
+				} else {
+					//there should be a valid SubscriberGroup to match this eventName
+					
+					String groupId = eventName.toString();
+					SubscriberGroup group = (SubscriberGroup) subscriberStore.getSubscriberGroup(groupId);
+					if (group!=null)
+						group.sendEventDataToGroup(eventData);
+					else
+						throw new SavanException ("Could not find a subscriberGroup or an operation to match the eventName");
+
+				}
+			} else {
+				//no event name, so send it to everybody.
 			
-			if (options.getAction()==null)
-				options.setAction(TEMP_PUBLICATION_ACTION);
+				//sending to all individual subscribers
+				for (Iterator iter = subscriberStore.retrieveAllSubscribers();iter.hasNext();){
+					Subscriber subscriber = (Subscriber) iter.next();
+					subscriber.sendEventData(eventData);
+				}
+				
+				//sending to all Subscriber Groups
+				for (Iterator iter = subscriberStore.retrieveAllSubscriberGroups();iter.hasNext();){
+					SubscriberGroup subscriberGroup = (SubscriberGroup) iter.next();
+					subscriberGroup.sendEventDataToGroup(eventData);
+				}			
+			}
 			
-			sc.setOptions(options);
-			
-			//this will not be required when the 
-			Parameter parameter = new Parameter ();
-			parameter.setName(SavanConstants.SUBSCRIBER_STORE);
-			SubscriberStore store = CommonUtil.getSubscriberStore(service);
-			parameter.setValue(store);
-			sc.getAxisService().addParameter(parameter);
-			
-			//if already engaged, axis2 will neglect this engagement.
-			sc.engageModule( new QName("savan"));
-			
-			MessageContext mc = new MessageContext ();
-			mc.setEnvelope(getEnvelopeFromPublication (publication));
-			OperationClient client = sc.createClient(ServiceClient.ANON_OUT_ONLY_OP);
-			client.addMessageContext(mc);
-			client.execute(true);
 		} catch (AxisFault e) {
 			String message = "Could not send the publication";
 			throw new SavanException (message,e);
 		}
 	}
 	
-	
-	private SOAPEnvelope getEnvelopeFromPublication (OMElement element) {
-		
-		//for now we are sending SOAP 1.1
-		SOAPEnvelope envelope = OMAbstractFactory.getSOAP11Factory().getDefaultEnvelope();
-		envelope.getBody().addChild(element);
-		
-		return envelope;
+	private AxisOperation getAxisOperationFromEventName (URI eventName) {
+		//TODO do operation lookup
+		return null;
 	}
 	
 }

@@ -20,10 +20,10 @@ package org.apache.savan.messagereceiver;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.receivers.AbstractInOutSyncMessageReceiver;
-import org.apache.savan.SavanConstants;
 import org.apache.savan.SavanException;
 import org.apache.savan.SavanMessageContext;
 import org.apache.savan.configuration.Protocol;
+import org.apache.savan.util.ProtocolManager;
 import org.apache.savan.util.UtilFactory;
 
 /**
@@ -36,27 +36,21 @@ public class SavanInOutMessageReceiver extends AbstractInOutSyncMessageReceiver 
 
 		SavanMessageContext savanInMessage = new SavanMessageContext (inMessage);
 		
-//		Integer protocolVersion = (Integer) inMessage.getProperty(SavanConstants.PROTOCOL_VERSION);
-//		UtilFactory utilFactory = AbstractSavanUtilFactory.getUtilFactory(protocolVersion.intValue());
-		
-		Protocol protocol = savanInMessage.getProtocol();
+		//setting the Protocol
+		Protocol protocol = ProtocolManager.getMessageProtocol(savanInMessage);
 		if (protocol==null) {
-			throw new SavanException ("Protocol not found");
+			//this message does not have a matching protocol
+			//so let it go
+			throw new SavanException ("Cannot find a matching protocol");
 		}
+		
+		savanInMessage.setProtocol(protocol);
 		
 		UtilFactory utilFactory = protocol.getUtilFactory();
 		MessageReceiverDeligater deligator = utilFactory.createMessageReceiverDeligater();
-
-		int messageType = savanInMessage.getMessageType();
-		if (messageType==SavanConstants.MessageTypes.SUBSCRIPTION_MESSAGE) {
-			deligator.handleSubscriptionRequest(savanInMessage,outMessage);
-		} else if (messageType==SavanConstants.MessageTypes.RENEW_MESSAGE) {
-			deligator.handleRenewRequest (savanInMessage,outMessage);
-		} else if (messageType==SavanConstants.MessageTypes.UNSUBSCRIPTION_MESSAGE) {
-			deligator.handleEndSubscriptionRequest (savanInMessage,outMessage);
-		} else if (messageType==SavanConstants.MessageTypes.GET_STATUS_MESSAGE) {
-			deligator.handleGetStatusRequest (savanInMessage,outMessage);
-		}
+		
+		deligator.processMessage(savanInMessage);
+		deligator.doProtocolSpecificProcessing (savanInMessage, outMessage);
 		
 	}
 
