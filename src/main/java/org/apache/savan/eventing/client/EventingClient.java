@@ -88,7 +88,7 @@ public class EventingClient {
 		renewSubscription(expirationString,subscriptionID);
 	}
 	
-	public void renewSubscription (String expirationString, String subscriptionID) throws Exception {
+	private void renewSubscription (String expirationString, String subscriptionID) throws Exception {
 		SubscriptionResponseData data = (SubscriptionResponseData) subscriptionDataMap.get(subscriptionID);
 		EndpointReference managerEPR = data.getSubscriptionManager();
 		if (managerEPR==null)
