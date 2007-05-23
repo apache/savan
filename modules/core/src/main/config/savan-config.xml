@@ -21,6 +21,17 @@
         	</parameters>
         	-->
         </protocol>
+		<protocol>
+        	<name>atom</name>
+        	<utilFactory>org.apache.savan.atom.AtomUtilFactory</utilFactory>
+        	<mapping-rules>
+                <action>http://wso2.com/eventing/Subscribe</action>
+                <action>http://wso2.com/eventing/Renew</action>
+                <action>http://wso2.com/eventing/Unsubscribe</action>
+        	</mapping-rules>
+        	<defaultSubscriber>atom-subscriber</defaultSubscriber>
+        	<defaultFilter>empty</defaultFilter>
+        </protocol>        
     </protocols>
     
     <subscriberStores>
@@ -48,6 +59,10 @@
     		<name>eventing</name>
     		<class>org.apache.savan.eventing.subscribers.EventingSubscriber</class>
     	</subscriber>
+		<subscriber>
+    		<name>atom-subscriber</name>
+    		<class>org.apache.savan.atom.AtomSubscriber</class>
+    	</subscriber>    	
     </subscribers>
     
 </savan-config>

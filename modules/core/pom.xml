@@ -31,6 +31,45 @@
                     <target>1.4</target>
                 </configuration>
             </plugin>
+<plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-antrun-plugin</artifactId>
+               <version>1.1</version>
+               <executions>
+                   <execution>
+                       <id>generate-sources</id>
+                       <phase>generate-sources</phase>
+                       <configuration>
+                           <tasks>
+                    	       <property name="schema.out" value="target/tmp/schema"  />
+							<mkdir dir="${schema.out}"/>
+							<mkdir dir="${schema.out}/src"/>
+							<taskdef name="xmlbean" classname="org.apache.xmlbeans.impl.tool.XMLBean">
+					          <classpath refid="maven.dependency.classpath"/>
+                              <classpath refid="maven.compile.classpath"/>
+                              <classpath refid="maven.runtime.classpath"/>
+							</taskdef>
+								     
+							<xmlbean debug="true" download="true"
+					             srcgendir="${schema.out}/src"
+					             srconly="false"
+					             typesystemname="intercepter"
+					 		     destfile="${schema.out}/savan_types-0.1.jar">
+
+					          <classpath refid="maven.dependency.classpath"/>
+                              <classpath refid="maven.compile.classpath"/>
+                              <classpath refid="maven.runtime.classpath"/>
+					          <fileset dir="src/main/resources/" includes="*"/>
+					        </xmlbean>
+					        <unzip dest="target/classes" src="${schema.out}/savan_types-0.1.jar"></unzip>
+                           </tasks>
+                       </configuration>
+                       <goals>
+                           <goal>run</goal>
+                       </goals>
+                   </execution>
+               </executions>
+           </plugin>            
         </plugins>
     </build>
 

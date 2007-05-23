@@ -27,6 +27,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.llom.factory.OMXMLBuilderFactory;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
@@ -36,6 +37,7 @@ import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
 import org.apache.savan.SavanConstants;
 import org.apache.savan.storage.SubscriberStore;
+import org.apache.xmlbeans.XmlObject;
 
 /**
  * A common set of methods that may be used in various places of Savan.
@@ -86,5 +88,11 @@ public class CommonUtil {
 			return null;
 		
 		return (SubscriberStore) parameter.getValue();
+	}
+	
+	public static OMElement toOM(XmlObject element){
+		org.apache.axiom.om.impl.builder.StAXOMBuilder builder = new org.apache.axiom.om.impl.builder.StAXOMBuilder
+        (org.apache.axiom.om.OMAbstractFactory.getOMFactory(),new org.apache.axis2.util.StreamWrapper(element.newXMLStreamReader())) ;
+		return builder.getDocumentElement();
 	}
 }
