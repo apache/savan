@@ -26,6 +26,12 @@ import org.apache.savan.subscription.SubscriptionProcessor;
 import org.apache.savan.util.UtilFactory;
 
 public class AtomUtilFactory implements UtilFactory {
+	
+	public AtomUtilFactory(){
+		
+	}
+	
+	
 
 	/** 
 	 * this is a way to map different actions to different types of operations 

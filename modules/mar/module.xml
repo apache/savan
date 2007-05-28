@@ -6,7 +6,6 @@
         <actionMapping>http://schemas.xmlsoap.org/ws/2004/08/eventing/Renew</actionMapping>
         <actionMapping>http://schemas.xmlsoap.org/ws/2004/08/eventing/GetStatus</actionMapping>
         <actionMapping>http://schemas.xmlsoap.org/ws/2004/08/eventing/Unsubscribe</actionMapping>
-        <actionMapping>http://wso2.com/ws/2007/05/eventing/Publish</actionMapping>
         <actionMapping>http://wso2.com/eventing/Subscribe</actionMapping>
 		<actionMapping>http://wso2.com/eventing/Renew</actionMapping>
 		<actionMapping>http://wso2.com/eventing/Unsubscribe</actionMapping>
@@ -16,5 +15,10 @@
     <operation name="atom" mep="http://www.w3.org/2004/08/wsdl/in-out">
         <messageReceiver class="org.apache.savan.atom.AtomMessageReceiver"/>
     </operation>
+    
+    <operation name="publish" mep="http://www.w3.org/2004/08/wsdl/in-out">
+        <messageReceiver class="org.apache.savan.messagereceiver.PublishingMessageReceiver"/>
+        <actionMapping>http://wso2.com/ws/2007/05/eventing/Publish</actionMapping>
+	</operation>        
     
 </module>

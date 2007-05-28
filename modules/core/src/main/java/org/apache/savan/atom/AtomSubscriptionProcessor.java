@@ -38,6 +38,7 @@ import org.apache.savan.configuration.ConfigurationManager;
 import org.apache.savan.configuration.Protocol;
 import org.apache.savan.filters.Filter;
 import org.apache.savan.filters.XPathBasedFilter;
+import org.apache.savan.storage.SubscriberStore;
 import org.apache.savan.subscribers.Subscriber;
 import org.apache.savan.subscription.ExpirationBean;
 import org.apache.savan.subscription.SubscriptionProcessor;
@@ -120,7 +121,7 @@ public class AtomSubscriptionProcessor extends SubscriptionProcessor {
 			String id = UUIDGenerator.getUUID();
 			smc.setProperty(AtomConstants.TransferedProperties.SUBSCRIBER_UUID,id);
 			atomSubscriber.setId(new URI(id));
-			String atomFeedPath = id.replaceAll(":", "_")+ ".atom";
+			String atomFeedPath = id2Path(id);
 			atomSubscriber.setAtomFile(new File(realAtomPath,atomFeedPath));
 			atomSubscriber.setFeedUrl(serviceAddress+"/services/"+smc.getMessageContext().getServiceContext().getAxisService().getName() +"/atom?feed="+ atomFeedPath);
 			
@@ -150,10 +151,8 @@ public class AtomSubscriptionProcessor extends SubscriptionProcessor {
 				}
 				atomSubscriber.setFilter(filter);
 			}
-			//TODO -Srinath
 			atomSubscriber.setAuthor(createFeed.getAuthor());
 			atomSubscriber.setTitle(createFeed.getTitle());
-			
 			smc.setProperty(AtomConstants.Properties.feedUrl, atomSubscriber.getFeedUrl());
 			return atomSubscriber;
 		} catch (AxisFault e) {
@@ -250,5 +249,19 @@ public class AtomSubscriptionProcessor extends SubscriptionProcessor {
 		
 		return findValue(AtomConstants.ATOM_NAMESPACE,AtomConstants.IDEDNTIFIER_ELEMENT, envelope.getHeader(), false);
 	}
+
+	public void unsubscribe(SavanMessageContext endSubscriptionMessage) throws SavanException {
+		String subscriberID = getSubscriberID (endSubscriptionMessage);
+		File feedPath = endSubscriptionMessage.getConfigurationContext().getRealPath("atom/"+id2Path(subscriberID));
+		if(feedPath.exists()){
+			feedPath.delete();
+		}
+		super.unsubscribe(endSubscriptionMessage);
+	}
+	
+	private String id2Path(String id){
+		return id.replaceAll(":", "_")+ ".atom";
+	}
+	
 	
 }

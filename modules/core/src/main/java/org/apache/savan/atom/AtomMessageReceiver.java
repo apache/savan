@@ -3,6 +3,8 @@ package org.apache.savan.atom;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.stream.XMLStreamException;
@@ -22,7 +24,6 @@ import org.apache.axiom.soap.SOAPProcessingException;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.engine.AxisEngine;
-import org.apache.axis2.engine.AxisError;
 import org.apache.axis2.engine.MessageReceiver;
 import org.apache.axis2.i18n.Messages;
 import org.apache.axis2.transport.http.HTTPConstants;
@@ -49,10 +50,32 @@ public class AtomMessageReceiver implements MessageReceiver{
 				
 				OMElement feedID = bodyContent.getFirstElement();
 				String pathWRTRepository = "atom/"+feedID.getText();
-
+				
 				File atomFile = messageCtx.getConfigurationContext().getRealPath(pathWRTRepository);
+				if(pathWRTRepository.equals("atom/all.atom") && !atomFile.exists()){
+					AtomSubscriber atomSubscriber = new AtomSubscriber();
+					atomSubscriber.setId(new URI("All"));
+					atomSubscriber.setAtomFile(atomFile);
+					atomSubscriber.setAuthor("DefaultUser");
+					atomSubscriber.setTitle("default Feed");
+					
+					String serviceAddress = messageCtx.getTo().getAddress();
+					int cutIndex = serviceAddress.indexOf("services");
+					if(cutIndex > 0){
+						serviceAddress = serviceAddress.substring(0,cutIndex-1);
+					}
+					atomSubscriber.setFeedUrl(serviceAddress+"/services/"+messageCtx.getServiceContext().getAxisService().getName() +"/atom?feed=all.atom");
+					
+					
+					SubscriberStore store = CommonUtil.getSubscriberStore(messageCtx.getAxisService());
+					if (store == null)
+						throw new AxisFault ("Cant find the Savan subscriber store");
+					store.store(atomSubscriber);
+				}
+
+				
 				if(!atomFile.exists()){
-					throw new AxisFault("no feed exisits for "+feedID.getText());
+					throw new AxisFault("no feed exisits for "+feedID.getText() + " no file found "+ atomFile.getAbsolutePath());
 				}
 				FileInputStream atomIn =  new FileInputStream(atomFile);
 
@@ -96,12 +119,20 @@ public class AtomMessageReceiver implements MessageReceiver{
 			}
 			
 		} catch (SOAPProcessingException e) {
+			e.printStackTrace();
 			throw new AxisFault(e);
+			
 		} catch (OMException e) {
+			e.printStackTrace();
 			throw new AxisFault(e);
 		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 			throw new AxisFault(e);
 		} catch (XMLStreamException e) {
+			e.printStackTrace();
+			throw new AxisFault(e);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
 			throw new AxisFault(e);
 		}
 	}
