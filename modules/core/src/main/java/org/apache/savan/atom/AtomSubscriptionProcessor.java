@@ -56,6 +56,17 @@ public class AtomSubscriptionProcessor extends SubscriptionProcessor {
 		if (id!=null) {
 			smc.setProperty(AtomConstants.TransferedProperties.SUBSCRIBER_UUID,id);
 		}
+		
+		
+		
+//		AtomSubscriber atomSubscriber = new AtomSubscriber();
+//		smc.setProperty(AtomConstants.TransferedProperties.SUBSCRIBER_UUID,id);
+//		atomSubscriber.setId(new URI(id));
+//		String atomFeedPath = id.replaceAll(":", "_")+ ".atom";
+//		atomSubscriber.setAtomFile(new File(realAtomPath,atomFeedPath));
+//		atomSubscriber.setAuthor("DefaultUser");
+//		atomSubscriber.setTitle("default Feed");
+		
 	}
 	
 	/**
@@ -86,8 +97,6 @@ public class AtomSubscriptionProcessor extends SubscriptionProcessor {
 			if (envelope==null)
 				return null;
 			
-//		AbstractSubscriber subscriber = utilFactory.createSubscriber();  //eventing only works on leaf subscriber for now.
-			
 			String subscriberName = protocol.getDefaultSubscriber();
 			Subscriber subscriber = configurationManager.getSubscriberInstance(subscriberName);
 			
@@ -98,7 +107,7 @@ public class AtomSubscriptionProcessor extends SubscriptionProcessor {
 
 			//find the real path for atom feeds
 			File repositoryPath = smc.getConfigurationContext().getRealPath("/"); 
-			File realAtomPath = new File(repositoryPath.getAbsoluteFile(),"../atom");
+			File realAtomPath = new File(repositoryPath.getAbsoluteFile(),"atom");
 			
 			//Get the service URL from request
 			String serviceAddress = smc.getMessageContext().getTo().getAddress();
@@ -113,18 +122,18 @@ public class AtomSubscriptionProcessor extends SubscriptionProcessor {
 			atomSubscriber.setId(new URI(id));
 			String atomFeedPath = id.replaceAll(":", "_")+ ".atom";
 			atomSubscriber.setAtomFile(new File(realAtomPath,atomFeedPath));
-			atomSubscriber.setFeedUrl(serviceAddress +"/atom/"+ atomFeedPath);
+			atomSubscriber.setFeedUrl(serviceAddress+"/services/"+smc.getMessageContext().getServiceContext().getAxisService().getName() +"/atom?feed="+ atomFeedPath);
 			
 			SOAPBody body = envelope.getBody();
 			CreateFeedDocument createFeedDocument = CreateFeedDocument.Factory.parse(body.getFirstElement().getXMLStreamReader());
 			CreateFeed createFeed = createFeedDocument.getCreateFeed();
-			//TODO Srinath
-//			if(createFeed.getEndTo() != null){
-//				atomSubscriber.setEndToEPr(createFeed.getEndTo());	
-//			}
-//			if(createFeed.getExpires() != null){
-//				atomSubscriber.setSubscriptionEndingTime(createFeed.getExpires().getTime());	
-//			}
+
+			if(createFeed.getEndTo() != null){
+				atomSubscriber.setEndToEPr(createFeed.getEndTo());	
+			}
+			if(createFeed.getExpires() != null){
+				atomSubscriber.setSubscriptionEndingTime(createFeed.getExpires().getTime());	
+			}
 			
 			if (createFeed.getFilter() != null) {
 				Filter filter = null;
@@ -141,69 +150,12 @@ public class AtomSubscriptionProcessor extends SubscriptionProcessor {
 				}
 				atomSubscriber.setFilter(filter);
 			}
-			
-			
-			
-			
-			
 			//TODO -Srinath
 			atomSubscriber.setAuthor(createFeed.getAuthor());
 			atomSubscriber.setTitle(createFeed.getTitle());
 			
 			smc.setProperty(AtomConstants.Properties.feedUrl, atomSubscriber.getFeedUrl());
-			
 			return atomSubscriber;
-			
-			
-//			SOAPBody body = envelope.getBody();
-//			
-//			OMElement createFeed = findElement("createFeed", body, true) ;
-//			OMElement endToElement = findElement(AtomConstants.ElementNames.EndTo, body, true);
-//			
-//			EndpointReference endToEPR = null;
-//			if(endToElement != null){
-//				endToEPR = EndpointReferenceHelper.fromOM(endToElement);
-//			}
-//			atomSubscriber.setEndToEPr(endToEPR);
-//			
-//			
-//			String expiresText = findValue(AtomConstants.EXPIRES_ELEMENT, createFeed, true);
-//			if (expiresText==null){
-//				String message = "Expires Text is null";
-//				throw new SavanException (message);
-//			}
-//			expiresText = expiresText.trim();
-//			Date expiration = getExpirationBeanFromString(expiresText);
-//			if (expiration==null) {
-//				String message = "Cannot understand the given date-time value for the Expiration";
-//				throw new SavanException (message);
-//			}
-//			atomSubscriber.setSubscriptionEndingTime(expiration);
-//			
-//			OMElement filterElement = findElement(AtomConstants.ElementNames.Filter, createFeed, true);
-//			if (filterElement!= null) {
-//				OMNode filterNode = filterElement.getFirstOMChild();
-//				OMAttribute dialectAttr = filterElement.getAttribute(new QName (AtomConstants.ElementNames.Dialect));
-//				Filter filter = null;
-//				String filterKey = AtomConstants.DEFAULT_FILTER_IDENTIFIER;
-//				if (dialectAttr!=null) {
-//					filterKey = dialectAttr.getAttributeValue();
-//				}
-//				filter = configurationManager.getFilterInstanceFromId(filterKey);
-//				if (filter==null)
-//					throw new SavanException ("The Filter defined by the dialect is not available");
-//				
-//				filter.setUp (filterNode);
-//				atomSubscriber.setFilter(filter);
-//			}
-//			
-//			atomSubscriber.setId(findValue(AtomConstants.ID_ELEMENT, createFeed,true));
-//			atomSubscriber.setAuthor(findValue(AtomConstants.AUTHOR_ELEMENT, createFeed,true));
-//			atomSubscriber.setTitle(findValue(AtomConstants.TITLE_ELEMENT, createFeed,true));
-//			
-//			smc.setProperty(AtomConstants.Properties.feedUrl, atomSubscriber.getFeedUrl());
-//			
-//			return atomSubscriber;
 		} catch (AxisFault e) {
 			throw new SavanException(e);
 		} catch (OMException e) {
@@ -215,9 +167,9 @@ public class AtomSubscriptionProcessor extends SubscriptionProcessor {
 		}
 	}
 	
-	private String findValue(String localName,OMElement parent,boolean throwfault) throws SavanException{
-		return findValue(AtomConstants.ATOM_NAMESPACE, localName, parent, throwfault);
-	}
+//	private String findValue(String localName,OMElement parent,boolean throwfault) throws SavanException{
+//		return findValue(AtomConstants.ATOM_NAMESPACE, localName, parent, throwfault);
+//	}
 	
 	private String findValue(String nsURI,String localName,OMElement parent,boolean throwfault) throws SavanException{
 		QName name = new QName (nsURI,AtomConstants.IDEDNTIFIER_ELEMENT);
@@ -233,19 +185,19 @@ public class AtomSubscriptionProcessor extends SubscriptionProcessor {
 		}
 	}
 	
-	private OMElement findElement(String localName,OMElement parent,boolean throwfault) throws SavanException{
-		QName name = new QName (AtomConstants.ATOM_NAMESPACE,AtomConstants.ID_ELEMENT);
-		OMElement ele = parent.getFirstChildWithName(name);
-		if(ele != null){
-			return ele;
-		}else{
-			if(throwfault){
-				throw new SavanException (localName + " element is not defined");	
-			}else{
-				return null;
-			}
-		}
-	}
+//	private OMElement findElement(String localName,OMElement parent,boolean throwfault) throws SavanException{
+//		QName name = new QName (AtomConstants.ATOM_NAMESPACE,AtomConstants.ID_ELEMENT);
+//		OMElement ele = parent.getFirstChildWithName(name);
+//		if(ele != null){
+//			return ele;
+//		}else{
+//			if(throwfault){
+//				throw new SavanException (localName + " element is not defined");	
+//			}else{
+//				return null;
+//			}
+//		}
+//	}
 
 	public void pauseSubscription(SavanMessageContext pauseSubscriptionMessage) throws SavanException {
 		throw new UnsupportedOperationException ("Eventing specification does not support this type of messages");
@@ -298,66 +250,5 @@ public class AtomSubscriptionProcessor extends SubscriptionProcessor {
 		
 		return findValue(AtomConstants.ATOM_NAMESPACE,AtomConstants.IDEDNTIFIER_ELEMENT, envelope.getHeader(), false);
 	}
-	
-//	private Date getExpirationBeanFromString (String expiresStr) throws SavanException {
-//
-//		
-//		
-//		//expires can be a duration or a date time.
-//		//Doing the conversion using the ConverUtil helper class.
-//		
-//		boolean isDuration = CommonUtil.isDuration(expiresStr);
-//		if (isDuration) {
-//			try {
-//				Date currentTime = new Date();
-//				Duration duration = ConverterUtil.convertToDuration(expiresStr);
-//				return new Date(currentTime.getTime()+ (int)(1000* duration.getSeconds()));
-//			} catch (IllegalArgumentException e) {
-//				String message = "Cannot convert the Expiration value to a valid duration";
-//				throw new SavanException (message,e);
-//			}
-//		} else {
-//			try {
-//			    Calendar calendar = ConverterUtil.convertToDateTime(expiresStr);
-//			    return calendar.getTime();
-//			} catch (Exception e) {
-//				String message = "Cannot convert the Expiration value to a valid DATE/TIME";
-//				throw new SavanException (message,e);
-//			}
-//		}
-//	}
-
-	public void doProtocolSpecificEndSubscription(Subscriber subscriber, String reason, ConfigurationContext configurationContext) throws SavanException {
-		throw new UnsupportedOperationException();
-//		String SOAPVersion = (String) subscriber.getProperty(AtomConstants.Properties.SOAPVersion);
-//		if (SOAPVersion==null) 
-//			throw new SavanException ("Cant find the SOAP version of the subscriber");
-//		
-//		SOAPFactory factory = null;
-//		if (SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(SOAPVersion))
-//			factory = OMAbstractFactory.getSOAP11Factory();
-//		else if (SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(SOAPVersion))
-//			factory = OMAbstractFactory.getSOAP12Factory();
-//		else
-//			throw new SavanException ("The subscriber has a unknown SOAP version property set");
-//		
-//		SOAPEnvelope envelope = factory.getDefaultEnvelope();
-	}
-	
-//	private boolean deliveryModesupported() {
-//		return true;
-//	}
-//	
-//	private boolean isInvalidDiration (Duration duration) {
-//		return false;
-//	}
-//	
-//	private boolean isDateInThePast (Date date) {
-//		return false;
-//	}
-//	
-//	private boolean filterDilalectSupported (String filterDialect){ 
-//		return true;
-//	}
 	
 }

@@ -51,11 +51,14 @@ public interface SavanConstants {
 		int RENEW_RESPONSE_MESSAGE = 6;
 		int GET_STATUS_MESSAGE = 7;
 		int GET_STATUS_RESPONSE_MESSAGE = 8;
+		int PUBLISH = 9;
 	}
 	
 	interface Properties {
 		String SUBSCRIBER_STORE = "SubscriberStore";
 	}
+	
+	
 	
 
 	

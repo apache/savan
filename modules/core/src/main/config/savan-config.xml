@@ -9,6 +9,7 @@
                 <action>http://schemas.xmlsoap.org/ws/2004/08/eventing/Renew</action>
                 <action>http://schemas.xmlsoap.org/ws/2004/08/eventing/GetStatus</action>
                 <action>http://schemas.xmlsoap.org/ws/2004/08/eventing/Unsubscribe</action>
+                <action>http://wso2.com/ws/2007/05/eventing/Publish</action>
         	</mapping-rules>
         	<defaultSubscriber>eventing</defaultSubscriber>
         	<defaultFilter>empty</defaultFilter>

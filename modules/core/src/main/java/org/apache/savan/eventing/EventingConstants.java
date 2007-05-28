@@ -24,6 +24,7 @@ public interface EventingConstants {
 	String DEFAULT_DELIVERY_MODE = "http://schemas.xmlsoap.org/ws/2004/08/eventing/DeliveryModes/Push";
 	String DEFAULT_FILTER_IDENTIFIER = FilterDialects.XPath;
 	
+	
 	interface TransferedProperties {
 		String SUBSCRIBER_UUID = "SAVAN_EVENTING_SUBSCRIBER_UUID";
 	}
@@ -56,6 +57,7 @@ public interface EventingConstants {
 		String UnsubscribeResponse = "http://schemas.xmlsoap.org/ws/2004/08/eventing/UnsubscribeResponse";
 		String GetStatus = "http://schemas.xmlsoap.org/ws/2004/08/eventing/GetStatus";
 		String GetStatusResponse = "http://schemas.xmlsoap.org/ws/2004/08/eventing/GetStatusResponse";
+		String Publish = "http://wso2.com/ws/2007/05/eventing/Publish";
 	}
 	
 	interface Properties {

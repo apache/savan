@@ -68,7 +68,7 @@ public class Feed {
 		
 		factory.createOMElement("id",atomNs,feedEle).setText(id);
 		if(title != null){
-			factory.createOMElement("title",atomNs,feedEle).setText(id);	
+			factory.createOMElement("title",atomNs,feedEle).setText(title);	
 		}
 		factory.createOMElement("updated",atomNs,feedEle).setText( new SimpleDateFormat("dd-mm-yy'T1'HH:MM:ssZ").format(lastUpdated));
 		if(author != null){
@@ -81,12 +81,12 @@ public class Feed {
 		lastUpdated = new Date();
 		OMElement entryEle = factory.createOMElement("entry",atomNs,document.getOMDocumentElement());
 		factory.createOMElement("id",atomNs,entryEle).setText(id +"/" + entryCount);
-		factory.createOMElement("title",atomNs,entryEle).setText(id +"/" + entryCount);
+		factory.createOMElement("title",atomNs,entryEle).setText("entry" + entryCount);
 		
 		factory.createOMElement("updated",atomNs,entryEle).setText( new SimpleDateFormat("dd-mm-yy'T1'HH:MM:ssZ").format(lastUpdated));
 		
 		OMElement contentEle =  factory.createOMElement("content",atomNs,entryEle);
-		contentEle.addAttribute("type","xml",null);
+		contentEle.addAttribute("type","text/xml",null);
 		contentEle.addChild(entry);
 		
 		

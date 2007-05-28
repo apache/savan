@@ -17,9 +17,11 @@
 
 package org.apache.savan.subscription;
 
+import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axis2.context.ServiceContext;
 import org.apache.savan.SavanException;
 import org.apache.savan.SavanMessageContext;
+import org.apache.savan.publication.client.PublicationClient;
 import org.apache.savan.storage.SubscriberStore;
 import org.apache.savan.subscribers.Subscriber;
 import org.apache.savan.util.CommonUtil;
@@ -84,6 +86,16 @@ public abstract class SubscriptionProcessor {
 		
 		store.delete(subscriberID);
 	}
+	
+	public void publish(SavanMessageContext publishMessage) throws SavanException{
+		//TODO handle Topics
+		SOAPEnvelope requestEnvelope = publishMessage.getEnvelope();
+		ServiceContext serviceContext = publishMessage.getMessageContext().getServiceContext();
+		PublicationClient client = new PublicationClient(serviceContext.getConfigurationContext());
+		client.sendPublication(requestEnvelope.getBody().getFirstElement(),serviceContext.getAxisService(),null);
+	}
+	
+	
 	
 	public abstract void pauseSubscription (SavanMessageContext pauseSubscriptionMessage) throws SavanException;
 	

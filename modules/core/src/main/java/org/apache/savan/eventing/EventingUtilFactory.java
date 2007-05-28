@@ -51,6 +51,8 @@ public class EventingUtilFactory implements UtilFactory {
 			smc.setMessageType(SavanConstants.MessageTypes.UNSUBSCRIPTION_RESPONSE_MESSAGE);
 		else if (EventingConstants.Actions.GetStatusResponse.equals(action))
 			smc.setMessageType(SavanConstants.MessageTypes.GET_STATUS_RESPONSE_MESSAGE);
+		else if (EventingConstants.Actions.Publish.equals(action))
+			smc.setMessageType(SavanConstants.MessageTypes.PUBLISH);
 		else 
 			smc.setMessageType(SavanConstants.MessageTypes.UNKNOWN);
 		

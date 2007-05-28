@@ -49,6 +49,8 @@ import org.jaxen.JaxenException;
  * 
  */
 public class XPathBasedFilter implements Filter {
+	
+	public static String XPATH_BASED_FILTER = "http://www.w3.org/TR/1999/REC-xpath-19991116";
 
 	private String XPathString = null;
 	

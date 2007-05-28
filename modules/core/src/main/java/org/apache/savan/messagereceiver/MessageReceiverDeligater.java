@@ -77,6 +77,8 @@ public abstract class MessageReceiverDeligater {
 			processor.unsubscribe(smc);
 		} else if (messageType==SavanConstants.MessageTypes.RENEW_MESSAGE) {
 			processor.renewSubscription(smc);
+		}else if (messageType==SavanConstants.MessageTypes.PUBLISH) {
+			processor.publish(smc);
 		}
 	}
 	
