@@ -21,6 +21,8 @@ public class AtomSample {
 	 * 		<li>Run the sample with http://serviceHost:servicePort/services/<Service-Name> 
 	 * 			and <client-repostiory-location></li>
 	 * </ol>
+	 * 
+	 * Samples shows how to Create,Delete, publish to with SOAP/REST, and retrive  a Feed. 
 	 * @param args
 	 */
 	
