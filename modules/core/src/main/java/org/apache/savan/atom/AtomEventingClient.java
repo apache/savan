@@ -18,6 +18,8 @@ import org.apache.axis2.addressing.AddressingConstants;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -46,6 +48,17 @@ public class AtomEventingClient {
 
 	private EndpointReference feedEpr;
 
+	public AtomEventingClient(String serviceUrl,String clientRepository) throws AxisFault{
+		ConfigurationContext configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(clientRepository,clientRepository+"/conf/axis2.xml");
+		serviceClient = new ServiceClient (configContext,null); //TODO give a repo
+		
+		Options options = new Options ();
+		serviceClient.setOptions(options);
+		serviceClient.engageModule(new QName ("addressing"));
+		options.setTo(new EndpointReference (serviceUrl));
+	}
+	
+	
 	public AtomEventingClient(ServiceClient serviceClient) {
 		this.serviceClient = serviceClient;
 	}

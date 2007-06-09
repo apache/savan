@@ -20,7 +20,6 @@ package org.apache.axis2.savan.atom;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 
 import javax.xml.namespace.QName;
 
@@ -29,7 +28,6 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.OMOutputFormat;
-import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
@@ -42,10 +40,7 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.savan.atom.AtomEventingClient;
-import org.apache.savan.eventing.EventingConstants;
 import org.apache.savan.eventing.client.EventingClient;
-import org.apache.savan.eventing.client.EventingClientBean;
-import org.apache.savan.eventing.client.SubscriptionStatus;
 
 import com.wso2.eventing.atom.CreateFeedResponseDocument.CreateFeedResponse;
 
@@ -184,103 +179,103 @@ public class AtomTest extends UtilServerBasedTestCase  {
 	}
     
     
-    private void initClient () throws AxisFault {
-
-//		String CLIENT_REPO = null;
-//		String AXIS2_XML = null;
+//    private void initClient () throws AxisFault {
+//
+////		String CLIENT_REPO = null;
+////		String AXIS2_XML = null;
+////		
+////		if (repo!=null) {
+////			CLIENT_REPO = repo;
+////			AXIS2_XML = repo + File.separator + "axis2.xml";
+////		} else {
+//////			throw new AxisFault ("Please specify the client repository as a program argument.Use '-h' for help.");
+////		}
 //		
-//		if (repo!=null) {
-//			CLIENT_REPO = repo;
-//			AXIS2_XML = repo + File.separator + "axis2.xml";
-//		} else {
-////			throw new AxisFault ("Please specify the client repository as a program argument.Use '-h' for help.");
+//		ConfigurationContext configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(AXIS2_REPO,AXIS2_REPO+"/conf/axis2.xml");
+//		serviceClient = new ServiceClient (configContext,null); //TODO give a repo
+//		
+//		options = new Options ();
+//		serviceClient.setOptions(options);
+//		serviceClient.engageModule(new QName ("addressing"));
+//		
+//		eventingClient = new EventingClient (serviceClient);
+//		
+//		String toAddress = "http://" + serverIP + ":" + port + toAddressPart;
+//		
+//		//String toAddress = "http://" + serverIP + ":" + port + "/axis2/services/RMSampleService";
+//		options.setTo(new EndpointReference (toAddress));
+//	}
+//	
+//	private void performAction (int action) throws Exception {
+//		
+//		switch (action) {
+//		case 1:
+//			doSubscribe(SUBSCRIBER_1_ID);
+//			break;
+//		case 2:
+//			doSubscribe(SUBSCRIBER_2_ID);
+//			break;
+//		case 3:
+//			doSubscribe(SUBSCRIBER_1_ID);
+//			doSubscribe(SUBSCRIBER_2_ID);
+//			break;
+//		case 4:
+//			doUnsubscribe(SUBSCRIBER_1_ID);
+//			break;
+//		case 5:
+//			doUnsubscribe(SUBSCRIBER_2_ID);
+//			break;
+//		case 6:
+//			doUnsubscribe(SUBSCRIBER_1_ID);
+//			doUnsubscribe(SUBSCRIBER_2_ID);
+//			break;
+//		case 7:
+//			doGetStatus(SUBSCRIBER_1_ID);
+//			break;
+//		case 8:
+//			doGetStatus(SUBSCRIBER_2_ID);
+//			break;
+//		case 9:
+//			System.exit(0);
+//			break;
+//		default:
+//			break;
 //		}
-		
-		ConfigurationContext configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(AXIS2_REPO,AXIS2_REPO+"/conf/axis2.xml");
-		serviceClient = new ServiceClient (configContext,null); //TODO give a repo
-		
-		options = new Options ();
-		serviceClient.setOptions(options);
-		serviceClient.engageModule(new QName ("addressing"));
-		
-		eventingClient = new EventingClient (serviceClient);
-		
-		String toAddress = "http://" + serverIP + ":" + port + toAddressPart;
-		
-		//String toAddress = "http://" + serverIP + ":" + port + "/axis2/services/RMSampleService";
-		options.setTo(new EndpointReference (toAddress));
-	}
+//	}
 	
-	private void performAction (int action) throws Exception {
-		
-		switch (action) {
-		case 1:
-			doSubscribe(SUBSCRIBER_1_ID);
-			break;
-		case 2:
-			doSubscribe(SUBSCRIBER_2_ID);
-			break;
-		case 3:
-			doSubscribe(SUBSCRIBER_1_ID);
-			doSubscribe(SUBSCRIBER_2_ID);
-			break;
-		case 4:
-			doUnsubscribe(SUBSCRIBER_1_ID);
-			break;
-		case 5:
-			doUnsubscribe(SUBSCRIBER_2_ID);
-			break;
-		case 6:
-			doUnsubscribe(SUBSCRIBER_1_ID);
-			doUnsubscribe(SUBSCRIBER_2_ID);
-			break;
-		case 7:
-			doGetStatus(SUBSCRIBER_1_ID);
-			break;
-		case 8:
-			doGetStatus(SUBSCRIBER_2_ID);
-			break;
-		case 9:
-			System.exit(0);
-			break;
-		default:
-			break;
-		}
-	}
-	
-	private void doSubscribe (String ID) throws Exception {
-		EventingClientBean bean = new EventingClientBean ();
-		
-		String subscribingAddress = null;
-		if (SUBSCRIBER_1_ID.equals(ID)) {
-            subscribingAddress = "http://" + serverIP + ":" + port + listner1AddressPart;
-		} else if (SUBSCRIBER_2_ID.equals(ID)) {
-            subscribingAddress = "http://" + serverIP + ":" + port + listner2AddressPart;
-		}
-	
-		bean.setDeliveryEPR(new EndpointReference (subscribingAddress));
-	
-		//uncomment following to set an expiration time of 10 minutes.
-//		Date date = new Date ();
-//		date.setMinutes(date.getMinutes()+10);
-//		bean.setExpirationTime(date);
-		
-		eventingClient.subscribe(bean,ID);
-		Thread.sleep(1000);   //TODO remove if not sequired
-	}
-	
-	private void doUnsubscribe (String ID) throws Exception {
-		eventingClient.unsubscribe(ID);
-		Thread.sleep(1000);   //TODO remove if not sequired
-	}
-	
-	private void doGetStatus (String ID) throws Exception {
-		SubscriptionStatus status  = eventingClient.getSubscriptionStatus(ID);
-		Thread.sleep(1000);   //TODO remove if not sequired
-		
-		String statusValue = status.getExpirationValue();
-		System.out.println("Status of the subscriber '" + ID +"' is" + statusValue);
-	}
+//	private void doSubscribe (String ID) throws Exception {
+//		EventingClientBean bean = new EventingClientBean ();
+//		
+//		String subscribingAddress = null;
+//		if (SUBSCRIBER_1_ID.equals(ID)) {
+//            subscribingAddress = "http://" + serverIP + ":" + port + listner1AddressPart;
+//		} else if (SUBSCRIBER_2_ID.equals(ID)) {
+//            subscribingAddress = "http://" + serverIP + ":" + port + listner2AddressPart;
+//		}
+//	
+//		bean.setDeliveryEPR(new EndpointReference (subscribingAddress));
+//	
+//		//uncomment following to set an expiration time of 10 minutes.
+////		Date date = new Date ();
+////		date.setMinutes(date.getMinutes()+10);
+////		bean.setExpirationTime(date);
+//		
+//		eventingClient.subscribe(bean,ID);
+//		Thread.sleep(1000);   //TODO remove if not sequired
+//	}
+//	
+//	private void doUnsubscribe (String ID) throws Exception {
+//		eventingClient.unsubscribe(ID);
+//		Thread.sleep(1000);   //TODO remove if not sequired
+//	}
+//	
+//	private void doGetStatus (String ID) throws Exception {
+//		SubscriptionStatus status  = eventingClient.getSubscriptionStatus(ID);
+//		Thread.sleep(1000);   //TODO remove if not sequired
+//		
+//		String statusValue = status.getExpirationValue();
+//		System.out.println("Status of the subscriber '" + ID +"' is" + statusValue);
+//	}
 	
 	private OMElement getDummyMethodRequestElement(int i) {
 		OMFactory fac = OMAbstractFactory.getOMFactory();
