@@ -1,6 +1,10 @@
 
 package org.apache.savan.atom;
 
+/**
+ * 
+ * @author Srinath Perera(hemapani@apache.org)
+ */
 public class AtomConstants {
 	public static String ATOM_NAMESPACE = "http://www.w3.org/2005/Atom";
 	public static String ATOM_PREFIX = "atom";

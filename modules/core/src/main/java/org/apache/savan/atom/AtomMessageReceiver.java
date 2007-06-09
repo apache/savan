@@ -31,6 +31,11 @@ import org.apache.axis2.util.MessageContextBuilder;
 import org.apache.savan.storage.SubscriberStore;
 import org.apache.savan.util.CommonUtil;
 
+/**
+ * Handle the HTTP GET requests for feeds
+ * @author Srinath Perera(hemapani@apache.org)
+ */
+
 public class AtomMessageReceiver implements MessageReceiver{
 	
 	public static final String ATOM_NAME = "atom";

@@ -10,24 +10,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.om.OMDocument;
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMFactory;
-import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.impl.builder.StAXBuilder;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axiom.om.util.StAXUtils;
 import org.apache.axis2.context.MessageContext;
 import org.apache.savan.SavanException;
 
+/**
+ * This class interface between Derby and Savan atom implementation 
+ * @author Srinath Perera(hemapani@apache.org)
+ *
+ */
 public class AtomDataSource {
 	public static final String SQL_CREATE_FEEDS = "CREATE TABLE FEEDS(id CHAR(250) NOT NULL, " +
 			"title CHAR(250), updated TIMESTAMP, author CHAR(250), PRIMARY KEY(id))";
@@ -182,9 +182,4 @@ public class AtomDataSource {
 			throw new SavanException(e);
 		}
 	}
-	
-	
-	
-	
-	
 }

@@ -28,6 +28,7 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
+import org.apache.axiom.om.OMOutputFormat;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
@@ -137,22 +138,31 @@ public class AtomTest extends UtilServerBasedTestCase  {
 		CreateFeedResponse createFeedResponse = atomEventingClient.createFeed("test Title","Srinath Perera");
 		
 		options.setAction("http://wso2.com/eventing/dummyMethod");
-		serviceClient.fireAndForget(getDummyMethodRequestElement ());
+		serviceClient.fireAndForget(getDummyMethodRequestElement (0));
 		
-		options.setAction(EventingConstants.Actions.Publish);
-		serviceClient.fireAndForget(getDummyMethodRequestElement ());
+//		options.setAction(EventingConstants.Actions.Publish);
+//		serviceClient.fireAndForget(getDummyMethodRequestElement ());
 		
+		atomEventingClient.publishWithSOAP(toAddress, getDummyMethodRequestElement (1), null);
+		atomEventingClient.publishWithREST(toAddress, getDummyMethodRequestElement (2), null);
 		//Thread.sleep(1000*10*1000);
 		
-		int i = 0;
-		while(i<1){
+//		int i = 0;
+//		while(i<1){
 			System.out.println(createFeedResponse.getFeedUrl());
-			URL url = new URL(createFeedResponse.getFeedUrl());
-			System.out.println(readFromStream(url.openStream()));
-			Thread.sleep(1000*10);	
-			i++;
-		}
+			OMElement feedAsXml = atomEventingClient.fetchFeed(createFeedResponse.getFeedUrl());
+			feedAsXml.serialize(System.out,new OMOutputFormat());
+			
+//			URL url = new URL(createFeedResponse.getFeedUrl());
+//			System.out.println(readFromStream(url.openStream()));
+//			Thread.sleep(1000*10);	
+//			i++;
+//		}
 //		
+		feedAsXml = atomEventingClient.fetchFeed(createFeedResponse.getFeedUrl());
+		feedAsXml.serialize(System.out,new OMOutputFormat());	
+			
+			
 		atomEventingClient.deleteFeed();
 		
 		
@@ -272,10 +282,12 @@ public class AtomTest extends UtilServerBasedTestCase  {
 		System.out.println("Status of the subscriber '" + ID +"' is" + statusValue);
 	}
 	
-	private OMElement getDummyMethodRequestElement() {
+	private OMElement getDummyMethodRequestElement(int i) {
 		OMFactory fac = OMAbstractFactory.getOMFactory();
 		OMNamespace namespace = fac.createOMNamespace(applicationNamespaceName,"ns1");
-		return fac.createOMElement(dummyMethod, namespace);
+		OMElement de =  fac.createOMElement(dummyMethod, namespace);
+		de.setText(String.valueOf(i));
+		return de;
 	}
     
 	public static String readFromStream(InputStream in) throws Exception{
