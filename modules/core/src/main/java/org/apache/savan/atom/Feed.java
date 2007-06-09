@@ -56,11 +56,20 @@ public class Feed {
 //	</feed>
 	
 	
-	public Feed(String title, String id, String author) {
+	public Feed(String title, String id, String author,Date lastUpdated) {
 		this.title = title;
+		if(title != null){
+			title = title.trim();
+		}
+		if(author != null){
+			author = author.trim();
+		}
+		
 		this.id = id;
 		this.author = author;
-		lastUpdated = new Date();
+		if(lastUpdated == null){
+			lastUpdated = new Date();	
+		}
 		factory = OMAbstractFactory.getOMFactory();
 		document = factory.createOMDocument();
 		atomNs = factory.createOMNamespace(AtomConstants.ATOM_NAMESPACE,AtomConstants.ATOM_PREFIX);
@@ -106,5 +115,12 @@ public class Feed {
 //		System.out.flush();
 //		
 //	}
+	
+	public OMElement getFeedAsXml(){
+		return document.getOMDocumentElement();
+	}
+	public OMFactory getFactory() {
+		return factory;
+	}
 	
 }

@@ -49,44 +49,64 @@ public class AtomMessageReceiver implements MessageReceiver{
 				OMElement bodyContent = envlope.getBody().getFirstElement();
 				
 				OMElement feedID = bodyContent.getFirstElement();
-				String pathWRTRepository = "atom/"+feedID.getText();
 				
-				File atomFile = messageCtx.getConfigurationContext().getRealPath(pathWRTRepository);
-				if(pathWRTRepository.equals("atom/all.atom") && !atomFile.exists()){
-					AtomSubscriber atomSubscriber = new AtomSubscriber();
-					atomSubscriber.setId(new URI("All"));
-					atomSubscriber.setAtomFile(atomFile);
-					atomSubscriber.setAuthor("DefaultUser");
-					atomSubscriber.setTitle("default Feed");
-					
-					String serviceAddress = messageCtx.getTo().getAddress();
-					int cutIndex = serviceAddress.indexOf("services");
-					if(cutIndex > 0){
-						serviceAddress = serviceAddress.substring(0,cutIndex-1);
-					}
-					atomSubscriber.setFeedUrl(serviceAddress+"/services/"+messageCtx.getServiceContext().getAxisService().getName() +"/atom?feed=all.atom");
-					
-					
-					SubscriberStore store = CommonUtil.getSubscriberStore(messageCtx.getAxisService());
-					if (store == null)
-						throw new AxisFault ("Cant find the Savan subscriber store");
-					store.store(atomSubscriber);
-				}
-
 				
-				if(!atomFile.exists()){
-					throw new AxisFault("no feed exisits for "+feedID.getText() + " no file found "+ atomFile.getAbsolutePath());
-				}
-				FileInputStream atomIn =  new FileInputStream(atomFile);
-
+				
+				
+				String feedIDAsUrn = feedID.getText().replaceAll("_", ":").replaceAll(".atom", "");
+				
+				SubscriberStore store = CommonUtil.getSubscriberStore(messageCtx.getAxisService());
+				if (store == null)
+					throw new AxisFault ("Cant find the Savan subscriber store");
+				
+				
+				AtomSubscriber subscriber = (AtomSubscriber)store.retrieve(feedIDAsUrn);
+				
 	            SOAPFactory fac = getSOAPFactory(messageCtx);
 	            SOAPEnvelope envelope = fac.getDefaultEnvelope();
+
+	            OMElement result = subscriber.getFeedAsXml();
+				
+				
+				
+				
+				
+//				String pathWRTRepository = "atom/"+feedID.getText();
+//				
+//				File atomFile = messageCtx.getConfigurationContext().getRealPath(pathWRTRepository);
+//				if(pathWRTRepository.equals("atom/all.atom") && !atomFile.exists()){
+//					AtomSubscriber atomSubscriber = new AtomSubscriber();
+//					atomSubscriber.setId(new URI("All"));
+//					atomSubscriber.setAtomFile(atomFile);
+//					atomSubscriber.setAuthor("DefaultUser");
+//					atomSubscriber.setTitle("default Feed");
+//					
+//					String serviceAddress = messageCtx.getTo().getAddress();
+//					int cutIndex = serviceAddress.indexOf("services");
+//					if(cutIndex > 0){
+//						serviceAddress = serviceAddress.substring(0,cutIndex-1);
+//					}
+//					atomSubscriber.setFeedUrl(serviceAddress+"/services/"+messageCtx.getServiceContext().getAxisService().getName() +"/atom?feed=all.atom");
+//					
+//					
+//					SubscriberStore store = CommonUtil.getSubscriberStore(messageCtx.getAxisService());
+//					if (store == null)
+//						throw new AxisFault ("Cant find the Savan subscriber store");
+//					store.store(atomSubscriber);
+//				}
+//
+//				
+//				if(!atomFile.exists()){
+//					throw new AxisFault("no feed exisits for "+feedID.getText() + " no file found "+ atomFile.getAbsolutePath());
+//				}
+//				FileInputStream atomIn =  new FileInputStream(atomFile);
+
 	            
 	            //add the content of the file to the response
-	            XMLStreamReader xmlreader = StAXUtils.createXMLStreamReader
-		            (atomIn, MessageContext.DEFAULT_CHAR_SET_ENCODING);
-		        StAXBuilder builder = new StAXOMBuilder(fac,xmlreader);
-		        OMElement result = (OMElement) builder.getDocumentElement();
+//	            XMLStreamReader xmlreader = StAXUtils.createXMLStreamReader
+//		            (atomIn, MessageContext.DEFAULT_CHAR_SET_ENCODING);
+//		        StAXBuilder builder = new StAXOMBuilder(fac,xmlreader);
+//		        OMElement result = (OMElement) builder.getDocumentElement();
 	            envelope.getBody().addChild(result);
 				
 	            //send beck the response
@@ -125,15 +145,15 @@ public class AtomMessageReceiver implements MessageReceiver{
 		} catch (OMException e) {
 			e.printStackTrace();
 			throw new AxisFault(e);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			throw new AxisFault(e);
-		} catch (XMLStreamException e) {
-			e.printStackTrace();
-			throw new AxisFault(e);
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-			throw new AxisFault(e);
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//			throw new AxisFault(e);
+//		} catch (XMLStreamException e) {
+//			e.printStackTrace();
+//			throw new AxisFault(e);
+//		} catch (URISyntaxException e) {
+//			e.printStackTrace();
+//			throw new AxisFault(e);
 		}
 	}
 	

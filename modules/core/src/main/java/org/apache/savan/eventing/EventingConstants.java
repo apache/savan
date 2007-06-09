@@ -20,6 +20,7 @@ package org.apache.savan.eventing;
 public interface EventingConstants {
 
 	String EVENTING_NAMESPACE = "http://schemas.xmlsoap.org/ws/2004/08/eventing";
+	String EXTENDED_EVENTING_NAMESPACE = "http://ws.apache.org/ws/2007/05/eventing-extended";
 	String EVENTING_PREFIX = "wse";
 	String DEFAULT_DELIVERY_MODE = "http://schemas.xmlsoap.org/ws/2004/08/eventing/DeliveryModes/Push";
 	String DEFAULT_FILTER_IDENTIFIER = FilterDialects.XPath;
@@ -46,6 +47,7 @@ public interface EventingConstants {
 		String Unsubscribe = "Unsubscribe";
 		String GetStatus = "GetStatus";
 		String GetStatusResponse = "GetStatusResponse";
+		String Topic = "topic";
 	}
 	
 	interface Actions {
@@ -57,7 +59,7 @@ public interface EventingConstants {
 		String UnsubscribeResponse = "http://schemas.xmlsoap.org/ws/2004/08/eventing/UnsubscribeResponse";
 		String GetStatus = "http://schemas.xmlsoap.org/ws/2004/08/eventing/GetStatus";
 		String GetStatusResponse = "http://schemas.xmlsoap.org/ws/2004/08/eventing/GetStatusResponse";
-		String Publish = "http://wso2.com/ws/2007/05/eventing/Publish";
+		String Publish = "http://ws.apache.org/ws/2007/05/eventing-extended/Publish";
 	}
 	
 	interface Properties {

@@ -31,6 +31,7 @@ import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPHeader;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.context.ServiceContext;
 import org.apache.savan.SavanConstants;
 import org.apache.savan.SavanException;
 import org.apache.savan.SavanMessageContext;
@@ -98,6 +99,13 @@ public class AtomSubscriptionProcessor extends SubscriptionProcessor {
 			if (envelope==null)
 				return null;
 			
+			ServiceContext serviceContext = smc.getMessageContext().getServiceContext();
+			AtomDataSource dataSource = (AtomDataSource)serviceContext.getProperty(AtomConstants.Properties.DataSource);
+			if(dataSource == null){
+				dataSource = new AtomDataSource();
+				serviceContext.setProperty(AtomConstants.Properties.DataSource, dataSource);
+			}
+			
 			String subscriberName = protocol.getDefaultSubscriber();
 			Subscriber subscriber = configurationManager.getSubscriberInstance(subscriberName);
 			
@@ -105,6 +113,8 @@ public class AtomSubscriptionProcessor extends SubscriptionProcessor {
 				String message = "Savan only support implementations of Atom subscriber as Subscribers";
 				throw new SavanException (message);
 			}
+			
+			
 
 			//find the real path for atom feeds
 			File repositoryPath = smc.getConfigurationContext().getRealPath("/"); 
@@ -118,6 +128,7 @@ public class AtomSubscriptionProcessor extends SubscriptionProcessor {
 			}
 			
 			AtomSubscriber atomSubscriber = (AtomSubscriber) subscriber;
+			
 			String id = UUIDGenerator.getUUID();
 			smc.setProperty(AtomConstants.TransferedProperties.SUBSCRIBER_UUID,id);
 			atomSubscriber.setId(new URI(id));
@@ -151,8 +162,8 @@ public class AtomSubscriptionProcessor extends SubscriptionProcessor {
 				}
 				atomSubscriber.setFilter(filter);
 			}
-			atomSubscriber.setAuthor(createFeed.getAuthor());
-			atomSubscriber.setTitle(createFeed.getTitle());
+			
+			atomSubscriber.init(dataSource, new URI(id), createFeed.getTitle(), createFeed.getAuthor());
 			smc.setProperty(AtomConstants.Properties.feedUrl, atomSubscriber.getFeedUrl());
 			return atomSubscriber;
 		} catch (AxisFault e) {

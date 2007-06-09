@@ -21,14 +21,20 @@ import org.w3.x2005.x08.addressing.EndpointReferenceType;
 public class AtomSubscriber implements Subscriber{
 	private static final Log log = LogFactory.getLog(AtomSubscriber.class);
 	private Date subscriptionEndingTime = null;
-	private Feed feed; 
+	//private Feed feed; 
 	private Filter filter = null;
 	private File atomFile;
 	private String feedUrl;
-	
+	private AtomDataSource atomDataSource;
 	private URI id;
-	private String title;
-	private String author;
+	
+	public void init(AtomDataSource dataSource,URI id,String title,String author) throws SavanException{
+		this.atomDataSource = dataSource;
+		atomDataSource.addFeed(id.toString(), title, new Date(), author);
+	}
+	
+	
+	
 	public URI getId() {
 		return id;
 	}
@@ -36,7 +42,7 @@ public class AtomSubscriber implements Subscriber{
 		throw new UnsupportedOperationException();
 	}
 	public void sendEventData(OMElement eventData) throws SavanException {
-		try {
+//		try {
 			Date date = new Date ();
 			
 			boolean expired = false;
@@ -47,25 +53,28 @@ public class AtomSubscriber implements Subscriber{
 				String message = "Cant notify the listner since the subscription has been expired";
 				log.debug(message);
 			}
-			if(feed == null){
-				feed = new Feed(title,id.toString(),author);
-			}
-			feed.addEntry(eventData);
 			
-			if(!atomFile.getParentFile().exists()){
-				atomFile.getParentFile().mkdir();
-			}
-			FileOutputStream out = new FileOutputStream(atomFile);
-			feed.write(out);
-			out.close();
-			System.out.println("Atom file at "+ atomFile + " is updated");
-		} catch (FileNotFoundException e) {
-			throw new SavanException(e);
-		} catch (XMLStreamException e) {
-			throw new SavanException(e);
-		} catch (IOException e) {
-			throw new SavanException(e);
-		}
+			atomDataSource.addEntry(id.toString(), eventData);
+//			
+//			if(feed == null){
+//				feed = new Feed(title,id.toString(),author);
+//			}
+//			feed.addEntry(eventData);
+//			
+//			if(!atomFile.getParentFile().exists()){
+//				atomFile.getParentFile().mkdir();
+//			}
+//			FileOutputStream out = new FileOutputStream(atomFile);
+//			feed.write(out);
+//			out.close();
+//			System.out.println("Atom file at "+ atomFile + " is updated");
+//		} catch (FileNotFoundException e) {
+//			throw new SavanException(e);
+//		} catch (XMLStreamException e) {
+//			throw new SavanException(e);
+//		} catch (IOException e) {
+//			throw new SavanException(e);
+//		}
 	}
 	public void setId(URI id) {
 		this.id = id;
@@ -84,22 +93,22 @@ public class AtomSubscriber implements Subscriber{
 		throw new UnsupportedOperationException();
 	}
 
-	public String getAuthor() {
-		return author;
-	}
+//	public String getAuthor() {
+//		return author;
+//	}
+//
+//	public void setAuthor(String author) {
+//		this.author = author;
+//	}
+//
+//
+//	public String getTitle() {
+//		return title;
+//	}
 
-	public void setAuthor(String author) {
-		this.author = author;
-	}
-
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
+//	public void setTitle(String title) {
+//		this.title = title;
+//	}
 	
 	
 	public String getFeedUrl(){
@@ -121,6 +130,15 @@ public class AtomSubscriber implements Subscriber{
 	public void setFeedUrl(String feedUrl) {
 		this.feedUrl = feedUrl;
 	}
+//	public Feed getFeed() {
+//		return feed;
+//	}
+	public OMElement getFeedAsXml() throws SavanException {
+		return atomDataSource.getFeedAsXml(id.toString());
+	}
+//	public void setAtomDataSource(AtomDataSource atomDataSource) {
+//		this.atomDataSource = atomDataSource;
+//	}
 	
 	
 }

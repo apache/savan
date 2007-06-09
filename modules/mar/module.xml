@@ -18,7 +18,7 @@
     
     <operation name="publish" mep="http://www.w3.org/2004/08/wsdl/in-out">
         <messageReceiver class="org.apache.savan.messagereceiver.PublishingMessageReceiver"/>
-        <actionMapping>http://wso2.com/ws/2007/05/eventing/Publish</actionMapping>
+        <actionMapping>http://ws.apache.org/ws/2007/05/eventing-extended/Publish</actionMapping>
 	</operation>        
     
 </module>

@@ -40,7 +40,7 @@ public class AtomConstants {
 		String SUBSCRIBER_UUID = "SAVAN_EVENTING_SUBSCRIBER_UUID";
 	}
 	
-	interface ElementNames {
+	public interface ElementNames {
 		String Subscribe = "Subscribe";
 		String EndTo = "EndTo";
 		String Delivery = "Delivery";
@@ -58,13 +58,15 @@ public class AtomConstants {
 		String GetStatus = "GetStatus";
 		String GetStatusResponse = "GetStatusResponse";
 		String FeedUrl = "FeedUrl";
-		
+		String Entry = "entry";
+		String Content = "content";
 		String deleteFeedResponse = "DeleteFeedResponse";
 	}
 	
 	interface Properties {
 		String SOAPVersion = "SOAPVersion";
 		String feedUrl = "feedUrl";
+		String DataSource = "DataSource";
 	}
 	
 }
