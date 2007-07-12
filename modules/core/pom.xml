@@ -14,6 +14,13 @@
     <packaging>jar</packaging>
     <name>Savan - Core</name>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>10.1.1.0</version>
+        </dependency>
+    </dependencies>
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <testSourceDirectory>src/test/java</testSourceDirectory>
@@ -31,6 +38,19 @@
                     <target>1.4</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <inherited>true</inherited>
+                <configuration>
+                    <skip>false</skip>
+                    <excludes>
+                        <exclude>**/*Abstract*.java</exclude>
+                        <exclude>**/*Util*.java</exclude>
+                        <exclude>**/AtomTest.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
 <plugin>
                <groupId>org.apache.maven.plugins</groupId>
                <artifactId>maven-antrun-plugin</artifactId>
