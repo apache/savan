@@ -231,15 +231,12 @@
 			<id>website</id>
 			<url>scpexe://people.apache.org/www/ws.apache.org/savan</url>
 		</site>
-	
 	</distributionManagement>
 	
 	<modules>
 		<module>modules/core</module>
 		<module>modules/mar</module>
-	<!-- <module>modules/samples</module> -->
-<!--	<module>modules/eventing-client</module>
-		<module>modules/distribution</module>-->
+	        <module>modules/samples</module>
   	</modules>
 	
 	<properties>
