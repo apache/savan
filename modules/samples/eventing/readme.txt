@@ -3,12 +3,13 @@ Steps to build and run the Savan-Eventing sample
 
 To build
 --------
+1. Open build.xml
+2. Change value of 'axis2.home' property to a valid Axis2 home
+3. Run 'ant' to build the sample.
 
-1. Move to the sample folder.
-2. Create a subfolders 'build/lib'.
-3. Copy all the jars from a compatible Axis2 distribution to 'build/lib'.
-4. Copy the savan jar file to 'build/lib'.
-5. Run 'ant' to build the sample.
+To clean
+--------
+1. Run 'ant clean'
 
 
 To run
