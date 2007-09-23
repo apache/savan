@@ -1,4 +1,5 @@
 <project default="build.sample">
+	<property name="axis2.home" value="/mnt/win_d/projects/axis/Axis2-1.3/axis2-1.3" />
 	
 	<target name="build.sample">
 		<property name="axis2.home" value="/mnt/win_d/projects/axis/Axis2-1.3/axis2-1.3" />
@@ -87,4 +88,16 @@
 		<delete dir="build"/>
 	</target>
 
+	<target name="deploy">
+		<!-- deploy savan module to axis2 -->
+		<copy todir="${axis2.home}/repository/modules">
+			<fileset dir="../../mar/target" includes="savan-*.mar"/>
+		</copy>
+		
+		<!-- deploy samples -->		
+		<copy todir="${axis2.home}/repository/services">
+			<fileset dir="build" includes="*.aar"/>
+		</copy>
+	</target>
+	
 </project>

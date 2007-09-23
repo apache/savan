@@ -11,10 +11,13 @@ To clean
 --------
 1. Run 'ant clean'
 
+To deploy
+---------
+1. Run 'ant deploy' 
+(This will copy sample services to ${axis2.home}/repository/services & savan module into ${axis2.home}/repository/modules)
 
 To run
 ------
-1. Start a Axis2 server.
-2. Deploy savan and addressing modules.
-3. Deploy the three services that were created in the 'build' folder.
-4. Run the 'samples.eventing.Client' class, you can pass the repository with a '-r' parameter and the server port with a '-p' parameter.
+1. Make sure addressing module is inside ${axis2.home}/repository/modules
+2. Start Axis2 server.
+3. Run the 'samples.eventing.Client' class, you can pass the repository with a '-r' parameter and the server port with a '-p' parameter.
