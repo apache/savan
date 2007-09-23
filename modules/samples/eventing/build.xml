@@ -1,15 +1,12 @@
 <project default="build.sample">
-
-    
-	<!--<classpath id="classpath1">
-		<pathelement location="lib/*.jar"/>
-	</classpath>-->
 	
 	<target name="build.sample">
+		<property name="axis2.home" value="/mnt/win_d/projects/axis/Axis2-1.3/axis2-1.3" />
 		<property name="eventing.temp.dir" value="build/temp" />
 	    <property name="listner1.temp.dir" value="${eventing.temp.dir}/listner1" />
 	    <property name="listner2.temp.dir" value="${eventing.temp.dir}/listner2" />
 	    <property name="publisher.temp.dir" value="${eventing.temp.dir}/publisher" />
+		
 	        
 	    <mkdir dir="${listner1.temp.dir}" />
 	    <mkdir dir="${listner1.temp.dir}/META-INF" />
@@ -23,7 +20,10 @@
 	    	
 		<javac srcdir="src" destdir="build/classes">
 			<classpath>
-			    <fileset dir="build/lib">
+			    <fileset dir="../../core/target">
+			        <include name="*.jar"/>
+			    </fileset>				
+			    <fileset dir="${axis2.home}/lib">
 			        <include name="*.jar"/>
 			    </fileset>
 			</classpath>
@@ -81,6 +81,10 @@
 	            	 <include name="*.bat"/>
 	        	</fileset>
 	        </copy>
+	</target>
+	
+	<target name="clean">
+		<delete dir="build"/>
 	</target>
 
 </project>
