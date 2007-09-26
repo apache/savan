@@ -115,7 +115,7 @@ public class AtomEventingClient {
 
 			return createFeedResponseDocument.getCreateFeedResponse();
 		} catch (XmlException e) {
-			throw new AxisFault(e);
+			throw AxisFault.makeFault(e);
 		}
 	}
 

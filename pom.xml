@@ -69,11 +69,13 @@
 	</reporting>
 	
 	<dependencies>
+	<!--
 		<dependency>
 			<groupId>org.apache.axis2</groupId>
 			<artifactId>axis2-addressing</artifactId>
 			<version>${axis2.version}</version>
 		</dependency>
+ -->		
 		<dependency>
 			<groupId>org.apache.axis2</groupId>
 			<artifactId>axis2-kernel</artifactId>
@@ -240,7 +242,7 @@
   	</modules>
 	
 	<properties>
-		<axis2.version>1.2</axis2.version>
+		<axis2.version>1.3</axis2.version>
 		<savan.version>SNAPSHOT</savan.version>
 	</properties>
 	

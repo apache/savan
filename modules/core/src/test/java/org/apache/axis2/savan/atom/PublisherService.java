@@ -43,7 +43,7 @@ public class PublisherService {
 			thread.start();
 			Thread.sleep(10000);
 		} catch (InterruptedException e) {
-			throw new AxisFault(e);
+			throw AxisFault.makeFault(e);
 		}
 	}
   

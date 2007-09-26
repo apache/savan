@@ -68,9 +68,9 @@ public class PublishingMessageReceiver implements MessageReceiver{
 			PublicationClient client = new PublicationClient(serviceContext.getConfigurationContext());
 			client.sendPublication(eventData,serviceContext.getAxisService(),topic);
 		} catch (OMException e) {
-			throw new AxisFault(e);
+			throw AxisFault.makeFault(e);
 		} catch (URISyntaxException e) {
-			throw new AxisFault(e);
+			throw AxisFault.makeFault(e);
 		}
 	}
 }

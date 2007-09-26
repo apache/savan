@@ -145,11 +145,11 @@ public class AtomMessageReceiver implements MessageReceiver{
 			
 		} catch (SOAPProcessingException e) {
 			e.printStackTrace();
-			throw new AxisFault(e);
+			throw AxisFault.makeFault(e);
 			
 		} catch (OMException e) {
 			e.printStackTrace();
-			throw new AxisFault(e);
+			throw  AxisFault.makeFault(e);
 //		} catch (FileNotFoundException e) {
 //			e.printStackTrace();
 //			throw new AxisFault(e);
