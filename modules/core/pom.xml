@@ -2,109 +2,109 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <parent>
-		<groupId>org.apache.ws.savan</groupId>
-		<artifactId>savan-parent</artifactId>
-        <version>SNAPSHOT</version>
-    </parent>
-	
-    <modelVersion>4.0.0</modelVersion>
+  <parent>
     <groupId>org.apache.ws.savan</groupId>
-    <artifactId>savan-core</artifactId>
-    <packaging>jar</packaging>
-    <name>Savan - Core</name>
+    <artifactId>savan-parent</artifactId>
+    <version>SNAPSHOT</version>
+  </parent>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.derby</groupId>
-            <artifactId>derby</artifactId>
-            <version>10.1.1.0</version>
-        </dependency>
-    </dependencies>
-    <build>
-        <sourceDirectory>src/main/java</sourceDirectory>
-        <testSourceDirectory>src/test/java</testSourceDirectory>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-        </resources>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.4</source>
-                    <target>1.4</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <inherited>true</inherited>
-                <configuration>
-                    <skip>false</skip>
-                    <excludes>
-                        <exclude>**/*Abstract*.java</exclude>
-                        <exclude>**/*Util*.java</exclude>
-                        <exclude>**/AtomTest.java</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.apache.ws.savan</groupId>
+  <artifactId>savan-core</artifactId>
+  <packaging>jar</packaging>
+  <name>Savan - Core</name>
 
-<plugin>
-               <groupId>org.apache.maven.plugins</groupId>
-               <artifactId>maven-antrun-plugin</artifactId>
-               <version>1.1</version>
-               <executions>
-                   <execution>
-                       <id>generate-sources</id>
-                       <phase>generate-sources</phase>
-                       <configuration>
-                           <tasks>
-                    	       <property name="schema.out" value="target/tmp/schema"  />
-							<mkdir dir="${schema.out}"/>
-							<mkdir dir="${schema.out}/src"/>
-							<taskdef name="xmlbean" classname="org.apache.xmlbeans.impl.tool.XMLBean">
-					          <classpath refid="maven.dependency.classpath"/>
-                              <classpath refid="maven.compile.classpath"/>
-                              <classpath refid="maven.runtime.classpath"/>
-							</taskdef>
-								     
-							<xmlbean debug="true" download="true"
-					             srcgendir="${schema.out}/src"
-					             srconly="false"
-					             typesystemname="intercepter"
-					 		     destfile="${schema.out}/savan_types-0.1.jar">
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derby</artifactId>
+      <version>10.1.1.0</version>
+    </dependency>
+  </dependencies>
+  <build>
+    <sourceDirectory>src/main/java</sourceDirectory>
+    <testSourceDirectory>src/test/java</testSourceDirectory>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.4</source>
+          <target>1.4</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <inherited>true</inherited>
+        <configuration>
+          <skip>false</skip>
+          <excludes>
+            <exclude>**/*Abstract*.java</exclude>
+            <exclude>**/*Util*.java</exclude>
+            <exclude>**/AtomTest.java</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
 
-					          <classpath refid="maven.dependency.classpath"/>
-                              <classpath refid="maven.compile.classpath"/>
-                              <classpath refid="maven.runtime.classpath"/>
-					          <fileset dir="src/main/resources/" includes="*"/>
-					        </xmlbean>
-					        <unzip dest="target/classes" src="${schema.out}/savan_types-0.1.jar"></unzip>
-                           </tasks>
-                       </configuration>
-                       <goals>
-                           <goal>run</goal>
-                       </goals>
-                   </execution>
-                   <execution>
-                       <id>copy-config-file</id>
-                       <phase>package</phase>
-                       <configuration>
-                           <tasks>
-                                <copy file="./src/main/config/savan-config.xml"
-                                      todir="target/classes"/>
-                           </tasks>
-                       </configuration>
-                       <goals>
-                           <goal>run</goal>
-                       </goals>
-                   </execution>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.1</version>
+        <executions>
+          <execution>
+            <id>generate-sources</id>
+            <phase>generate-sources</phase>
+            <configuration>
+              <tasks>
+                <property name="schema.out" value="target/tmp/schema"/>
+                <mkdir dir="${schema.out}"/>
+                <mkdir dir="${schema.out}/src"/>
+                <taskdef name="xmlbean" classname="org.apache.xmlbeans.impl.tool.XMLBean">
+                  <classpath refid="maven.dependency.classpath"/>
+                  <classpath refid="maven.compile.classpath"/>
+                  <classpath refid="maven.runtime.classpath"/>
+                </taskdef>
 
-               </executions>
-           </plugin>            
-        </plugins>
-    </build>
+                <xmlbean debug="true" download="true"
+                         srcgendir="${schema.out}/src"
+                         srconly="false"
+                         typesystemname="intercepter"
+                         destfile="${schema.out}/savan_types-0.1.jar">
+
+                  <classpath refid="maven.dependency.classpath"/>
+                  <classpath refid="maven.compile.classpath"/>
+                  <classpath refid="maven.runtime.classpath"/>
+                  <fileset dir="src/main/resources/" includes="*"/>
+                </xmlbean>
+                <unzip dest="target/classes" src="${schema.out}/savan_types-0.1.jar"></unzip>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>copy-config-file</id>
+            <phase>package</phase>
+            <configuration>
+              <tasks>
+                <copy file="./src/main/config/savan-config.xml"
+                      todir="target/classes"/>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

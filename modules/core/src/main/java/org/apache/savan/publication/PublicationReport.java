@@ -17,49 +17,46 @@
 
 package org.apache.savan.publication;
 
+import org.apache.savan.SavanException;
+
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import org.apache.savan.SavanException;
-
 /**
- * This will encapsulate error information of a specific publication.
- * Probably will contain details of each subscriber to which the message could not
- * be delivered successfully. 
+ * This will encapsulate error information of a specific publication. Probably will contain details
+ * of each subscriber to which the message could not be delivered successfully.
  */
 public class PublicationReport {
 
-	/**
-	 * The susbscribers to which this msg could not be sent. Probably their ID and the
-	 * Exception that occured.
-	 */
-	private Hashtable errors = null;
-	
-	/**
-	 * Ids of the subscribers to which this msg could be sent successfully.
-	 */
-	private ArrayList notifiedSubscribers;
-	
-	public PublicationReport () {
-		errors = new Hashtable ();
-		notifiedSubscribers = new ArrayList ();
-	}
-	
-	public void addErrorReportEntry (String id, SavanException reason) {
-		errors.put(id,reason);
-	}
-	
-	public void addNotifiedSubscriber (String subscriberID) {
-		notifiedSubscribers.add(subscriberID);
-	}
+    /**
+     * The susbscribers to which this msg could not be sent. Probably their ID and the Exception that
+     * occured.
+     */
+    private Hashtable errors = null;
 
-	public Hashtable getErrors() {
-		return errors;
-	}
+    /** Ids of the subscribers to which this msg could be sent successfully. */
+    private ArrayList notifiedSubscribers;
 
-	public ArrayList getNotifiedSubscribers() {
-		return notifiedSubscribers;
-	}
+    public PublicationReport() {
+        errors = new Hashtable();
+        notifiedSubscribers = new ArrayList();
+    }
+
+    public void addErrorReportEntry(String id, SavanException reason) {
+        errors.put(id, reason);
+    }
+
+    public void addNotifiedSubscriber(String subscriberID) {
+        notifiedSubscribers.add(subscriberID);
+    }
+
+    public Hashtable getErrors() {
+        return errors;
+    }
+
+    public ArrayList getNotifiedSubscribers() {
+        return notifiedSubscribers;
+    }
 	
 	
 }

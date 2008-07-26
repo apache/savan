@@ -18,17 +18,15 @@ package org.apache.savan.eventing.client;
 
 public class SubscriptionStatus {
 
-	String expirationValue;
+    String expirationValue;
 
-	public String getExpirationValue() {
-		return expirationValue;
-	}
+    public String getExpirationValue() {
+        return expirationValue;
+    }
 
-	public void setExpirationValue(String expirationValue) {
-		this.expirationValue = expirationValue;
-	}
+    public void setExpirationValue(String expirationValue) {
+        this.expirationValue = expirationValue;
+    }
 
-	
-	
-	
+
 }

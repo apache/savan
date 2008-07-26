@@ -2,58 +2,58 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <parent>
-	<groupId>org.apache.ws.savan</groupId>
-	<artifactId>savan-parent</artifactId>
-        <version>SNAPSHOT</version>
-    </parent>
-	
-    <modelVersion>4.0.0</modelVersion>
+  <parent>
     <groupId>org.apache.ws.savan</groupId>
-    <artifactId>savan-samples</artifactId>
-    <packaging>jar</packaging>
-    <name>Savan - Samples</name>
+    <artifactId>savan-parent</artifactId>
+    <version>SNAPSHOT</version>
+  </parent>
 
-    <dependencies>
-        <dependency>
-          <groupId>org.apache.ws.savan</groupId>
-          <artifactId>savan-core</artifactId>
-          <version>SNAPSHOT</version>
-        </dependency>
-    </dependencies>
-    
-    <build>
-        <sourceDirectory>eventing/src</sourceDirectory>
-        <testSourceDirectory>eventing/src</testSourceDirectory>
-        <resources>
-            <resource>
-                <directory>eventing</directory>
-            </resource>
-        </resources>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.4</source>
-                    <target>1.4</target>
-                </configuration>
-            </plugin>
-            <!--
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <inherited>true</inherited>
-                <configuration>
-                    <skip>false</skip>
-                    <excludes>
-                        <exclude>**/*Abstract*.java</exclude>
-                        <exclude>**/*Util*.java</exclude>
-                        <exclude>**/AtomTest.java</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-            -->
-         </plugins>
-    </build>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.apache.ws.savan</groupId>
+  <artifactId>savan-samples</artifactId>
+  <packaging>jar</packaging>
+  <name>Savan - Samples</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.ws.savan</groupId>
+      <artifactId>savan-core</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <sourceDirectory>eventing/src</sourceDirectory>
+    <testSourceDirectory>eventing/src</testSourceDirectory>
+    <resources>
+      <resource>
+        <directory>eventing</directory>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.4</source>
+          <target>1.4</target>
+        </configuration>
+      </plugin>
+      <!--
+      <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <inherited>true</inherited>
+          <configuration>
+              <skip>false</skip>
+              <excludes>
+                  <exclude>**/*Abstract*.java</exclude>
+                  <exclude>**/*Util*.java</exclude>
+                  <exclude>**/AtomTest.java</exclude>
+              </excludes>
+          </configuration>
+      </plugin>
+      -->
+    </plugins>
+  </build>
 
 </project>

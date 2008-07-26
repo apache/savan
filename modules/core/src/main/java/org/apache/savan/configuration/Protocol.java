@@ -20,55 +20,55 @@ package org.apache.savan.configuration;
 import org.apache.savan.util.UtilFactory;
 
 /**
- *Encapsulates a date of a Protocol as defined by Savan configurations. 
- *(probably from a savan-config.xml file).
+ * Encapsulates a date of a Protocol as defined by Savan configurations. (probably from a
+ * savan-config.xml file).
  */
 public class Protocol {
 
-	private String name;
-	private UtilFactory utilFactory;
-	private MappingRules mappingRules;
-	private String defaultSubscriber;
-	private String defaultFilter;
-	
-	public Protocol () {
-		this.mappingRules = new MappingRules ();
-	}
+    private String name;
+    private UtilFactory utilFactory;
+    private MappingRules mappingRules;
+    private String defaultSubscriber;
+    private String defaultFilter;
 
-	public String getDefaultFilter() {
-		return defaultFilter;
-	}
+    public Protocol() {
+        this.mappingRules = new MappingRules();
+    }
 
-	public String getDefaultSubscriber() {
-		return defaultSubscriber;
-	}
+    public String getDefaultFilter() {
+        return defaultFilter;
+    }
 
-	public void setDefaultFilter(String defaultFilter) {
-		this.defaultFilter = defaultFilter;
-	}
+    public String getDefaultSubscriber() {
+        return defaultSubscriber;
+    }
 
-	public void setDefaultSubscriber(String defaultSubscriber) {
-		this.defaultSubscriber = defaultSubscriber;
-	}
+    public void setDefaultFilter(String defaultFilter) {
+        this.defaultFilter = defaultFilter;
+    }
 
-	public String getName() {
-		return name;
-	}
-	
-	public UtilFactory getUtilFactory() {
-		return utilFactory;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public void setUtilFactory(UtilFactory utilFactory) {
-		this.utilFactory = utilFactory;
-	}
+    public void setDefaultSubscriber(String defaultSubscriber) {
+        this.defaultSubscriber = defaultSubscriber;
+    }
 
-	public MappingRules getMappingRules() {
-		return mappingRules;
-	}
+    public String getName() {
+        return name;
+    }
+
+    public UtilFactory getUtilFactory() {
+        return utilFactory;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setUtilFactory(UtilFactory utilFactory) {
+        this.utilFactory = utilFactory;
+    }
+
+    public MappingRules getMappingRules() {
+        return mappingRules;
+    }
 
 }

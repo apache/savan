@@ -16,66 +16,63 @@
 
 package org.apache.savan.storage;
 
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.savan.SavanException;
 import org.apache.savan.subscribers.Subscriber;
 import org.apache.savan.subscribers.SubscriberGroup;
 
-/**
- * Defines the Storage for storing subscribers. 
- */
+import java.util.Iterator;
+
+/** Defines the Storage for storing subscribers. */
 public interface SubscriberStore {
 
-	/**
-	 * To Initialize the storage.
-	 * 
-	 * @param configurationContext
-	 * @throws SavanException
-	 */
-	void init (ConfigurationContext configurationContext) throws SavanException;
-	
-	/**
-	 * To store the subscriber.
-	 * 
-	 * @param s
-	 * @throws SavanException
-	 */
-	void store (Subscriber s) throws SavanException;
-	
-	/**
-	 * To retrieve a previously stored subscriber.
-	 * 
-	 * @param subscriberID
-	 * @return
-	 * @throws SavanException
-	 */
-	Subscriber retrieve (String subscriberID) throws SavanException;
-	
-	/**
-	 * To retrieve all subscribers stored upto now.
-	 * 
-	 * @return
-	 * @throws SavanException
-	 */
-	Iterator retrieveAllSubscribers () throws SavanException;
+    /**
+     * To Initialize the storage.
+     *
+     * @param configurationContext
+     * @throws SavanException
+     */
+    void init(ConfigurationContext configurationContext) throws SavanException;
 
-	Iterator retrieveAllSubscriberGroups () throws SavanException;
-	
-	/**
-	 * To delete a previously stored subscriber.
-	 * 
-	 * @param subscriberID
-	 * @throws SavanException
-	 */
-	void delete (String subscriberID) throws SavanException;
-	
-	SubscriberGroup getSubscriberGroup (String groupId) throws SavanException;
-	
-	void addSubscriberGroup (String subscriberList) throws SavanException;
-	
-	void addSubscriberToGroup (String groupId, Subscriber subscriber) throws SavanException;
+    /**
+     * To store the subscriber.
+     *
+     * @param s
+     * @throws SavanException
+     */
+    void store(Subscriber s) throws SavanException;
+
+    /**
+     * To retrieve a previously stored subscriber.
+     *
+     * @param subscriberID
+     * @return
+     * @throws SavanException
+     */
+    Subscriber retrieve(String subscriberID) throws SavanException;
+
+    /**
+     * To retrieve all subscribers stored upto now.
+     *
+     * @return
+     * @throws SavanException
+     */
+    Iterator retrieveAllSubscribers() throws SavanException;
+
+    Iterator retrieveAllSubscriberGroups() throws SavanException;
+
+    /**
+     * To delete a previously stored subscriber.
+     *
+     * @param subscriberID
+     * @throws SavanException
+     */
+    void delete(String subscriberID) throws SavanException;
+
+    SubscriberGroup getSubscriberGroup(String groupId) throws SavanException;
+
+    void addSubscriberGroup(String subscriberList) throws SavanException;
+
+    void addSubscriberToGroup (String groupId, Subscriber subscriber) throws SavanException;
 	
 }

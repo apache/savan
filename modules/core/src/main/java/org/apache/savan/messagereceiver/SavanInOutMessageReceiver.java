@@ -26,32 +26,30 @@ import org.apache.savan.configuration.Protocol;
 import org.apache.savan.util.ProtocolManager;
 import org.apache.savan.util.UtilFactory;
 
-/**
- * InOut message deceiver for Savan. 
- * May get called for control messages depending on the protocol.
- */
+/** InOut message deceiver for Savan. May get called for control messages depending on the protocol. */
 public class SavanInOutMessageReceiver extends AbstractInOutSyncMessageReceiver {
 
-	public void invokeBusinessLogic(MessageContext inMessage, MessageContext outMessage) throws AxisFault {
+    public void invokeBusinessLogic(MessageContext inMessage, MessageContext outMessage)
+            throws AxisFault {
 
-		SavanMessageContext savanInMessage = new SavanMessageContext (inMessage);
-		
-		//setting the Protocol
-		Protocol protocol = ProtocolManager.getMessageProtocol(savanInMessage);
-		if (protocol==null) {
-			//this message does not have a matching protocol
-			//so let it go
-			throw new SavanException ("Cannot find a matching protocol");
-		}
-		
-		savanInMessage.setProtocol(protocol);
-		
-		UtilFactory utilFactory = protocol.getUtilFactory();
-		MessageReceiverDeligater deligator = utilFactory.createMessageReceiverDeligater();
-		
-		deligator.processMessage(savanInMessage);
-		deligator.doProtocolSpecificProcessing (savanInMessage, outMessage);
-		
-	}
+        SavanMessageContext savanInMessage = new SavanMessageContext(inMessage);
+
+        //setting the Protocol
+        Protocol protocol = ProtocolManager.getMessageProtocol(savanInMessage);
+        if (protocol == null) {
+            //this message does not have a matching protocol
+            //so let it go
+            throw new SavanException("Cannot find a matching protocol");
+        }
+
+        savanInMessage.setProtocol(protocol);
+
+        UtilFactory utilFactory = protocol.getUtilFactory();
+        MessageReceiverDeligater deligator = utilFactory.createMessageReceiverDeligater();
+
+        deligator.processMessage(savanInMessage);
+        deligator.doProtocolSpecificProcessing(savanInMessage, outMessage);
+
+    }
 
 }

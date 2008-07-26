@@ -26,51 +26,48 @@ import org.apache.savan.subscription.SubscriptionProcessor;
 import org.apache.savan.util.UtilFactory;
 
 public class AtomUtilFactory implements UtilFactory {
-	
-	public AtomUtilFactory(){
-		
-	}
-	
-	
 
-	/** 
-	 * this is a way to map different actions to different types of operations 
-	 */
-	public SavanMessageContext initializeMessage(SavanMessageContext smc) {
-		MessageContext messageContext = smc.getMessageContext();
-		//setting the message type.
-		String action = messageContext.getOptions().getAction();
-		if (AtomConstants.Actions.Subscribe.equals(action))
-			smc.setMessageType(SavanConstants.MessageTypes.SUBSCRIPTION_MESSAGE);
-		else if (AtomConstants.Actions.Renew.equals(action))
-			smc.setMessageType(SavanConstants.MessageTypes.RENEW_MESSAGE);
-		else if (AtomConstants.Actions.Unsubscribe.equals(action))
-			smc.setMessageType(SavanConstants.MessageTypes.UNSUBSCRIPTION_MESSAGE);
-		else if (AtomConstants.Actions.GetStatus.equals(action))
-			smc.setMessageType(SavanConstants.MessageTypes.GET_STATUS_MESSAGE);
-		else if (AtomConstants.Actions.SubscribeResponse.equals(action))
-			smc.setMessageType(SavanConstants.MessageTypes.SUBSCRIPTION_RESPONSE_MESSAGE);
-		else if (AtomConstants.Actions.RenewResponse.equals(action))
-			smc.setMessageType(SavanConstants.MessageTypes.RENEW_RESPONSE_MESSAGE);
-		else if (AtomConstants.Actions.UnsubscribeResponse.equals(action))
-			smc.setMessageType(SavanConstants.MessageTypes.UNSUBSCRIPTION_RESPONSE_MESSAGE);
-		else if (AtomConstants.Actions.GetStatusResponse.equals(action))
-			smc.setMessageType(SavanConstants.MessageTypes.GET_STATUS_RESPONSE_MESSAGE);
-		else 
-			smc.setMessageType(SavanConstants.MessageTypes.UNKNOWN);
-		return smc;
-	}
+    public AtomUtilFactory() {
 
-	public SubscriptionProcessor createSubscriptionProcessor() {
-		return new AtomSubscriptionProcessor ();
-	}
-	
-	public MessageReceiverDeligater createMessageReceiverDeligater() {
-		return new AtomMessageReceiverDeligater ();
-	}
+    }
 
-	public Subscriber createSubscriber() {
-		return new AtomSubscriber ();
-	}
-	
+
+    /** this is a way to map different actions to different types of operations */
+    public SavanMessageContext initializeMessage(SavanMessageContext smc) {
+        MessageContext messageContext = smc.getMessageContext();
+        //setting the message type.
+        String action = messageContext.getOptions().getAction();
+        if (AtomConstants.Actions.Subscribe.equals(action))
+            smc.setMessageType(SavanConstants.MessageTypes.SUBSCRIPTION_MESSAGE);
+        else if (AtomConstants.Actions.Renew.equals(action))
+            smc.setMessageType(SavanConstants.MessageTypes.RENEW_MESSAGE);
+        else if (AtomConstants.Actions.Unsubscribe.equals(action))
+            smc.setMessageType(SavanConstants.MessageTypes.UNSUBSCRIPTION_MESSAGE);
+        else if (AtomConstants.Actions.GetStatus.equals(action))
+            smc.setMessageType(SavanConstants.MessageTypes.GET_STATUS_MESSAGE);
+        else if (AtomConstants.Actions.SubscribeResponse.equals(action))
+            smc.setMessageType(SavanConstants.MessageTypes.SUBSCRIPTION_RESPONSE_MESSAGE);
+        else if (AtomConstants.Actions.RenewResponse.equals(action))
+            smc.setMessageType(SavanConstants.MessageTypes.RENEW_RESPONSE_MESSAGE);
+        else if (AtomConstants.Actions.UnsubscribeResponse.equals(action))
+            smc.setMessageType(SavanConstants.MessageTypes.UNSUBSCRIPTION_RESPONSE_MESSAGE);
+        else if (AtomConstants.Actions.GetStatusResponse.equals(action))
+            smc.setMessageType(SavanConstants.MessageTypes.GET_STATUS_RESPONSE_MESSAGE);
+        else
+            smc.setMessageType(SavanConstants.MessageTypes.UNKNOWN);
+        return smc;
+    }
+
+    public SubscriptionProcessor createSubscriptionProcessor() {
+        return new AtomSubscriptionProcessor();
+    }
+
+    public MessageReceiverDeligater createMessageReceiverDeligater() {
+        return new AtomMessageReceiverDeligater();
+    }
+
+    public Subscriber createSubscriber() {
+        return new AtomSubscriber();
+    }
+
 }

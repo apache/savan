@@ -17,26 +17,27 @@
 
 package org.apache.savan.subscription;
 
-/**
- * Encapsulates a data for a subscrpition renewal.
- */
+/** Encapsulates a data for a subscrpition renewal. */
 public class RenewBean {
 
-	long renewMount;
-	String subscriberID;
-	
-	public long getRenewMount() {
-		return renewMount;
-	}
-	public String getSubscriberID() {
-		return subscriberID;
-	}
-	public void setRenewMount(long renewMount) {
-		this.renewMount = renewMount;
-	}
-	public void setSubscriberID(String subscriberID) {
-		this.subscriberID = subscriberID;
-	}
-	
-	
+    long renewMount;
+    String subscriberID;
+
+    public long getRenewMount() {
+        return renewMount;
+    }
+
+    public String getSubscriberID() {
+        return subscriberID;
+    }
+
+    public void setRenewMount(long renewMount) {
+        this.renewMount = renewMount;
+    }
+
+    public void setSubscriberID(String subscriberID) {
+        this.subscriberID = subscriberID;
+    }
+
+
 }

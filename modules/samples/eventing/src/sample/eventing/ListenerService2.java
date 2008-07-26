@@ -18,15 +18,15 @@ package sample.eventing;
 
 import org.apache.axiom.om.OMElement;
 
-public class ListnerService1 {
-	
-	String name = "ListnerService1";
+public class ListenerService2 {
 
-	public void publish(OMElement param) throws Exception {
-		System.out.println("\n");
-		System.out.println("'" + name + "' got a new publication...");
-		System.out.println(param);
-		System.out.println("\n");
-	}
+    String name = "ListenerService2";
+
+    public void publish(OMElement param) throws Exception {
+        System.out.println("\n");
+        System.out.println("'" + name + "' got a new publication...");
+        System.out.println(param);
+        System.out.println("\n");
+    }
 
 }

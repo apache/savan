@@ -16,9 +16,6 @@
 
 package org.apache.axis2.savan.atom;
 
-import java.net.URI;
-import java.util.Random;
-
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
@@ -29,72 +26,75 @@ import org.apache.savan.publication.client.PublicationClient;
 import org.apache.savan.storage.SubscriberStore;
 import org.apache.savan.util.CommonUtil;
 
+import java.util.Random;
+
 public class PublisherService {
-  
-	ServiceContext serviceContext = null;
-	private String eventName = "testTopic";
-	
-	public void init(ServiceContext serviceContext) throws AxisFault {
-		try {
-			System.out.println("Eventing Service INIT called");
-			this.serviceContext = serviceContext;
-			
-			PublisherThread thread = new PublisherThread ();
-			thread.start();
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			throw AxisFault.makeFault(e);
-		}
-	}
-  
-	public void dummyMethod(OMElement param) throws Exception  {
-		System.out.println("Eventing Service dummy method called");
-	}
-	
-	private class PublisherThread extends Thread {
-		
-		String Publication = "Publication";
-		String publicationNamespaceValue = "http://tempuri/publication/";
-		Random r = new Random ();
-		
-		public void run () {
-			try {
-				while (true) {
-					
-					
-					
-					//publishing
-					System.out.println("Publishing next publication...");
-					
-					SubscriberStore store = CommonUtil.getSubscriberStore(serviceContext.getAxisService());
-					if (store==null)
-						throw new Exception ("Cant find the Savan subscriber store");
-					
-					OMElement envelope = getNextPublicationEvent ();
-					PublicationClient client = new PublicationClient(serviceContext.getConfigurationContext());
-					client.sendPublication(envelope,serviceContext.getAxisService(),null);
-					Thread.sleep(10000);
-				}
-				
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		private int eventID = 0;
-		
-		public OMElement getNextPublicationEvent () {
-			SOAPFactory factory = OMAbstractFactory.getSOAP11Factory();
-			OMNamespace namespace = factory.createOMNamespace(publicationNamespaceValue,"ns1");
-			OMElement publicationElement = factory.createOMElement(Publication,namespace);
-			
-			factory.createOMElement("foo",namespace,publicationElement).setText("Event "+eventID);
-			
-			OMElement publishMethod = factory.createOMElement("publish",namespace);
-			publishMethod.addChild(publicationElement);
-			
-			return publishMethod;
-		}
-	}
+
+    ServiceContext serviceContext = null;
+    private String eventName = "testTopic";
+
+    public void init(ServiceContext serviceContext) throws AxisFault {
+        try {
+            System.out.println("Eventing Service INIT called");
+            this.serviceContext = serviceContext;
+
+            PublisherThread thread = new PublisherThread();
+            thread.start();
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            throw AxisFault.makeFault(e);
+        }
+    }
+
+    public void dummyMethod(OMElement param) throws Exception {
+        System.out.println("Eventing Service dummy method called");
+    }
+
+    private class PublisherThread extends Thread {
+
+        String Publication = "Publication";
+        String publicationNamespaceValue = "http://tempuri/publication/";
+        Random r = new Random();
+
+        public void run() {
+            try {
+                while (true) {
+
+                    //publishing
+                    System.out.println("Publishing next publication...");
+
+                    SubscriberStore store =
+                            CommonUtil.getSubscriberStore(serviceContext.getAxisService());
+                    if (store == null)
+                        throw new Exception("Cant find the Savan subscriber store");
+
+                    OMElement envelope = getNextPublicationEvent();
+                    PublicationClient client =
+                            new PublicationClient(serviceContext.getConfigurationContext());
+                    client.sendPublication(envelope, serviceContext.getAxisService(), null);
+                    Thread.sleep(10000);
+                }
+
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        private int eventID = 0;
+
+        public OMElement getNextPublicationEvent() {
+            SOAPFactory factory = OMAbstractFactory.getSOAP11Factory();
+            OMNamespace namespace = factory.createOMNamespace(publicationNamespaceValue, "ns1");
+            OMElement publicationElement = factory.createOMElement(Publication, namespace);
+
+            factory.createOMElement("foo", namespace, publicationElement)
+                    .setText("Event " + eventID);
+
+            OMElement publishMethod = factory.createOMElement("publish", namespace);
+            publishMethod.addChild(publicationElement);
+
+            return publishMethod;
+        }
+    }
 }

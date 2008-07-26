@@ -1,103 +1,103 @@
 <project default="build.sample">
-	<property name="axis2.home" value="/mnt/win_d/projects/axis/Axis2-1.3/axis2-1.3" />
-	
-	<target name="build.sample">
-		<property name="axis2.home" value="/mnt/win_d/projects/axis/Axis2-1.3/axis2-1.3" />
-		<property name="eventing.temp.dir" value="build/temp" />
-	    <property name="listner1.temp.dir" value="${eventing.temp.dir}/listner1" />
-	    <property name="listner2.temp.dir" value="${eventing.temp.dir}/listner2" />
-	    <property name="publisher.temp.dir" value="${eventing.temp.dir}/publisher" />
-		
-	        
-	    <mkdir dir="${listner1.temp.dir}" />
-	    <mkdir dir="${listner1.temp.dir}/META-INF" />
-	    <mkdir dir="${listner2.temp.dir}" />
-	    <mkdir dir="${listner2.temp.dir}/META-INF" />
-	    <mkdir dir="${publisher.temp.dir}" />
-	    <mkdir dir="${publisher.temp.dir}/META-INF" />
+  <property name="axis2.home" value="c:/temp/axis2-1.4"/>
 
-	    <mkdir dir="build/classes" />
-	    <mkdir dir="build/lib" />
-	    	
-		<javac srcdir="src" destdir="build/classes">
-			<classpath>
-			    <fileset dir="../../core/target">
-			        <include name="*.jar"/>
-			    </fileset>				
-			    <fileset dir="${axis2.home}/lib">
-			        <include name="*.jar"/>
-			    </fileset>
-			</classpath>
-		</javac>
-		
-	    <copy toFile="${listner1.temp.dir}/META-INF/services.xml" file="listner1.services.xml"/>
-	    <copy toFile="${listner2.temp.dir}/META-INF/services.xml" file="listner2.services.xml"/>
-	        <copy toFile="${publisher.temp.dir}/META-INF/services.xml" file="publisher.services.xml"/>
-	        
-	        <jar destfile="build/ListnerService1.aar">
-	            <fileset dir="build/classes">
-	                <include name="sample/eventing/**/**/*ListnerService1*" />
-	            </fileset>
-	            <fileset dir="${listner1.temp.dir}">
-	                <include name="META-INF/**"/>
-	            </fileset>
-	        </jar>
-	        
-	        <jar destfile="build/ListnerService2.aar">
-	            <fileset dir="build/classes">
-	                <include name="sample/eventing/**/**/*ListnerService2*" />
-	            </fileset>
-	            <fileset dir="${listner2.temp.dir}">
-	                <include name="META-INF/**"/>
-	            </fileset>
-	        </jar>
-	        
-	        <jar destfile="build/PublisherService.aar">
-	            <fileset dir="build/classes">
-	                <include name="sample/eventing/**/**/*PublisherService*" />
-	            </fileset>
-	            <fileset dir="${publisher.temp.dir}">
-	                <include name="META-INF/**"/>
-	            </fileset>
-	        </jar>
-	        
-	        <jar destfile="build/ListnerService1.aar">
-	            <fileset dir="build/classes">
-	                <include name="sample/eventing/**/**/*ListnerService1*" />
-	            </fileset>
-	            <fileset dir="${listner1.temp.dir}">
-	                <include name="META-INF/**"/>
-	            </fileset>
-	        </jar>
-	        
-	        <jar destfile="build/EventingSample.jar">
-	            <fileset dir="build/classes">
-	                <include name="sample/eventing/**"/>
-	            </fileset>
-	        </jar>
-	        
-	        <copy todir="build">
-	            <fileset dir=".">
-	            	 <include name="*.sh"/>
-	            	 <include name="*.bat"/>
-	        	</fileset>
-	        </copy>
-	</target>
-	
-	<target name="clean">
-		<delete dir="build"/>
-	</target>
+  <target name="build.sample">
+    <property name="axis2.home" value="/mnt/win_d/projects/axis/Axis2-1.3/axis2-1.3"/>
+    <property name="eventing.temp.dir" value="build/temp"/>
+    <property name="listener1.temp.dir" value="${eventing.temp.dir}/listener1"/>
+    <property name="listener2.temp.dir" value="${eventing.temp.dir}/listener2"/>
+    <property name="publisher.temp.dir" value="${eventing.temp.dir}/publisher"/>
 
-	<target name="deploy">
-		<!-- deploy savan module to axis2 -->
-		<copy todir="${axis2.home}/repository/modules">
-			<fileset dir="../../mar/target" includes="savan-*.mar"/>
-		</copy>
-		
-		<!-- deploy samples -->		
-		<copy todir="${axis2.home}/repository/services">
-			<fileset dir="build" includes="*.aar"/>
-		</copy>
-	</target>
-	
+
+    <mkdir dir="${listener1.temp.dir}"/>
+    <mkdir dir="${listener1.temp.dir}/META-INF"/>
+    <mkdir dir="${listener2.temp.dir}"/>
+    <mkdir dir="${listener2.temp.dir}/META-INF"/>
+    <mkdir dir="${publisher.temp.dir}"/>
+    <mkdir dir="${publisher.temp.dir}/META-INF"/>
+
+    <mkdir dir="build/classes"/>
+    <mkdir dir="build/lib"/>
+
+    <javac srcdir="src" destdir="build/classes">
+      <classpath>
+        <fileset dir="../../core/target">
+          <include name="*.jar"/>
+        </fileset>
+        <fileset dir="${axis2.home}/lib">
+          <include name="*.jar"/>
+        </fileset>
+      </classpath>
+    </javac>
+
+    <copy toFile="${listener1.temp.dir}/META-INF/services.xml" file="listener1.services.xml"/>
+    <copy toFile="${listener2.temp.dir}/META-INF/services.xml" file="listener2.services.xml"/>
+    <copy toFile="${publisher.temp.dir}/META-INF/services.xml" file="publisher.services.xml"/>
+
+    <jar destfile="build/ListenerService1.aar">
+      <fileset dir="build/classes">
+        <include name="sample/eventing/**/**/*ListenerService1*"/>
+      </fileset>
+      <fileset dir="${listener1.temp.dir}">
+        <include name="META-INF/**"/>
+      </fileset>
+    </jar>
+
+    <jar destfile="build/ListenerService2.aar">
+      <fileset dir="build/classes">
+        <include name="sample/eventing/**/**/*ListenerService2*"/>
+      </fileset>
+      <fileset dir="${listener2.temp.dir}">
+        <include name="META-INF/**"/>
+      </fileset>
+    </jar>
+
+    <jar destfile="build/PublisherService.aar">
+      <fileset dir="build/classes">
+        <include name="sample/eventing/**/**/*PublisherService*"/>
+      </fileset>
+      <fileset dir="${publisher.temp.dir}">
+        <include name="META-INF/**"/>
+      </fileset>
+    </jar>
+
+    <jar destfile="build/ListenerService1.aar">
+      <fileset dir="build/classes">
+        <include name="sample/eventing/**/**/*ListenerService1*"/>
+      </fileset>
+      <fileset dir="${listener1.temp.dir}">
+        <include name="META-INF/**"/>
+      </fileset>
+    </jar>
+
+    <jar destfile="build/EventingSample.jar">
+      <fileset dir="build/classes">
+        <include name="sample/eventing/**"/>
+      </fileset>
+    </jar>
+
+    <copy todir="build">
+      <fileset dir=".">
+        <include name="*.sh"/>
+        <include name="*.bat"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="clean">
+    <delete dir="build"/>
+  </target>
+
+  <target name="deploy">
+    <!-- deploy savan module to axis2 -->
+    <copy todir="${axis2.home}/repository/modules">
+      <fileset dir="../../mar/target" includes="savan-*.mar"/>
+    </copy>
+
+    <!-- deploy samples -->
+    <copy todir="${axis2.home}/repository/services">
+      <fileset dir="build" includes="*.aar"/>
+    </copy>
+  </target>
+
 </project>

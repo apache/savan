@@ -16,9 +16,6 @@
 
 package sample.eventing;
 
-import java.net.URI;
-import java.util.Random;
-
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
@@ -29,65 +26,69 @@ import org.apache.savan.publication.client.PublicationClient;
 import org.apache.savan.storage.SubscriberStore;
 import org.apache.savan.util.CommonUtil;
 
+import java.util.Random;
+
 public class PublisherService {
-  
-	ServiceContext serviceContext = null;
-	
-	public void init(ServiceContext serviceContext) throws AxisFault {
-		System.out.println("Eventing Service INIT called");
-		this.serviceContext = serviceContext;
-		
-		PublisherThread thread = new PublisherThread ();
-		thread.start();
-	}
-  
-	public void dummyMethod(OMElement param) throws Exception  {
-		System.out.println("Eventing Service dummy method called");
-	}
-	
-	private class PublisherThread extends Thread {
-		
-		String Publication = "Publication";
-		String publicationNamespaceValue = "http://tempuri/publication/";
-		Random r = new Random ();
-		
-		public void run () {
-			try {
-				while (true) {
-					
-					Thread.sleep(5000);
-					
-					//publishing
-					System.out.println("Publishing next publication...");
-					
-					SubscriberStore store = CommonUtil.getSubscriberStore(serviceContext.getAxisService());
-					if (store==null)
-						throw new Exception ("Cant find the Savan subscriber store");
-					
-					OMElement data = getNextPublicationData ();
-					
-					PublicationClient publicationClient = new PublicationClient (serviceContext.getConfigurationContext());
-					publicationClient.sendPublication(data,serviceContext.getAxisService(),null);
-				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		public OMElement getNextPublicationData () {
-			OMFactory factory = OMAbstractFactory.getOMFactory();
-			OMNamespace namespace = factory.createOMNamespace(publicationNamespaceValue,"ns1");
-			OMElement publicationElement = factory.createOMElement(Publication,namespace);
-			
-			int value = r.nextInt();
-			publicationElement.setText(Integer.toString(value));
-			
-			OMElement data = factory.createOMElement("publish",namespace);
-			data.addChild(publicationElement);
-			
-			
-			return data;
-		}
-	}
+
+    ServiceContext serviceContext = null;
+
+    public void init(ServiceContext serviceContext) throws AxisFault {
+        System.out.println("Eventing Service INIT called");
+        this.serviceContext = serviceContext;
+
+        PublisherThread thread = new PublisherThread();
+        thread.start();
+    }
+
+    public void dummyMethod(OMElement param) throws Exception {
+        System.out.println("Eventing Service dummy method called");
+    }
+
+    private class PublisherThread extends Thread {
+
+        String Publication = "Publication";
+        String publicationNamespaceValue = "http://tempuri/publication/";
+        Random r = new Random();
+
+        public void run() {
+            try {
+                while (true) {
+
+                    Thread.sleep(5000);
+
+                    //publishing
+                    System.out.println("Publishing next publication...");
+
+                    SubscriberStore store =
+                            CommonUtil.getSubscriberStore(serviceContext.getAxisService());
+                    if (store == null)
+                        throw new Exception("Cant find the Savan subscriber store");
+
+                    OMElement data = getNextPublicationData();
+
+                    PublicationClient publicationClient =
+                            new PublicationClient(serviceContext.getConfigurationContext());
+                    publicationClient.sendPublication(data, serviceContext.getAxisService(), null);
+                }
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        public OMElement getNextPublicationData() {
+            OMFactory factory = OMAbstractFactory.getOMFactory();
+            OMNamespace namespace = factory.createOMNamespace(publicationNamespaceValue, "ns1");
+            OMElement publicationElement = factory.createOMElement(Publication, namespace);
+
+            int value = r.nextInt();
+            publicationElement.setText(Integer.toString(value));
+
+            OMElement data = factory.createOMElement("publish", namespace);
+            data.addChild(publicationElement);
+
+
+            return data;
+        }
+    }
 }

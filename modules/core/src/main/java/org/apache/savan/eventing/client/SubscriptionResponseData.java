@@ -22,26 +22,26 @@ import org.apache.savan.subscription.ExpirationBean;
 
 public class SubscriptionResponseData {
 
-	EndpointReference subscriptionManager = null;
-	ExpirationBean  expiration = null;
-	
-	public SubscriptionResponseData () {
-		expiration = new ExpirationBean ();
-	}
+    EndpointReference subscriptionManager = null;
+    ExpirationBean expiration = null;
 
-	public EndpointReference getSubscriptionManager() {
-		return subscriptionManager;
-	}
+    public SubscriptionResponseData() {
+        expiration = new ExpirationBean();
+    }
 
-	public ExpirationBean getExpiration() {
-		return expiration;
-	}
+    public EndpointReference getSubscriptionManager() {
+        return subscriptionManager;
+    }
 
-	public void setExpiration(ExpirationBean expiration) {
-		this.expiration = expiration;
-	}
+    public ExpirationBean getExpiration() {
+        return expiration;
+    }
 
-	public void setSubscriptionManager(EndpointReference subscriptionManager) {
-		this.subscriptionManager = subscriptionManager;
-	}
+    public void setExpiration(ExpirationBean expiration) {
+        this.expiration = expiration;
+    }
+
+    public void setSubscriptionManager(EndpointReference subscriptionManager) {
+        this.subscriptionManager = subscriptionManager;
+    }
 }

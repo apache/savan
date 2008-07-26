@@ -21,25 +21,24 @@ import org.apache.axis2.addressing.EndpointReference;
 
 public class Delivery {
 
-	EndpointReference deliveryEPR;
-	String deliveryMode;
+    EndpointReference deliveryEPR;
+    String deliveryMode;
 
-	public EndpointReference getDeliveryEPR() {
-		return deliveryEPR;
-	}
+    public EndpointReference getDeliveryEPR() {
+        return deliveryEPR;
+    }
 
-	public String getDeliveryMode() {
-		return deliveryMode;
-	}
+    public String getDeliveryMode() {
+        return deliveryMode;
+    }
 
-	public void setDeliveryEPR(EndpointReference deliveryEPR) {
-		this.deliveryEPR = deliveryEPR;
-	}
+    public void setDeliveryEPR(EndpointReference deliveryEPR) {
+        this.deliveryEPR = deliveryEPR;
+    }
 
-	public void setDeliveryMode(String deliveryMode) {
-		this.deliveryMode = deliveryMode;
-	}
-	
-	
-	
+    public void setDeliveryMode(String deliveryMode) {
+        this.deliveryMode = deliveryMode;
+    }
+
+
 }

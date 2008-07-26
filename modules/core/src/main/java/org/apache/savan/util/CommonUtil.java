@@ -17,16 +17,6 @@
 
 package org.apache.savan.util;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Calendar;
-
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-
-import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.llom.factory.OMXMLBuilderFactory;
 import org.apache.axiom.soap.SOAPEnvelope;
@@ -39,60 +29,71 @@ import org.apache.savan.SavanConstants;
 import org.apache.savan.storage.SubscriberStore;
 import org.apache.xmlbeans.XmlObject;
 
-/**
- * A common set of methods that may be used in various places of Savan.
- */
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Calendar;
+
+/** A common set of methods that may be used in various places of Savan. */
 public class CommonUtil {
 
-	public static Calendar addDurationToCalendar (Calendar calendar,Duration duration) {
-		calendar.add(Calendar.YEAR,duration.getYears());
-		calendar.add(Calendar.MONTH,duration.getMonths());
-		calendar.add(Calendar.DATE,duration.getDays());
-		calendar.add(Calendar.HOUR,duration.getHours());
-		calendar.add(Calendar.MINUTE,duration.getMinutes());
-		calendar.add(Calendar.SECOND,(int) duration.getSeconds());
-		
-		return calendar;
-	}
-	
-	/**
-	 * Will be used by test cases to load XML files from test-resources as Envelopes
-	 * SOAP 1.1 is assumed
-	 * 
-	 * @param path
-	 * @param name
-	 * @return
-	 */
-	public static SOAPEnvelope getTestEnvelopeFromFile (String path, String name, SOAPFactory factory) throws IOException {
+    public static Calendar addDurationToCalendar(Calendar calendar, Duration duration) {
+        calendar.add(Calendar.YEAR, duration.getYears());
+        calendar.add(Calendar.MONTH, duration.getMonths());
+        calendar.add(Calendar.DATE, duration.getDays());
+        calendar.add(Calendar.HOUR, duration.getHours());
+        calendar.add(Calendar.MINUTE, duration.getMinutes());
+        calendar.add(Calendar.SECOND, (int)duration.getSeconds());
+
+        return calendar;
+    }
+
+    /**
+     * Will be used by test cases to load XML files from test-resources as Envelopes SOAP 1.1 is
+     * assumed
+     *
+     * @param path
+     * @param name
+     * @return
+     */
+    public static SOAPEnvelope getTestEnvelopeFromFile(String path,
+                                                       String name,
+                                                       SOAPFactory factory) throws IOException {
         try {
-        	String fullName = path + File.separator + name;
+            String fullName = path + File.separator + name;
             FileReader reader = new FileReader(fullName);
             XMLStreamReader streamReader = XMLInputFactory.newInstance().createXMLStreamReader(
                     reader);
             StAXSOAPModelBuilder builder = OMXMLBuilderFactory.createStAXSOAPModelBuilder(
-            		factory, streamReader);
+                    factory, streamReader);
             return builder.getSOAPEnvelope();
         } catch (XMLStreamException e) {
             throw new RuntimeException(e);
         }
-	}
-	
-	public static boolean isDuration (String timeStr) {
-        return timeStr.startsWith("p") || timeStr.startsWith("P") || timeStr.startsWith("-p") || timeStr.startsWith("-P");
+    }
+
+    public static boolean isDuration(String timeStr) {
+        return timeStr.startsWith("p") || timeStr.startsWith("P") || timeStr.startsWith("-p") ||
+               timeStr.startsWith("-P");
 
     }
-	
-	public static SubscriberStore getSubscriberStore (AxisService axisService) {
-		Parameter parameter = axisService.getParameter(SavanConstants.SUBSCRIBER_STORE);
-		if (parameter==null)
-			return null;
-		
-		return (SubscriberStore) parameter.getValue();
-	}
-	
-	public static OMElement toOM(XmlObject element){
-		org.apache.axiom.om.impl.builder.StAXOMBuilder builder = new org.apache.axiom.om.impl.builder.StAXOMBuilder
-        (org.apache.axiom.om.OMAbstractFactory.getOMFactory(),new org.apache.axis2.util.StreamWrapper(element.newXMLStreamReader())) ;
-		return builder.getDocumentElement();
+
+    public static SubscriberStore getSubscriberStore(AxisService axisService) {
+        Parameter parameter = axisService.getParameter(SavanConstants.SUBSCRIBER_STORE);
+        if (parameter == null)
+            return null;
+
+        return (SubscriberStore)parameter.getValue();
+    }
+
+    public static OMElement toOM(XmlObject element) {
+        org.apache.axiom.om.impl.builder.StAXOMBuilder builder =
+                new org.apache.axiom.om.impl.builder.StAXOMBuilder
+                        (org.apache.axiom.om.OMAbstractFactory.getOMFactory(),
+                         new org.apache.axis2.util.StreamWrapper(element.newXMLStreamReader()));
+        return builder.getDocumentElement();
 	}
 }

@@ -1,15 +1,10 @@
 package org.apache.savan.atom;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Calendar;
-import java.util.Iterator;
-
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
-
+import com.wso2.eventing.atom.CreateFeedDocument;
+import com.wso2.eventing.atom.CreateFeedDocument.CreateFeed;
+import com.wso2.eventing.atom.CreateFeedResponseDocument;
+import com.wso2.eventing.atom.CreateFeedResponseDocument.CreateFeedResponse;
+import com.wso2.eventing.atom.FilterType;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
@@ -31,219 +26,227 @@ import org.apache.savan.filters.XPathBasedFilter;
 import org.apache.savan.util.CommonUtil;
 import org.apache.xmlbeans.XmlException;
 
-import com.wso2.eventing.atom.CreateFeedDocument;
-import com.wso2.eventing.atom.CreateFeedResponseDocument;
-import com.wso2.eventing.atom.FilterType;
-import com.wso2.eventing.atom.CreateFeedDocument.CreateFeed;
-import com.wso2.eventing.atom.CreateFeedResponseDocument.CreateFeedResponse;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Calendar;
+import java.util.Iterator;
 
 /**
  * This class take provide client interface for Savan atom support
- * 
+ *
  * @author Srinath Perera(hemapani@apache.org)
- * 
  */
 public class AtomEventingClient {
-	private ServiceClient serviceClient = null;
+    private ServiceClient serviceClient = null;
 
-	private EndpointReference feedEpr;
+    private EndpointReference feedEpr;
 
-	public AtomEventingClient(String serviceUrl,String clientRepository) throws AxisFault{
-		ConfigurationContext configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(clientRepository,clientRepository+"/conf/axis2.xml");
-		serviceClient = new ServiceClient (configContext,null); //TODO give a repo
-		
-		Options options = new Options ();
-		serviceClient.setOptions(options);
-		serviceClient.engageModule(new QName ("addressing"));
-		options.setTo(new EndpointReference (serviceUrl));
-	}
-	
-	
-	public AtomEventingClient(ServiceClient serviceClient) {
-		this.serviceClient = serviceClient;
-	}
+    public AtomEventingClient(String serviceUrl, String clientRepository) throws AxisFault {
+        ConfigurationContext configContext = ConfigurationContextFactory
+                .createConfigurationContextFromFileSystem(clientRepository,
+                                                          clientRepository + "/conf/axis2.xml");
+        serviceClient = new ServiceClient(configContext, null); //TODO give a repo
 
-	public CreateFeedResponse createFeed(String title, String author)
-			throws AxisFault {
-		return createFeed(title, author, null, null);
-	}
+        Options options = new Options();
+        serviceClient.setOptions(options);
+        serviceClient.engageModule(new QName("addressing"));
+        options.setTo(new EndpointReference(serviceUrl));
+    }
 
-	public CreateFeedResponse createFeed(String title, String author,
-			Calendar expiredTime, String xpathFilter) throws AxisFault {
-		try {
-			serviceClient.getOptions().setAction(
-					AtomConstants.Actions.Subscribe);
 
-			CreateFeedDocument createFeedDocument = CreateFeedDocument.Factory
-					.newInstance();
-			CreateFeed createFeed = createFeedDocument.addNewCreateFeed();
+    public AtomEventingClient(ServiceClient serviceClient) {
+        this.serviceClient = serviceClient;
+    }
 
-			createFeed.setAuthor(author);
-			createFeed.setTitle(title);
+    public CreateFeedResponse createFeed(String title, String author)
+            throws AxisFault {
+        return createFeed(title, author, null, null);
+    }
 
-			if (expiredTime != null) {
-				createFeed.setExpires(expiredTime);
-			}
-			if (xpathFilter != null) {
-				FilterType filter = createFeed.addNewFilter();
-				filter.setDialect(XPathBasedFilter.XPATH_BASED_FILTER);
-				filter.setStringValue(xpathFilter);
-			}
+    public CreateFeedResponse createFeed(String title, String author,
+                                         Calendar expiredTime, String xpathFilter)
+            throws AxisFault {
+        try {
+            serviceClient.getOptions().setAction(
+                    AtomConstants.Actions.Subscribe);
 
-			OMElement request = CommonUtil.toOM(createFeedDocument);
-			request.build();
-			OMElement element = serviceClient.sendReceive(request);
-			CreateFeedResponseDocument createFeedResponseDocument = CreateFeedResponseDocument.Factory
-					.parse(element.getXMLStreamReader());
-			System.out.println(createFeedDocument.xmlText());
+            CreateFeedDocument createFeedDocument = CreateFeedDocument.Factory
+                    .newInstance();
+            CreateFeed createFeed = createFeedDocument.addNewCreateFeed();
 
-			// read epr for subscription from response and store it
-			OMElement responseAsOM = CommonUtil
-					.toOM(createFeedResponseDocument);
-			OMElement eprAsOM = responseAsOM.getFirstChildWithName(new QName(
-					AtomConstants.ATOM_MSG_NAMESPACE, "SubscriptionManager"));
+            createFeed.setAuthor(author);
+            createFeed.setTitle(title);
 
-			feedEpr = new EndpointReference(eprAsOM.getFirstElement().getText());
-			OMElement referanceParameters = eprAsOM
-					.getFirstChildWithName(new QName(eprAsOM.getFirstElement()
-							.getNamespace().getNamespaceURI(),
-							AddressingConstants.EPR_REFERENCE_PARAMETERS));
-			Iterator refparams = referanceParameters.getChildElements();
-			while (refparams.hasNext()) {
-				feedEpr.addReferenceParameter((OMElement) refparams.next());
-			}
+            if (expiredTime != null) {
+                createFeed.setExpires(expiredTime);
+            }
+            if (xpathFilter != null) {
+                FilterType filter = createFeed.addNewFilter();
+                filter.setDialect(XPathBasedFilter.XPATH_BASED_FILTER);
+                filter.setStringValue(xpathFilter);
+            }
 
-			return createFeedResponseDocument.getCreateFeedResponse();
-		} catch (XmlException e) {
-			throw AxisFault.makeFault(e);
-		}
-	}
+            OMElement request = CommonUtil.toOM(createFeedDocument);
+            request.build();
+            OMElement element = serviceClient.sendReceive(request);
+            CreateFeedResponseDocument createFeedResponseDocument =
+                    CreateFeedResponseDocument.Factory
+                            .parse(element.getXMLStreamReader());
+            System.out.println(createFeedDocument.xmlText());
 
-	public void deleteFeed(EndpointReference epr) throws AxisFault {
-		serviceClient.getOptions().setAction(AtomConstants.Actions.Unsubscribe);
-		serviceClient.getOptions().setTo(epr);
+            // read epr for subscription from response and store it
+            OMElement responseAsOM = CommonUtil
+                    .toOM(createFeedResponseDocument);
+            OMElement eprAsOM = responseAsOM.getFirstChildWithName(new QName(
+                    AtomConstants.ATOM_MSG_NAMESPACE, "SubscriptionManager"));
 
-		OMElement request = OMAbstractFactory.getOMFactory().createOMElement(
-				new QName(AtomConstants.ATOM_MSG_NAMESPACE, "DeleteFeed"));
-		serviceClient.sendReceive(request);
-	}
+            feedEpr = new EndpointReference(eprAsOM.getFirstElement().getText());
+            OMElement referanceParameters = eprAsOM
+                    .getFirstChildWithName(new QName(eprAsOM.getFirstElement()
+                            .getNamespace().getNamespaceURI(),
+                                                     AddressingConstants.EPR_REFERENCE_PARAMETERS));
+            Iterator refparams = referanceParameters.getChildElements();
+            while (refparams.hasNext()) {
+                feedEpr.addReferenceParameter((OMElement)refparams.next());
+            }
 
-	public void deleteFeed() throws AxisFault {
-		if (feedEpr != null) {
-			deleteFeed(feedEpr);
-		} else {
-			throw new AxisFault(
-					"No feed epr alreday stored, you must have create a feed using same AtomEventingClient Object");
-		}
-	}
+            return createFeedResponseDocument.getCreateFeedResponse();
+        } catch (XmlException e) {
+            throw AxisFault.makeFault(e);
+        }
+    }
 
-	public OMElement fetchFeed(String url) throws SavanException {
-		// Create an instance of HttpClient.
-		HttpClient client = new HttpClient();
+    public void deleteFeed(EndpointReference epr) throws AxisFault {
+        serviceClient.getOptions().setAction(AtomConstants.Actions.Unsubscribe);
+        serviceClient.getOptions().setTo(epr);
 
-		// Create a method instance.
-		GetMethod method = new GetMethod(url);
+        OMElement request = OMAbstractFactory.getOMFactory().createOMElement(
+                new QName(AtomConstants.ATOM_MSG_NAMESPACE, "DeleteFeed"));
+        serviceClient.sendReceive(request);
+    }
 
-		try {
-			// Execute the method.
-			int statusCode = client.executeMethod(method);
+    public void deleteFeed() throws AxisFault {
+        if (feedEpr != null) {
+            deleteFeed(feedEpr);
+        } else {
+            throw new AxisFault(
+                    "No feed epr alreday stored, you must have create a feed using same AtomEventingClient Object");
+        }
+    }
 
-			if (statusCode != HttpStatus.SC_OK) {
-				throw new SavanException("Method failed: " + method.getStatusLine());
-			}
+    public OMElement fetchFeed(String url) throws SavanException {
+        // Create an instance of HttpClient.
+        HttpClient client = new HttpClient();
 
-			// Read the response body.
-			byte[] responseBody = method.getResponseBody();
+        // Create a method instance.
+        GetMethod method = new GetMethod(url);
 
-			StAXOMBuilder builder = new StAXOMBuilder(new ByteArrayInputStream(
-					responseBody));
-			return builder.getDocumentElement();
-		} catch (IOException e) {
-			throw new SavanException(e);
-		} catch (XMLStreamException e) {
-			throw new SavanException(e);
-		} finally {
-			// Release the connection.
-			method.releaseConnection();
-		}
-	}
+        try {
+            // Execute the method.
+            int statusCode = client.executeMethod(method);
 
-	public void publishWithREST(String serviceurl, final OMElement content,String topic)
-			throws SavanException {
-		// Create an instance of HttpClient.
-		HttpClient client = new HttpClient();
+            if (statusCode != HttpStatus.SC_OK) {
+                throw new SavanException("Method failed: " + method.getStatusLine());
+            }
 
-		StringBuffer queryUrl = new StringBuffer(serviceurl);
-		
-		if(!serviceurl.endsWith("/")){
-			queryUrl.append("/");
-		}
-		queryUrl.append("publish");
-		if(topic != null ){
-			queryUrl.append("?").append(EventingConstants.ElementNames.Topic).append("=").append(topic);	
-		}
-		PostMethod method = new PostMethod(queryUrl.toString());
-		// Request content will be retrieved directly
-		// from the input stream
-		try {
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			content.serialize(out);
-			out.flush();
-			final byte[] data = out.toByteArray();
+            // Read the response body.
+            byte[] responseBody = method.getResponseBody();
 
-			RequestEntity entity = new RequestEntity() {
+            StAXOMBuilder builder = new StAXOMBuilder(new ByteArrayInputStream(
+                    responseBody));
+            return builder.getDocumentElement();
+        } catch (IOException e) {
+            throw new SavanException(e);
+        } catch (XMLStreamException e) {
+            throw new SavanException(e);
+        } finally {
+            // Release the connection.
+            method.releaseConnection();
+        }
+    }
 
-				public void writeRequest(OutputStream outstream)
-						throws IOException {
-					outstream.write(data);
-				}
+    public void publishWithREST(String serviceurl, final OMElement content, String topic)
+            throws SavanException {
+        // Create an instance of HttpClient.
+        HttpClient client = new HttpClient();
 
-				public boolean isRepeatable() {
-					return false;
-				}
+        StringBuffer queryUrl = new StringBuffer(serviceurl);
 
-				public String getContentType() {
-					return "text/xml";
-				}
+        if (!serviceurl.endsWith("/")) {
+            queryUrl.append("/");
+        }
+        queryUrl.append("publish");
+        if (topic != null) {
+            queryUrl.append("?").append(EventingConstants.ElementNames.Topic).append("=")
+                    .append(topic);
+        }
+        PostMethod method = new PostMethod(queryUrl.toString());
+        // Request content will be retrieved directly
+        // from the input stream
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            content.serialize(out);
+            out.flush();
+            final byte[] data = out.toByteArray();
 
-				public long getContentLength() {
-					return data.length;
-				}
+            RequestEntity entity = new RequestEntity() {
 
-			};
-			method.setRequestEntity(entity);
+                public void writeRequest(OutputStream outstream)
+                        throws IOException {
+                    outstream.write(data);
+                }
 
-			// Execute the method.
-			int statusCode = client.executeMethod(method);
+                public boolean isRepeatable() {
+                    return false;
+                }
 
-			if (statusCode != HttpStatus.SC_OK && statusCode != HttpStatus.SC_ACCEPTED) {
-				throw new SavanException("Method failed: " + method.getStatusLine());
-			}
+                public String getContentType() {
+                    return "text/xml";
+                }
 
-		} catch (IOException e) {
-			throw new SavanException(e);
-		} catch (XMLStreamException e) {
-			throw new SavanException(e);
-		} finally {
-			// Release the connection.
-			method.releaseConnection();
-		}
-	}
-	
-	public void publishWithSOAP(String serviceurl, final OMElement content,String topic) throws SavanException{
-		try {
-			Options options = serviceClient.getOptions();
-			EndpointReference to = new EndpointReference(serviceurl);
-			if(topic != null){
-				to.addReferenceParameter(new QName(EventingConstants.EXTENDED_EVENTING_NAMESPACE,
-						EventingConstants.ElementNames.Topic), topic);
-			}
-			options.setAction(EventingConstants.Actions.Publish);
-			serviceClient.fireAndForget(content);
-		} catch (AxisFault e) {
-			throw new SavanException(e);
-		}
-	}
-	
+                public long getContentLength() {
+                    return data.length;
+                }
+
+            };
+            method.setRequestEntity(entity);
+
+            // Execute the method.
+            int statusCode = client.executeMethod(method);
+
+            if (statusCode != HttpStatus.SC_OK && statusCode != HttpStatus.SC_ACCEPTED) {
+                throw new SavanException("Method failed: " + method.getStatusLine());
+            }
+
+        } catch (IOException e) {
+            throw new SavanException(e);
+        } catch (XMLStreamException e) {
+            throw new SavanException(e);
+        } finally {
+            // Release the connection.
+            method.releaseConnection();
+        }
+    }
+
+    public void publishWithSOAP(String serviceurl, final OMElement content, String topic)
+            throws SavanException {
+        try {
+            Options options = serviceClient.getOptions();
+            EndpointReference to = new EndpointReference(serviceurl);
+            if (topic != null) {
+                to.addReferenceParameter(new QName(EventingConstants.EXTENDED_EVENTING_NAMESPACE,
+                                                   EventingConstants.ElementNames.Topic), topic);
+            }
+            options.setAction(EventingConstants.Actions.Publish);
+            serviceClient.fireAndForget(content);
+        } catch (AxisFault e) {
+            throw new SavanException(e);
+        }
+    }
+
 
 }

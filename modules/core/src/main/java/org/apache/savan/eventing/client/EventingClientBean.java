@@ -17,64 +17,65 @@
 
 package org.apache.savan.eventing.client;
 
-import java.util.Date;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.databinding.types.Duration;
 
+import java.util.Date;
+
 public class EventingClientBean {
 
-	EndpointReference deliveryEPR;
-	EndpointReference endToEPR;
-	String filterDialect;
-	String filter;
-	Date expirationTime;
-	Duration expirationDuration;
-	
-	public Duration getExpirationDuration() {
-		return expirationDuration;
-	}
+    EndpointReference deliveryEPR;
+    EndpointReference endToEPR;
+    String filterDialect;
+    String filter;
+    Date expirationTime;
+    Duration expirationDuration;
 
-	public void setExpirationDuration(Duration expirationDuration) {
-		this.expirationDuration = expirationDuration;
-	}
+    public Duration getExpirationDuration() {
+        return expirationDuration;
+    }
 
-	public EndpointReference getDeliveryEPR() {
-		return deliveryEPR;
-	}
-	
-	public EndpointReference getEndToEPR() {
-		return endToEPR;
-	}
-	
-	public Date getExpirationTime() {
-		return expirationTime;
-	}
-	
-	public String getFilter() {
-		return filter;
-	}
-	
-	public String getFilterDialect() {
-		return filterDialect;
-	}
-	
-	public void setDeliveryEPR(EndpointReference deliveryEPR) {
-		this.deliveryEPR = deliveryEPR;
-	}
-	
-	public void setEndToEPR(EndpointReference endToEPR) {
-		this.endToEPR = endToEPR;
-	}
-	
-	public void setExpirationTime(Date expirationTime) {
-		this.expirationTime = expirationTime;
-	}
-	
-	public void setFilter(String filter) {
-		this.filter = filter;
-	}
-	
-	public void setFilterDialect(String filterDialect) {
-		this.filterDialect = filterDialect;
-	}
+    public void setExpirationDuration(Duration expirationDuration) {
+        this.expirationDuration = expirationDuration;
+    }
+
+    public EndpointReference getDeliveryEPR() {
+        return deliveryEPR;
+    }
+
+    public EndpointReference getEndToEPR() {
+        return endToEPR;
+    }
+
+    public Date getExpirationTime() {
+        return expirationTime;
+    }
+
+    public String getFilter() {
+        return filter;
+    }
+
+    public String getFilterDialect() {
+        return filterDialect;
+    }
+
+    public void setDeliveryEPR(EndpointReference deliveryEPR) {
+        this.deliveryEPR = deliveryEPR;
+    }
+
+    public void setEndToEPR(EndpointReference endToEPR) {
+        this.endToEPR = endToEPR;
+    }
+
+    public void setExpirationTime(Date expirationTime) {
+        this.expirationTime = expirationTime;
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
+    }
+
+    public void setFilterDialect(String filterDialect) {
+        this.filterDialect = filterDialect;
+    }
 }

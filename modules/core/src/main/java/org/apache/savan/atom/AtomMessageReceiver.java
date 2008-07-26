@@ -1,26 +1,9 @@
 package org.apache.savan.atom;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
-import org.apache.axiom.om.impl.builder.StAXBuilder;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.apache.axiom.om.util.StAXUtils;
-import org.apache.axiom.soap.SOAP11Constants;
-import org.apache.axiom.soap.SOAP12Constants;
-import org.apache.axiom.soap.SOAPEnvelope;
-import org.apache.axiom.soap.SOAPFactory;
-import org.apache.axiom.soap.SOAPProcessingException;
+import org.apache.axiom.soap.*;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.engine.AxisEngine;
@@ -31,51 +14,50 @@ import org.apache.axis2.util.MessageContextBuilder;
 import org.apache.savan.storage.SubscriberStore;
 import org.apache.savan.util.CommonUtil;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+
 /**
  * Handle the HTTP GET requests for feeds
+ *
  * @author Srinath Perera(hemapani@apache.org)
  */
 
-public class AtomMessageReceiver implements MessageReceiver{
-	
-	public static final String ATOM_NAME = "atom";
+public class AtomMessageReceiver implements MessageReceiver {
 
-	public void receive(MessageContext messageCtx) throws AxisFault {
-		
-		try {
-			//String resourcePath = messageCtx.getTo().getAddress();
-			//http://127.0.0.1:5555/axis2/services/PublisherService/atom?a=urn_uuid_96C2CB953DABC98DFC1179904343537.atom
+    public static final String ATOM_NAME = "atom";
 
-			
-			
-			HttpServletRequest request = (HttpServletRequest)messageCtx.getProperty(HTTPConstants.MC_HTTP_SERVLETREQUEST);
-			if(request == null || HTTPConstants.HEADER_GET.equals(request.getMethod()) || HTTPConstants.HEADER_POST.equals(request.getMethod())){
-				SOAPEnvelope envlope = messageCtx.getEnvelope();
-				OMElement bodyContent = envlope.getBody().getFirstElement();
-				
-				OMElement feedID = bodyContent.getFirstElement();
-				
-				
-				
-				
-				String feedIDAsUrn = feedID.getText().replaceAll("_", ":").replaceAll(".atom", "");
-				
-				SubscriberStore store = CommonUtil.getSubscriberStore(messageCtx.getAxisService());
-				if (store == null)
-					throw new AxisFault ("Cant find the Savan subscriber store");
-				
-				
-				AtomSubscriber subscriber = (AtomSubscriber)store.retrieve(feedIDAsUrn);
-				
-	            SOAPFactory fac = getSOAPFactory(messageCtx);
-	            SOAPEnvelope envelope = fac.getDefaultEnvelope();
+    public void receive(MessageContext messageCtx) throws AxisFault {
 
-	            OMElement result = subscriber.getFeedAsXml();
-				
-				
-				
-				
-				
+        try {
+            //String resourcePath = messageCtx.getTo().getAddress();
+            //http://127.0.0.1:5555/axis2/services/PublisherService/atom?a=urn_uuid_96C2CB953DABC98DFC1179904343537.atom
+
+
+            HttpServletRequest request = (HttpServletRequest)messageCtx
+                    .getProperty(HTTPConstants.MC_HTTP_SERVLETREQUEST);
+            if (request == null || HTTPConstants.HEADER_GET.equals(request.getMethod()) ||
+                HTTPConstants.HEADER_POST.equals(request.getMethod())) {
+                SOAPEnvelope envlope = messageCtx.getEnvelope();
+                OMElement bodyContent = envlope.getBody().getFirstElement();
+
+                OMElement feedID = bodyContent.getFirstElement();
+
+
+                String feedIDAsUrn = feedID.getText().replaceAll("_", ":").replaceAll(".atom", "");
+
+                SubscriberStore store = CommonUtil.getSubscriberStore(messageCtx.getAxisService());
+                if (store == null)
+                    throw new AxisFault("Cant find the Savan subscriber store");
+
+
+                AtomSubscriber subscriber = (AtomSubscriber)store.retrieve(feedIDAsUrn);
+
+                SOAPFactory fac = getSOAPFactory(messageCtx);
+                SOAPEnvelope envelope = fac.getDefaultEnvelope();
+
+                OMElement result = subscriber.getFeedAsXml();
+
 //				String pathWRTRepository = "atom/"+feedID.getText();
 //				
 //				File atomFile = messageCtx.getConfigurationContext().getRealPath(pathWRTRepository);
@@ -106,50 +88,50 @@ public class AtomMessageReceiver implements MessageReceiver{
 //				}
 //				FileInputStream atomIn =  new FileInputStream(atomFile);
 
-	            
-	            //add the content of the file to the response
+                //add the content of the file to the response
 //	            XMLStreamReader xmlreader = StAXUtils.createXMLStreamReader
 //		            (atomIn, MessageContext.DEFAULT_CHAR_SET_ENCODING);
 //		        StAXBuilder builder = new StAXOMBuilder(fac,xmlreader);
 //		        OMElement result = (OMElement) builder.getDocumentElement();
-	            envelope.getBody().addChild(result);
-				
-	            //send beck the response
-				 MessageContext outMsgContext = MessageContextBuilder.createOutMessageContext(messageCtx);
-				 outMsgContext.getOperationContext().addMessageContext(outMsgContext);
-				 outMsgContext.setEnvelope(envelope);
-				 
-				 AxisEngine engine =
-				        new AxisEngine(
-				        		outMsgContext.getConfigurationContext());
-				engine.send(outMsgContext);
+                envelope.getBody().addChild(result);
 
-			}else if(HTTPConstants.HEADER_POST.equals(request.getMethod())){
-				SOAPEnvelope envlope = messageCtx.getEnvelope();
-				OMElement bodyContent = envlope.getBody().getFirstElement();
-				
-				OMElement feedID = bodyContent.getFirstElement();
-				String pathWRTRepository = "atom/"+feedID.getText();
+                //send beck the response
+                MessageContext outMsgContext =
+                        MessageContextBuilder.createOutMessageContext(messageCtx);
+                outMsgContext.getOperationContext().addMessageContext(outMsgContext);
+                outMsgContext.setEnvelope(envelope);
 
-				//remove the file
-				File atomFile = messageCtx.getConfigurationContext().getRealPath(pathWRTRepository);
-				atomFile.delete();
-				
-				//remove the feed from subscriber store
-				String feedIDAsUrn = feedID.getText().replaceAll("_", ":");
-				SubscriberStore store = CommonUtil.getSubscriberStore(messageCtx.getAxisService());
-				if (store == null)
-					throw new AxisFault ("Cant find the Savan subscriber store");
-				store.delete(feedIDAsUrn);
-			}
-			
-		} catch (SOAPProcessingException e) {
-			e.printStackTrace();
-			throw AxisFault.makeFault(e);
-			
-		} catch (OMException e) {
-			e.printStackTrace();
-			throw  AxisFault.makeFault(e);
+                AxisEngine engine =
+                        new AxisEngine(
+                                outMsgContext.getConfigurationContext());
+                engine.send(outMsgContext);
+
+            } else if (HTTPConstants.HEADER_POST.equals(request.getMethod())) {
+                SOAPEnvelope envlope = messageCtx.getEnvelope();
+                OMElement bodyContent = envlope.getBody().getFirstElement();
+
+                OMElement feedID = bodyContent.getFirstElement();
+                String pathWRTRepository = "atom/" + feedID.getText();
+
+                //remove the file
+                File atomFile = messageCtx.getConfigurationContext().getRealPath(pathWRTRepository);
+                atomFile.delete();
+
+                //remove the feed from subscriber store
+                String feedIDAsUrn = feedID.getText().replaceAll("_", ":");
+                SubscriberStore store = CommonUtil.getSubscriberStore(messageCtx.getAxisService());
+                if (store == null)
+                    throw new AxisFault("Cant find the Savan subscriber store");
+                store.delete(feedIDAsUrn);
+            }
+
+        } catch (SOAPProcessingException e) {
+            e.printStackTrace();
+            throw AxisFault.makeFault(e);
+
+        } catch (OMException e) {
+            e.printStackTrace();
+            throw AxisFault.makeFault(e);
 //		} catch (FileNotFoundException e) {
 //			e.printStackTrace();
 //			throw new AxisFault(e);
@@ -159,18 +141,18 @@ public class AtomMessageReceiver implements MessageReceiver{
 //		} catch (URISyntaxException e) {
 //			e.printStackTrace();
 //			throw new AxisFault(e);
-		}
-	}
-	
-	 public SOAPFactory getSOAPFactory(MessageContext msgContext) throws AxisFault {
-	        String nsURI = msgContext.getEnvelope().getNamespace().getNamespaceURI();
-	        if (SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(nsURI)) {
-	            return OMAbstractFactory.getSOAP12Factory();
-	        } else if (SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(nsURI)) {
-	            return OMAbstractFactory.getSOAP11Factory();
-	        } else {
-	            throw new AxisFault(Messages.getMessage("invalidSOAPversion"));
-	        }
-	    }
+        }
+    }
+
+    public SOAPFactory getSOAPFactory(MessageContext msgContext) throws AxisFault {
+        String nsURI = msgContext.getEnvelope().getNamespace().getNamespaceURI();
+        if (SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(nsURI)) {
+            return OMAbstractFactory.getSOAP12Factory();
+        } else if (SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI.equals(nsURI)) {
+            return OMAbstractFactory.getSOAP11Factory();
+        } else {
+            throw new AxisFault(Messages.getMessage("invalidSOAPversion"));
+        }
+    }
 
 }

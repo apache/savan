@@ -20,21 +20,18 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNode;
 import org.apache.savan.SavanException;
 
-/**
- * This filter does not do any affective filtering.
- * May be the default for some protocols.
- */
+/** This filter does not do any affective filtering. May be the default for some protocols. */
 public class EmptyFilter implements Filter {
 
-	public boolean checkCompliance(OMElement envelope) throws SavanException {
-		return true;
-	}
+    public boolean checkCompliance(OMElement envelope) throws SavanException {
+        return true;
+    }
 
-	public Object getFilterValue() {
-		return null;
-	}
+    public Object getFilterValue() {
+        return null;
+    }
 
-	public void setUp(OMNode element) {
-	}
-	
+    public void setUp(OMNode element) {
+    }
+
 }

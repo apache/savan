@@ -26,86 +26,88 @@ import org.apache.savan.storage.SubscriberStore;
 import org.apache.savan.subscribers.Subscriber;
 import org.apache.savan.util.CommonUtil;
 
-/**
- * Abstractly defines subscription methods.
- * Each protocol may extend this to add its own work.
- */
+/** Abstractly defines subscription methods. Each protocol may extend this to add its own work. */
 public abstract class SubscriptionProcessor {
-	
-	public abstract void init (SavanMessageContext smc) throws SavanException;
-	
-	public void unsubscribe(SavanMessageContext endSubscriptionMessage)  throws SavanException {
-		String subscriberID = getSubscriberID (endSubscriptionMessage);
-		if (subscriberID==null) {
-			String message = "Cannot find the subscriber ID";
-			throw new SavanException (message);
-		}
-		
-		SubscriberStore store = endSubscriptionMessage.getSubscriberStore();
-		if (store==null)
-			throw new SavanException ("AbstractSubscriber store not found");
-		
-		store.delete (subscriberID);
-	}
 
-	public void renewSubscription(SavanMessageContext renewMessage)  throws SavanException {
-		SubscriberStore store = renewMessage.getSubscriberStore();
-		if (store==null)
-			throw new SavanException ("AbstractSubscriber store not found");
-			
-		ExpirationBean bean = getExpirationBean(renewMessage);
-		Subscriber subscriber = (Subscriber) store.retrieve(bean.getSubscriberID());
-		if (subscriber==null) {
-			throw new SavanException ("Given subscriber is not present");
-		}
-		
-		subscriber.renewSubscription(bean);
-	}
+    public abstract void init(SavanMessageContext smc) throws SavanException;
 
-	public void subscribe(SavanMessageContext subscriptionMessage) throws SavanException {
-		SubscriberStore store = subscriptionMessage.getSubscriberStore();
-		if (store==null)
-			throw new SavanException ("AbstractSubscriber store not found");
-			
-		if (store==null)
-			throw new SavanException ("Sabscriber store not found");
-		
-		Subscriber subscriber = getSubscriberFromMessage (subscriptionMessage);
-		store.store (subscriber);
-	}
-	
-	public void endSubscription(String subscriberID,String reason,ServiceContext serviceContext)  throws SavanException {
-		
-		SubscriberStore store =CommonUtil.getSubscriberStore(serviceContext.getAxisService());
-		if (store==null) {
-			//TODO do something
-		}
-		
-		Subscriber subscriber = store.retrieve(subscriberID);
+    public void unsubscribe(SavanMessageContext endSubscriptionMessage) throws SavanException {
+        String subscriberID = getSubscriberID(endSubscriptionMessage);
+        if (subscriberID == null) {
+            String message = "Cannot find the subscriber ID";
+            throw new SavanException(message);
+        }
+
+        SubscriberStore store = endSubscriptionMessage.getSubscriberStore();
+        if (store == null)
+            throw new SavanException("AbstractSubscriber store not found");
+
+        store.delete(subscriberID);
+    }
+
+    public void renewSubscription(SavanMessageContext renewMessage) throws SavanException {
+        SubscriberStore store = renewMessage.getSubscriberStore();
+        if (store == null)
+            throw new SavanException("AbstractSubscriber store not found");
+
+        ExpirationBean bean = getExpirationBean(renewMessage);
+        Subscriber subscriber = (Subscriber)store.retrieve(bean.getSubscriberID());
+        if (subscriber == null) {
+            throw new SavanException("Given subscriber is not present");
+        }
+
+        subscriber.renewSubscription(bean);
+    }
+
+    public void subscribe(SavanMessageContext subscriptionMessage) throws SavanException {
+        SubscriberStore store = subscriptionMessage.getSubscriberStore();
+        if (store == null)
+            throw new SavanException("AbstractSubscriber store not found");
+
+        if (store == null)
+            throw new SavanException("Sabscriber store not found");
+
+        Subscriber subscriber = getSubscriberFromMessage(subscriptionMessage);
+        store.store(subscriber);
+    }
+
+    public void endSubscription(String subscriberID, String reason, ServiceContext serviceContext)
+            throws SavanException {
+
+        SubscriberStore store = CommonUtil.getSubscriberStore(serviceContext.getAxisService());
+        if (store == null) {
+            //TODO do something
+        }
+
+        Subscriber subscriber = store.retrieve(subscriberID);
 //		doProtocolSpecificEndSubscription(subscriber,reason,serviceContext.getConfigurationContext());
-		
-		store.delete(subscriberID);
-	}
-	
-	public void publish(SavanMessageContext publishMessage) throws SavanException{
-		//TODO handle Topics
-		SOAPEnvelope requestEnvelope = publishMessage.getEnvelope();
-		ServiceContext serviceContext = publishMessage.getMessageContext().getServiceContext();
-		PublicationClient client = new PublicationClient(serviceContext.getConfigurationContext());
-		client.sendPublication(requestEnvelope.getBody().getFirstElement(),serviceContext.getAxisService(),null);
-	}
-	
-	
-	
-	public abstract void pauseSubscription (SavanMessageContext pauseSubscriptionMessage) throws SavanException;
-	
-	public abstract void resumeSubscription (SavanMessageContext resumeSubscriptionMessage) throws SavanException;
-	
-	public abstract Subscriber getSubscriberFromMessage (SavanMessageContext smc) throws SavanException;
-	
-	public abstract ExpirationBean getExpirationBean (SavanMessageContext renewMessage) throws SavanException;
-	
-	public abstract String getSubscriberID (SavanMessageContext smc) throws SavanException;
-	
+
+        store.delete(subscriberID);
+    }
+
+    public void publish(SavanMessageContext publishMessage) throws SavanException {
+        //TODO handle Topics
+        SOAPEnvelope requestEnvelope = publishMessage.getEnvelope();
+        ServiceContext serviceContext = publishMessage.getMessageContext().getServiceContext();
+        PublicationClient client = new PublicationClient(serviceContext.getConfigurationContext());
+        client.sendPublication(requestEnvelope.getBody().getFirstElement(),
+                               serviceContext.getAxisService(), null);
+    }
+
+
+    public abstract void pauseSubscription(SavanMessageContext pauseSubscriptionMessage)
+            throws SavanException;
+
+    public abstract void resumeSubscription(SavanMessageContext resumeSubscriptionMessage)
+            throws SavanException;
+
+    public abstract Subscriber getSubscriberFromMessage(SavanMessageContext smc)
+            throws SavanException;
+
+    public abstract ExpirationBean getExpirationBean(SavanMessageContext renewMessage)
+            throws SavanException;
+
+    public abstract String getSubscriberID(SavanMessageContext smc) throws SavanException;
+
 
 }

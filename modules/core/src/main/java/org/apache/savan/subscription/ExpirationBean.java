@@ -17,49 +17,47 @@
 
 package org.apache.savan.subscription;
 
-import java.util.Date;
-
 import org.apache.axis2.databinding.types.Duration;
 
-/**
- * Defines a expiration. Could be based on a specific time in the future or a duration.
- */
+import java.util.Date;
+
+/** Defines a expiration. Could be based on a specific time in the future or a duration. */
 public class ExpirationBean {
 
-	Date dateValue;
-	Duration durationValue;
-	String subscriberID;
-	boolean duration;
-	
-	public String getSubscriberID() {
-		return subscriberID;
-	}
-	
-	public void setSubscriberID(String subscriberID) {
-		this.subscriberID = subscriberID;
-	}
-	
-	public boolean isDuration() {
-		return duration;
-	}
-	
-	public void setDuration(boolean duration) {
-		this.duration = duration;
-	}
+    Date dateValue;
+    Duration durationValue;
+    String subscriberID;
+    boolean duration;
 
-	public Date getDateValue() {
-		return dateValue;
-	}
+    public String getSubscriberID() {
+        return subscriberID;
+    }
 
-	public Duration getDurationValue() {
-		return durationValue;
-	}
+    public void setSubscriberID(String subscriberID) {
+        this.subscriberID = subscriberID;
+    }
 
-	public void setDateValue(Date dateValue) {
-		this.dateValue = dateValue;
-	}
+    public boolean isDuration() {
+        return duration;
+    }
 
-	public void setDurationValue(Duration durationValue) {
-		this.durationValue = durationValue;
-	}
+    public void setDuration(boolean duration) {
+        this.duration = duration;
+    }
+
+    public Date getDateValue() {
+        return dateValue;
+    }
+
+    public Duration getDurationValue() {
+        return durationValue;
+    }
+
+    public void setDateValue(Date dateValue) {
+        this.dateValue = dateValue;
+    }
+
+    public void setDurationValue(Duration durationValue) {
+        this.durationValue = durationValue;
+    }
 }

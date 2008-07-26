@@ -17,17 +17,18 @@
  -->
 <service name="PublisherService">
 
-   <parameter name="ServiceClass" locked="xsd:false">org.apache.axis2.savan.atom.PublisherService</parameter>
+  <parameter name="ServiceClass" locked="xsd:false">org.apache.axis2.savan.atom.PublisherService
+  </parameter>
 
-    <description>
-        The Publisher Service of the Axis2 Eventing sample.
-    </description>
+  <description>
+    The Publisher Service of the Axis2 Eventing sample.
+  </description>
 
-    <module ref="savan" />
-       
-    <operation name="dummyMethod" mep="http://www.w3.org/2004/08/wsdl/in-only">  
-        <messageReceiver class="org.apache.axis2.receivers.RawXMLINOnlyMessageReceiver" />
-        <actionMapping>http://wso2.com/eventing/dummyMethod</actionMapping>
-    </operation>
-           
+  <module ref="savan"/>
+
+  <operation name="dummyMethod" mep="http://www.w3.org/2004/08/wsdl/in-only">
+    <messageReceiver class="org.apache.axis2.receivers.RawXMLINOnlyMessageReceiver"/>
+    <actionMapping>http://wso2.com/eventing/dummyMethod</actionMapping>
+  </operation>
+
 </service>

@@ -20,29 +20,29 @@ package org.apache.savan.configuration;
 import java.util.ArrayList;
 
 /**
- *Encapsulates a date of a set of Mapping-Rules as defined by Savan configurations. 
- *(probably from a savan-config.xml file).
+ * Encapsulates a date of a set of Mapping-Rules as defined by Savan configurations. (probably from
+ * a savan-config.xml file).
  */
 public class MappingRules {
 
-	public static final int MAPPING_TYPE_ACTION = 1;
-	
-	private ArrayList actionList = null;
-	
-	public MappingRules () {
-		actionList = new ArrayList ();
-	}
-	
-	public void addRule (int type,String value) {
-		if (type==MAPPING_TYPE_ACTION)
-			actionList.add(value);
-	}
-	
-	public boolean ruleMatched (int type, String value) {
-		if (type==MAPPING_TYPE_ACTION)
-			return actionList.contains(value);
-		
-		return false;
-	}
-	
+    public static final int MAPPING_TYPE_ACTION = 1;
+
+    private ArrayList actionList = null;
+
+    public MappingRules() {
+        actionList = new ArrayList();
+    }
+
+    public void addRule(int type, String value) {
+        if (type == MAPPING_TYPE_ACTION)
+            actionList.add(value);
+    }
+
+    public boolean ruleMatched(int type, String value) {
+        if (type == MAPPING_TYPE_ACTION)
+            return actionList.contains(value);
+
+        return false;
+    }
+
 }

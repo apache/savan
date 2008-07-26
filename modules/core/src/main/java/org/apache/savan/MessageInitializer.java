@@ -19,8 +19,8 @@ package org.apache.savan;
 
 public class MessageInitializer {
 
-	public static void initializeMessage (SavanMessageContext smc) {
-		//TODO fill the properties in to the SMC,
-		//For e.g. UtilFactory and the SubscriberStore
-	}
+    public static void initializeMessage(SavanMessageContext smc) {
+        //TODO fill the properties in to the SMC,
+        //For e.g. UtilFactory and the SubscriberStore
+    }
 }

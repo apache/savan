@@ -17,22 +17,24 @@
 
 package org.apache.savan.subscribers;
 
-import java.net.URI;
-
 import org.apache.axiom.om.OMElement;
 import org.apache.savan.SavanException;
 import org.apache.savan.subscription.ExpirationBean;
 
+import java.net.URI;
+
 /**
- * Defines a subscriber which is the entity that define a specific subscription 
- * in savan. Independent of the protocol type.
- *
+ * Defines a subscriber which is the entity that define a specific subscription in savan.
+ * Independent of the protocol type.
  */
-public interface Subscriber  {
-	
-	public URI getId();
-	public void setId(URI id);
-	public void sendEventData (OMElement eventData) throws SavanException;
-	public void renewSubscription (ExpirationBean bean);
-	
+public interface Subscriber {
+
+    public URI getId();
+
+    public void setId(URI id);
+
+    public void sendEventData(OMElement eventData) throws SavanException;
+
+    public void renewSubscription(ExpirationBean bean);
+
 }

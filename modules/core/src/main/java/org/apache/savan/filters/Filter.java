@@ -21,33 +21,31 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNode;
 import org.apache.savan.SavanException;
 
-/**
- * Defines a filter used by Savan. 
- *
- */
+/** Defines a filter used by Savan. */
 public interface Filter {
-	
-	/**
-	 * To check weather the passed envelope is compliant with the current filter.
-	 * @param envelope
-	 * @return
-	 * @throws SavanException
-	 */
-	public boolean checkCompliance (OMElement element) throws SavanException;
-	
-	/**
-	 * To initialize the filter. The filter value should be sent to the argument
-	 * (for e.g. As a OMText for a String)
-	 * 
-	 * @param element
-	 */
-	public void setUp (OMNode element);
-	
-	/**
-	 * Returns a previously set filter value.
-	 * 
-	 * @return
-	 */
+
+    /**
+     * To check weather the passed envelope is compliant with the current filter.
+     *
+     * @param envelope
+     * @return
+     * @throws SavanException
+     */
+    public boolean checkCompliance(OMElement element) throws SavanException;
+
+    /**
+     * To initialize the filter. The filter value should be sent to the argument (for e.g. As a OMText
+     * for a String)
+     *
+     * @param element
+     */
+    public void setUp(OMNode element);
+
+    /**
+     * Returns a previously set filter value.
+     *
+     * @return
+     */
 	public Object getFilterValue ();
 	
 }

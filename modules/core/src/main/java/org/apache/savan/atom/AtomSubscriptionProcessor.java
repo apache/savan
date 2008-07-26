@@ -17,12 +17,9 @@
 
 package org.apache.savan.atom;
 
-import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import javax.xml.namespace.QName;
-
+import com.wso2.eventing.atom.CreateFeedDocument;
+import com.wso2.eventing.atom.CreateFeedDocument.CreateFeed;
+import com.wso2.eventing.atom.RenewFeedDocument;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.util.UUIDGenerator;
@@ -43,22 +40,21 @@ import org.apache.savan.subscription.ExpirationBean;
 import org.apache.savan.subscription.SubscriptionProcessor;
 import org.apache.xmlbeans.XmlException;
 
-import com.wso2.eventing.atom.CreateFeedDocument;
-import com.wso2.eventing.atom.RenewFeedDocument;
-import com.wso2.eventing.atom.CreateFeedDocument.CreateFeed;
+import javax.xml.namespace.QName;
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class AtomSubscriptionProcessor extends SubscriptionProcessor {
 
-	public void init (SavanMessageContext smc) throws SavanException {
-		//setting the subscriber_id as a property if possible.
-		
-		String id = getSubscriberID(smc);
-		if (id!=null) {
-			smc.setProperty(AtomConstants.TransferedProperties.SUBSCRIBER_UUID,id);
-		}
-		
-		
-		
+    public void init(SavanMessageContext smc) throws SavanException {
+        //setting the subscriber_id as a property if possible.
+
+        String id = getSubscriberID(smc);
+        if (id != null) {
+            smc.setProperty(AtomConstants.TransferedProperties.SUBSCRIBER_UUID, id);
+        }
+
 //		AtomSubscriber atomSubscriber = new AtomSubscriber();
 //		smc.setProperty(AtomConstants.TransferedProperties.SUBSCRIBER_UUID,id);
 //		atomSubscriber.setId(new URI(id));
@@ -66,133 +62,134 @@ public class AtomSubscriptionProcessor extends SubscriptionProcessor {
 //		atomSubscriber.setAtomFile(new File(realAtomPath,atomFeedPath));
 //		atomSubscriber.setAuthor("DefaultUser");
 //		atomSubscriber.setTitle("default Feed");
-		
-	}
-	
-	/**
-	 * Sample subscription
-	 * <createFeed xmlns="http://wso2.com/eventing/atom">
-     * <EndTo>endpoint-reference</EndTo> ?
-     * <Delivery Mode="xs:anyURI"? >xs:any</Delivery>
-     * <Expires>[xs:dateTime | xs:duration]</Expires> ?
-     * <Filter Dialect="xs:anyURI"? > xs:any </Filter> ?
-     * </createFeed>
-     * 
-	 */
-	
-	
-	
-	public Subscriber getSubscriberFromMessage(SavanMessageContext smc) throws SavanException {
 
-		try {
-			ConfigurationManager configurationManager = (ConfigurationManager) smc.getConfigurationContext().getProperty(SavanConstants.CONFIGURATION_MANAGER);
-			if (configurationManager == null)
-				throw new SavanException ("Configuration Manager not set");
-			
-			Protocol protocol = smc.getProtocol();
-			if (protocol== null)
-				throw new SavanException ("Protocol not found");
-			
-			SOAPEnvelope envelope = smc.getEnvelope();
-			if (envelope==null)
-				return null;
-			
-			ServiceContext serviceContext = smc.getMessageContext().getServiceContext();
-			AtomDataSource dataSource = (AtomDataSource)serviceContext.getProperty(AtomConstants.Properties.DataSource);
-			if(dataSource == null){
-				dataSource = new AtomDataSource();
-				serviceContext.setProperty(AtomConstants.Properties.DataSource, dataSource);
-			}
-			
-			String subscriberName = protocol.getDefaultSubscriber();
-			Subscriber subscriber = configurationManager.getSubscriberInstance(subscriberName);
-			
-			if (!(subscriber instanceof AtomSubscriber)) {
-				String message = "Savan only support implementations of Atom subscriber as Subscribers";
-				throw new SavanException (message);
-			}
-			
-			
+    }
 
-			//find the real path for atom feeds
-			File repositoryPath = smc.getConfigurationContext().getRealPath("/"); 
-			File realAtomPath = new File(repositoryPath.getAbsoluteFile(),"atom");
-			
-			//Get the service URL from request
-			String serviceAddress = smc.getMessageContext().getTo().getAddress();
-			int cutIndex = serviceAddress.indexOf("services");
-			if(cutIndex > 0){
-				serviceAddress = serviceAddress.substring(0,cutIndex-1);
-			}
-			
-			AtomSubscriber atomSubscriber = (AtomSubscriber) subscriber;
-			
-			String id = UUIDGenerator.getUUID();
-			smc.setProperty(AtomConstants.TransferedProperties.SUBSCRIBER_UUID,id);
-			atomSubscriber.setId(new URI(id));
-			String atomFeedPath = id2Path(id);
-			atomSubscriber.setAtomFile(new File(realAtomPath,atomFeedPath));
-			atomSubscriber.setFeedUrl(serviceAddress+"/services/"+smc.getMessageContext().getServiceContext().getAxisService().getName() +"/atom?feed="+ atomFeedPath);
-			
-			SOAPBody body = envelope.getBody();
-			CreateFeedDocument createFeedDocument = CreateFeedDocument.Factory.parse(body.getFirstElement().getXMLStreamReader());
-			CreateFeed createFeed = createFeedDocument.getCreateFeed();
+    /**
+     * Sample subscription <createFeed xmlns="http://wso2.com/eventing/atom">
+     * <EndTo>endpoint-reference</EndTo> ? <Delivery Mode="xs:anyURI"? >xs:any</Delivery>
+     * <Expires>[xs:dateTime | xs:duration]</Expires> ? <Filter Dialect="xs:anyURI"? > xs:any </Filter>
+     * ? </createFeed>
+     */
 
-			if(createFeed.getEndTo() != null){
-				atomSubscriber.setEndToEPr(createFeed.getEndTo());	
-			}
-			if(createFeed.getExpires() != null){
-				atomSubscriber.setSubscriptionEndingTime(createFeed.getExpires().getTime());	
-			}
-			
-			if (createFeed.getFilter() != null) {
-				Filter filter = null;
-				String 	filterKey = createFeed.getFilter().getDialect();
-				
-				filter = configurationManager.getFilterInstanceFromId(filterKey);
-				if (filter==null)
-					throw new SavanException ("The Filter defined by the dialect is not available");
-				
-				if(filter instanceof XPathBasedFilter){
-					((XPathBasedFilter)filter).setXPathString(createFeed.getFilter().getStringValue());
-				}else{
-					throw new SavanException("Only Xpath fileters are supported");
-				}
-				atomSubscriber.setFilter(filter);
-			}
-			
-			atomSubscriber.init(dataSource, new URI(id), createFeed.getTitle(), createFeed.getAuthor());
-			smc.setProperty(AtomConstants.Properties.feedUrl, atomSubscriber.getFeedUrl());
-			return atomSubscriber;
-		} catch (AxisFault e) {
-			throw new SavanException(e);
-		} catch (OMException e) {
-			throw new SavanException(e);
-		} catch (XmlException e) {
-			throw new SavanException(e);
-		} catch (URISyntaxException e) {
-			throw new SavanException(e);
-		}
-	}
-	
+
+    public Subscriber getSubscriberFromMessage(SavanMessageContext smc) throws SavanException {
+
+        try {
+            ConfigurationManager configurationManager = (ConfigurationManager)smc
+                    .getConfigurationContext().getProperty(SavanConstants.CONFIGURATION_MANAGER);
+            if (configurationManager == null)
+                throw new SavanException("Configuration Manager not set");
+
+            Protocol protocol = smc.getProtocol();
+            if (protocol == null)
+                throw new SavanException("Protocol not found");
+
+            SOAPEnvelope envelope = smc.getEnvelope();
+            if (envelope == null)
+                return null;
+
+            ServiceContext serviceContext = smc.getMessageContext().getServiceContext();
+            AtomDataSource dataSource =
+                    (AtomDataSource)serviceContext.getProperty(AtomConstants.Properties.DataSource);
+            if (dataSource == null) {
+                dataSource = new AtomDataSource();
+                serviceContext.setProperty(AtomConstants.Properties.DataSource, dataSource);
+            }
+
+            String subscriberName = protocol.getDefaultSubscriber();
+            Subscriber subscriber = configurationManager.getSubscriberInstance(subscriberName);
+
+            if (!(subscriber instanceof AtomSubscriber)) {
+                String message =
+                        "Savan only support implementations of Atom subscriber as Subscribers";
+                throw new SavanException(message);
+            }
+
+            //find the real path for atom feeds
+            File repositoryPath = smc.getConfigurationContext().getRealPath("/");
+            File realAtomPath = new File(repositoryPath.getAbsoluteFile(), "atom");
+
+            //Get the service URL from request
+            String serviceAddress = smc.getMessageContext().getTo().getAddress();
+            int cutIndex = serviceAddress.indexOf("services");
+            if (cutIndex > 0) {
+                serviceAddress = serviceAddress.substring(0, cutIndex - 1);
+            }
+
+            AtomSubscriber atomSubscriber = (AtomSubscriber)subscriber;
+
+            String id = UUIDGenerator.getUUID();
+            smc.setProperty(AtomConstants.TransferedProperties.SUBSCRIBER_UUID, id);
+            atomSubscriber.setId(new URI(id));
+            String atomFeedPath = id2Path(id);
+            atomSubscriber.setAtomFile(new File(realAtomPath, atomFeedPath));
+            atomSubscriber.setFeedUrl(serviceAddress + "/services/" + smc.getMessageContext()
+                    .getServiceContext().getAxisService().getName() + "/atom?feed=" + atomFeedPath);
+
+            SOAPBody body = envelope.getBody();
+            CreateFeedDocument createFeedDocument =
+                    CreateFeedDocument.Factory.parse(body.getFirstElement().getXMLStreamReader());
+            CreateFeed createFeed = createFeedDocument.getCreateFeed();
+
+            if (createFeed.getEndTo() != null) {
+                atomSubscriber.setEndToEPr(createFeed.getEndTo());
+            }
+            if (createFeed.getExpires() != null) {
+                atomSubscriber.setSubscriptionEndingTime(createFeed.getExpires().getTime());
+            }
+
+            if (createFeed.getFilter() != null) {
+                Filter filter = null;
+                String filterKey = createFeed.getFilter().getDialect();
+
+                filter = configurationManager.getFilterInstanceFromId(filterKey);
+                if (filter == null)
+                    throw new SavanException("The Filter defined by the dialect is not available");
+
+                if (filter instanceof XPathBasedFilter) {
+                    ((XPathBasedFilter)filter)
+                            .setXPathString(createFeed.getFilter().getStringValue());
+                } else {
+                    throw new SavanException("Only Xpath fileters are supported");
+                }
+                atomSubscriber.setFilter(filter);
+            }
+
+            atomSubscriber
+                    .init(dataSource, new URI(id), createFeed.getTitle(), createFeed.getAuthor());
+            smc.setProperty(AtomConstants.Properties.feedUrl, atomSubscriber.getFeedUrl());
+            return atomSubscriber;
+        } catch (AxisFault e) {
+            throw new SavanException(e);
+        } catch (OMException e) {
+            throw new SavanException(e);
+        } catch (XmlException e) {
+            throw new SavanException(e);
+        } catch (URISyntaxException e) {
+            throw new SavanException(e);
+        }
+    }
+
 //	private String findValue(String localName,OMElement parent,boolean throwfault) throws SavanException{
 //		return findValue(AtomConstants.ATOM_NAMESPACE, localName, parent, throwfault);
 //	}
-	
-	private String findValue(String nsURI,String localName,OMElement parent,boolean throwfault) throws SavanException{
-		QName name = new QName (nsURI,AtomConstants.IDEDNTIFIER_ELEMENT);
-		OMElement ele = parent.getFirstChildWithName(name);
-		if(ele != null){
-			return ele.getText();
-		}else{
-			if(throwfault){
-				throw new SavanException (localName + " element is not defined");	
-			}else{
-				return null;
-			}
-		}
-	}
-	
+
+    private String findValue(String nsURI, String localName, OMElement parent, boolean throwfault)
+            throws SavanException {
+        QName name = new QName(nsURI, AtomConstants.IDEDNTIFIER_ELEMENT);
+        OMElement ele = parent.getFirstChildWithName(name);
+        if (ele != null) {
+            return ele.getText();
+        } else {
+            if (throwfault) {
+                throw new SavanException(localName + " element is not defined");
+            } else {
+                return null;
+            }
+        }
+    }
+
 //	private OMElement findElement(String localName,OMElement parent,boolean throwfault) throws SavanException{
 //		QName name = new QName (AtomConstants.ATOM_NAMESPACE,AtomConstants.ID_ELEMENT);
 //		OMElement ele = parent.getFirstChildWithName(name);
@@ -207,69 +204,76 @@ public class AtomSubscriptionProcessor extends SubscriptionProcessor {
 //		}
 //	}
 
-	public void pauseSubscription(SavanMessageContext pauseSubscriptionMessage) throws SavanException {
-		throw new UnsupportedOperationException ("Eventing specification does not support this type of messages");
-	}
+    public void pauseSubscription(SavanMessageContext pauseSubscriptionMessage)
+            throws SavanException {
+        throw new UnsupportedOperationException(
+                "Eventing specification does not support this type of messages");
+    }
 
-	public void resumeSubscription(SavanMessageContext resumeSubscriptionMessage) throws SavanException {
-		throw new UnsupportedOperationException ("Eventing specification does not support this type of messages");
-	}
-	
-	/**
-	 * <renewFeed><Expires></Expires></renewFeed>
-	 */
+    public void resumeSubscription(SavanMessageContext resumeSubscriptionMessage)
+            throws SavanException {
+        throw new UnsupportedOperationException(
+                "Eventing specification does not support this type of messages");
+    }
 
-	public ExpirationBean getExpirationBean(SavanMessageContext renewMessage) throws SavanException {
-		try {
-			SOAPEnvelope envelope = renewMessage.getEnvelope();
-			
-			RenewFeedDocument renewFeedDocument = RenewFeedDocument.Factory.parse( envelope.getBody().getXMLStreamReader());
+    /** <renewFeed><Expires></Expires></renewFeed> */
+
+    public ExpirationBean getExpirationBean(SavanMessageContext renewMessage)
+            throws SavanException {
+        try {
+            SOAPEnvelope envelope = renewMessage.getEnvelope();
+
+            RenewFeedDocument renewFeedDocument =
+                    RenewFeedDocument.Factory.parse(envelope.getBody().getXMLStreamReader());
 //		SOAPBody body = envelope.getBody();
 //		
-			ExpirationBean expirationBean =  new ExpirationBean();
+            ExpirationBean expirationBean = new ExpirationBean();
 //		OMElement renewFeedEle = findElement(AtomConstants.RENEW_FEED, body, true);
 //		Date expieringTime = getExpirationBeanFromString(findValue(AtomConstants.EXPIRES_ELEMENT, renewFeedEle, true));
-			expirationBean.setDuration(false);
-			expirationBean.setDateValue(renewFeedDocument.getRenewFeed().getExpires().getTime());
-			
-			String subscriberID = getSubscriberID(renewMessage);
-			if (subscriberID==null) {
-				String message = "Cannot find the subscriber ID";
-				throw new SavanException (message);
-			}
-			
-			renewMessage.setProperty(AtomConstants.TransferedProperties.SUBSCRIBER_UUID,subscriberID);
-			
-			expirationBean.setSubscriberID(subscriberID);
-			return expirationBean;
-		} catch (OMException e) {
-			throw new SavanException(e);
-		} catch (XmlException e) {
-			throw new SavanException(e);
-		}
-	}
+            expirationBean.setDuration(false);
+            expirationBean.setDateValue(renewFeedDocument.getRenewFeed().getExpires().getTime());
 
-	public String getSubscriberID(SavanMessageContext smc) throws SavanException {
-		SOAPEnvelope envelope = smc.getEnvelope();
-		SOAPHeader header = envelope.getHeader();
-		if (header==null) {
-			return null;
-		}
-		
-		return findValue(AtomConstants.ATOM_NAMESPACE,AtomConstants.IDEDNTIFIER_ELEMENT, envelope.getHeader(), false);
-	}
+            String subscriberID = getSubscriberID(renewMessage);
+            if (subscriberID == null) {
+                String message = "Cannot find the subscriber ID";
+                throw new SavanException(message);
+            }
 
-	public void unsubscribe(SavanMessageContext endSubscriptionMessage) throws SavanException {
-		String subscriberID = getSubscriberID (endSubscriptionMessage);
-		File feedPath = endSubscriptionMessage.getConfigurationContext().getRealPath("atom/"+id2Path(subscriberID));
-		if(feedPath.exists()){
-			feedPath.delete();
-		}
-		super.unsubscribe(endSubscriptionMessage);
-	}
-	
-	private String id2Path(String id){
-		return id.replaceAll(":", "_")+ ".atom";
+            renewMessage
+                    .setProperty(AtomConstants.TransferedProperties.SUBSCRIBER_UUID, subscriberID);
+
+            expirationBean.setSubscriberID(subscriberID);
+            return expirationBean;
+        } catch (OMException e) {
+            throw new SavanException(e);
+        } catch (XmlException e) {
+            throw new SavanException(e);
+        }
+    }
+
+    public String getSubscriberID(SavanMessageContext smc) throws SavanException {
+        SOAPEnvelope envelope = smc.getEnvelope();
+        SOAPHeader header = envelope.getHeader();
+        if (header == null) {
+            return null;
+        }
+
+        return findValue(AtomConstants.ATOM_NAMESPACE, AtomConstants.IDEDNTIFIER_ELEMENT,
+                         envelope.getHeader(), false);
+    }
+
+    public void unsubscribe(SavanMessageContext endSubscriptionMessage) throws SavanException {
+        String subscriberID = getSubscriberID(endSubscriptionMessage);
+        File feedPath = endSubscriptionMessage.getConfigurationContext()
+                .getRealPath("atom/" + id2Path(subscriberID));
+        if (feedPath.exists()) {
+            feedPath.delete();
+        }
+        super.unsubscribe(endSubscriptionMessage);
+    }
+
+    private String id2Path(String id) {
+        return id.replaceAll(":", "_") + ".atom";
 	}
 	
 	

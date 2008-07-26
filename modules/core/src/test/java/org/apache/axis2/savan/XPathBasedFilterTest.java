@@ -18,7 +18,6 @@
 package org.apache.axis2.savan;
 
 import junit.framework.TestCase;
-
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNode;
@@ -31,39 +30,39 @@ import org.apache.savan.filters.XPathBasedFilter;
 
 public class XPathBasedFilterTest extends TestCase {
 
-	String filterString = "//elem1";
-	
-	public void testMessageFiltering () throws AxisFault {
-		SOAPEnvelope envelope = createTestEnvelope ();
-		
-		OMNode filterNode = getFilterElement ();
-		Filter filter = new XPathBasedFilter ();
-		filter.setUp(filterNode);
-		
-		assertTrue (filter.checkCompliance(envelope));
-	}
-	
-	private SOAPEnvelope createTestEnvelope () {
-		SOAPFactory factory = OMAbstractFactory.getSOAP11Factory();
-		SOAPEnvelope envelope = factory.getDefaultEnvelope();
-		
-		OMElement elem1 = factory.createOMElement("elem1",null);
-		OMElement elem2 = factory.createOMElement("elem2",null);
-		OMElement elem3 = factory.createOMElement("elem3",null);
+    String filterString = "//elem1";
 
-		elem2.addChild(elem3);
-		elem1.addChild(elem2);
-		
-		envelope.getBody().addChild(elem1);
-		factory.createOMDocument().addChild(envelope);
-		
-		return envelope;
-	}
-	
-	private OMNode getFilterElement () {
-		SOAPFactory factory = OMAbstractFactory.getSOAP11Factory();
-		OMText text = factory.createOMText(filterString);
-		return text;
-	}
-	
+    public void testMessageFiltering() throws AxisFault {
+        SOAPEnvelope envelope = createTestEnvelope();
+
+        OMNode filterNode = getFilterElement();
+        Filter filter = new XPathBasedFilter();
+        filter.setUp(filterNode);
+
+        assertTrue(filter.checkCompliance(envelope));
+    }
+
+    private SOAPEnvelope createTestEnvelope() {
+        SOAPFactory factory = OMAbstractFactory.getSOAP11Factory();
+        SOAPEnvelope envelope = factory.getDefaultEnvelope();
+
+        OMElement elem1 = factory.createOMElement("elem1", null);
+        OMElement elem2 = factory.createOMElement("elem2", null);
+        OMElement elem3 = factory.createOMElement("elem3", null);
+
+        elem2.addChild(elem3);
+        elem1.addChild(elem2);
+
+        envelope.getBody().addChild(elem1);
+        factory.createOMDocument().addChild(envelope);
+
+        return envelope;
+    }
+
+    private OMNode getFilterElement() {
+        SOAPFactory factory = OMAbstractFactory.getSOAP11Factory();
+        OMText text = factory.createOMText(filterString);
+        return text;
+    }
+
 }

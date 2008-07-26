@@ -1,24 +1,24 @@
 <module name="Savan" class="org.apache.savan.module.SavanModule">
 
-    <operation name="SavanInOutOperation" mep="http://www.w3.org/2004/08/wsdl/in-out">
-        <messageReceiver class="org.apache.savan.messagereceiver.SavanInOutMessageReceiver"/>
-        <actionMapping>http://schemas.xmlsoap.org/ws/2004/08/eventing/Subscribe</actionMapping>
-        <actionMapping>http://schemas.xmlsoap.org/ws/2004/08/eventing/Renew</actionMapping>
-        <actionMapping>http://schemas.xmlsoap.org/ws/2004/08/eventing/GetStatus</actionMapping>
-        <actionMapping>http://schemas.xmlsoap.org/ws/2004/08/eventing/Unsubscribe</actionMapping>
-        <actionMapping>http://wso2.com/eventing/Subscribe</actionMapping>
-		<actionMapping>http://wso2.com/eventing/Renew</actionMapping>
-		<actionMapping>http://wso2.com/eventing/Unsubscribe</actionMapping>
-		<actionMapping>http://wso2.com/eventing/GetStatus</actionMapping>
-    </operation>
-    
-    <operation name="atom" mep="http://www.w3.org/2004/08/wsdl/in-out">
-        <messageReceiver class="org.apache.savan.atom.AtomMessageReceiver"/>
-    </operation>
-    
-    <operation name="publish" mep="http://www.w3.org/2004/08/wsdl/in-out">
-        <messageReceiver class="org.apache.savan.messagereceiver.PublishingMessageReceiver"/>
-        <actionMapping>http://ws.apache.org/ws/2007/05/eventing-extended/Publish</actionMapping>
-	</operation>        
-    
+  <operation name="SavanInOutOperation" mep="http://www.w3.org/2004/08/wsdl/in-out">
+    <messageReceiver class="org.apache.savan.messagereceiver.SavanInOutMessageReceiver"/>
+    <actionMapping>http://schemas.xmlsoap.org/ws/2004/08/eventing/Subscribe</actionMapping>
+    <actionMapping>http://schemas.xmlsoap.org/ws/2004/08/eventing/Renew</actionMapping>
+    <actionMapping>http://schemas.xmlsoap.org/ws/2004/08/eventing/GetStatus</actionMapping>
+    <actionMapping>http://schemas.xmlsoap.org/ws/2004/08/eventing/Unsubscribe</actionMapping>
+    <actionMapping>http://wso2.com/eventing/Subscribe</actionMapping>
+    <actionMapping>http://wso2.com/eventing/Renew</actionMapping>
+    <actionMapping>http://wso2.com/eventing/Unsubscribe</actionMapping>
+    <actionMapping>http://wso2.com/eventing/GetStatus</actionMapping>
+  </operation>
+
+  <operation name="atom" mep="http://www.w3.org/2004/08/wsdl/in-out">
+    <messageReceiver class="org.apache.savan.atom.AtomMessageReceiver"/>
+  </operation>
+
+  <operation name="publish" mep="http://www.w3.org/2004/08/wsdl/in-out">
+    <messageReceiver class="org.apache.savan.messagereceiver.PublishingMessageReceiver"/>
+    <actionMapping>http://ws.apache.org/ws/2007/05/eventing-extended/Publish</actionMapping>
+  </operation>
+
 </module>

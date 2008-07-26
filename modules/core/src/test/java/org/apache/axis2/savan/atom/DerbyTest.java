@@ -1,48 +1,39 @@
 package org.apache.axis2.savan.atom;
 
-import java.io.StringWriter;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Properties;
-import java.util.Random;
-
+import junit.framework.TestCase;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
-import org.apache.savan.SavanException;
 import org.apache.savan.atom.AtomDataSource;
 
-import junit.framework.TestCase;
+import java.io.StringWriter;
+import java.util.Date;
+import java.util.Random;
 
-public class DerbyTest extends TestCase{
-	
-	    /* the default framework is embedded*/
-	    public String framework = "embedded";
-	    public String driver = "org.apache.derby.jdbc.EmbeddedDriver";
-	    public String protocol = "jdbc:derby:";
-	    
-	    public void testDataSource() throws Exception{
-	    	AtomDataSource dataSource = new AtomDataSource();
-	    	String id  = "id"+new Random().nextDouble();
-	    	dataSource.addFeed(id, "foo", new Date(),"Srinath");
-	    	dataSource.addEntry(id,getDummyMethodRequestElement());
-	    	StringWriter w = new StringWriter();
-	    	
-	    	OMElement result = dataSource.getFeedAsXml(id); 
+public class DerbyTest extends TestCase {
+
+    /* the default framework is embedded*/
+    public String framework = "embedded";
+    public String driver = "org.apache.derby.jdbc.EmbeddedDriver";
+    public String protocol = "jdbc:derby:";
+
+    public void testDataSource() throws Exception {
+        AtomDataSource dataSource = new AtomDataSource();
+        String id = "id" + new Random().nextDouble();
+        dataSource.addFeed(id, "foo", new Date(), "Srinath");
+        dataSource.addEntry(id, getDummyMethodRequestElement());
+        StringWriter w = new StringWriter();
+
+        OMElement result = dataSource.getFeedAsXml(id);
 //	    	Iterator it = result.getChildElements();
 //	    	while(it.hasNext()){
 //	    		System.out.println(it.next());
 //	    	}
-	    	
-	    	result.serialize(w);
-	    	System.out.println(w.getBuffer().toString());
-	    }
+
+        result.serialize(w);
+        System.out.println(w.getBuffer().toString());
+    }
 
 //	    public static void main(String[] args)
 //	    {
@@ -235,12 +226,13 @@ public class DerbyTest extends TestCase{
 //	                protocol = "jdbc:derby://localhost:1527/";
 //	            }
 //	        }
-//	    }
-	    private final String applicationNamespaceName = "http://tempuri.org/"; 
-		private final String dummyMethod = "dummyMethod";
-	    private OMElement getDummyMethodRequestElement() {
-			OMFactory fac = OMAbstractFactory.getOMFactory();
-			OMNamespace namespace = fac.createOMNamespace(applicationNamespaceName,"ns1");
-			return fac.createOMElement(dummyMethod, namespace);
-		}
-	}
+    //	    }
+    private final String applicationNamespaceName = "http://tempuri.org/";
+    private final String dummyMethod = "dummyMethod";
+
+    private OMElement getDummyMethodRequestElement() {
+        OMFactory fac = OMAbstractFactory.getOMFactory();
+        OMNamespace namespace = fac.createOMNamespace(applicationNamespaceName, "ns1");
+        return fac.createOMElement(dummyMethod, namespace);
+    }
+}

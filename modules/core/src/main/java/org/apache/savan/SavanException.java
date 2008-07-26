@@ -19,21 +19,18 @@ package org.apache.savan;
 
 import org.apache.axis2.AxisFault;
 
-/**
- * To convey a exception that occured in Savan.
- * 
- */
+/** To convey a exception that occured in Savan. */
 public class SavanException extends AxisFault {
 
-	public SavanException (String cause) {
-		super (cause);
-	}
-	
-	public SavanException (String cause, Exception superException) {
-	    super (cause,superException);	
-	}
-	
-	public SavanException (Exception superException) {
-	    super (superException);	
-	}
+    public SavanException(String cause) {
+        super(cause);
+    }
+
+    public SavanException(String cause, Exception superException) {
+        super(cause, superException);
+    }
+
+    public SavanException(Exception superException) {
+        super(superException);
+    }
 }
