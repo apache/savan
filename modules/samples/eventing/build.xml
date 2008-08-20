@@ -1,8 +1,15 @@
 <project default="build.sample">
-  <property name="axis2.home" value="c:/temp/axis2-1.4"/>
+  <property environment="env"/>
+  <fail message="You must set the AXIS2_HOME environment variable to a valid Axis2 installation.">
+    <condition>
+      <not>
+        <isset property="env.AXIS2_HOME"/>
+      </not>
+    </condition>
+  </fail>
+  <echo message="${env.AXIS2_HOME}"/>
 
   <target name="build.sample">
-    <property name="axis2.home" value="/mnt/win_d/projects/axis/Axis2-1.3/axis2-1.3"/>
     <property name="eventing.temp.dir" value="build/temp"/>
     <property name="listener1.temp.dir" value="${eventing.temp.dir}/listener1"/>
     <property name="listener2.temp.dir" value="${eventing.temp.dir}/listener2"/>
@@ -24,7 +31,7 @@
         <fileset dir="../../core/target">
           <include name="*.jar"/>
         </fileset>
-        <fileset dir="${axis2.home}/lib">
+        <fileset dir="${env.AXIS2_HOME}/lib">
           <include name="*.jar"/>
         </fileset>
       </classpath>
@@ -90,12 +97,17 @@
 
   <target name="deploy">
     <!-- deploy savan module to axis2 -->
-    <copy todir="${axis2.home}/repository/modules">
+    <copy todir="${env.AXIS2_HOME}/repository/modules">
       <fileset dir="../../mar/target" includes="savan-*.mar"/>
     </copy>
 
+    <!-- copy core jar (used by the PublisherService) -->
+    <copy todir="${env.AXIS2_HOME}/lib">
+      <fileset dir="../../core/target" includes="savan-core-*.jar"/>
+    </copy>
+
     <!-- deploy samples -->
-    <copy todir="${axis2.home}/repository/services">
+    <copy todir="${env.AXIS2_HOME}/repository/services">
       <fileset dir="build" includes="*.aar"/>
     </copy>
   </target>
