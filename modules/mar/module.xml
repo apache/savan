@@ -1,4 +1,4 @@
-<module name="Savan" class="org.apache.savan.module.SavanModule">
+<module name="savan" class="org.apache.savan.module.SavanModule">
 
   <operation name="SavanInOutOperation" mep="http://www.w3.org/2004/08/wsdl/in-out">
     <messageReceiver class="org.apache.savan.messagereceiver.SavanInOutMessageReceiver"/>
