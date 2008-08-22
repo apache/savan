@@ -51,7 +51,7 @@ public abstract class SubscriptionProcessor {
             throw new SavanException("AbstractSubscriber store not found");
 
         ExpirationBean bean = getExpirationBean(renewMessage);
-        Subscriber subscriber = (Subscriber)store.retrieve(bean.getSubscriberID());
+        Subscriber subscriber = store.retrieve(bean.getSubscriberID());
         if (subscriber == null) {
             throw new SavanException("Given subscriber is not present");
         }
@@ -61,9 +61,6 @@ public abstract class SubscriptionProcessor {
 
     public void subscribe(SavanMessageContext subscriptionMessage) throws SavanException {
         SubscriberStore store = subscriptionMessage.getSubscriberStore();
-        if (store == null)
-            throw new SavanException("AbstractSubscriber store not found");
-
         if (store == null)
             throw new SavanException("Sabscriber store not found");
 
@@ -76,10 +73,13 @@ public abstract class SubscriptionProcessor {
 
         SubscriberStore store = CommonUtil.getSubscriberStore(serviceContext.getAxisService());
         if (store == null) {
-            //TODO do something
+            throw new SavanException("SubscriberStore not found");
         }
 
         Subscriber subscriber = store.retrieve(subscriberID);
+        if (subscriber == null) {
+            throw new SavanException("No such subscriber '" + subscriberID + "'");
+        }
 //		doProtocolSpecificEndSubscription(subscriber,reason,serviceContext.getConfigurationContext());
 
         store.delete(subscriberID);
@@ -94,6 +94,8 @@ public abstract class SubscriptionProcessor {
                                serviceContext.getAxisService(), null);
     }
 
+    public void getStatus(SavanMessageContext smc) {
+    }
 
     public abstract void pauseSubscription(SavanMessageContext pauseSubscriptionMessage)
             throws SavanException;
@@ -108,6 +110,4 @@ public abstract class SubscriptionProcessor {
             throws SavanException;
 
     public abstract String getSubscriberID(SavanMessageContext smc) throws SavanException;
-
-
 }

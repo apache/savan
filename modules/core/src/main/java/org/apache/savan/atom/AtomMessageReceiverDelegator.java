@@ -33,7 +33,7 @@ import org.apache.axis2.databinding.utils.ConverterUtil;
 import org.apache.savan.SavanConstants;
 import org.apache.savan.SavanException;
 import org.apache.savan.SavanMessageContext;
-import org.apache.savan.messagereceiver.MessageReceiverDeligater;
+import org.apache.savan.messagereceiver.MessageReceiverDelegator;
 import org.apache.savan.storage.SubscriberStore;
 import org.apache.savan.subscribers.Subscriber;
 import org.apache.savan.util.CommonUtil;
@@ -46,7 +46,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 
-public class AtomMessageReceiverDeligater extends MessageReceiverDeligater {
+public class AtomMessageReceiverDelegator extends MessageReceiverDelegator {
     private SOAPEnvelope findOrCreateSoapEnvelope(SavanMessageContext subscriptionMessage,
                                                   MessageContext outMessage) throws AxisFault {
         MessageContext subscriptionMsgCtx = subscriptionMessage.getMessageContext();

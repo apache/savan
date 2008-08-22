@@ -45,10 +45,10 @@ public class SavanInOutMessageReceiver extends AbstractInOutSyncMessageReceiver 
         savanInMessage.setProtocol(protocol);
 
         UtilFactory utilFactory = protocol.getUtilFactory();
-        MessageReceiverDeligater deligator = utilFactory.createMessageReceiverDeligater();
+        MessageReceiverDelegator delegator = utilFactory.createMessageReceiverDelegator();
 
-        deligator.processMessage(savanInMessage);
-        deligator.doProtocolSpecificProcessing(savanInMessage, outMessage);
+        delegator.processMessage(savanInMessage);
+        delegator.doProtocolSpecificProcessing(savanInMessage, outMessage);
 
     }
 

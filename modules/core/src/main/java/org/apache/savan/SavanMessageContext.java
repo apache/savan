@@ -38,17 +38,17 @@ public class SavanMessageContext {
     }
 
     public void setMessageType(int type) {
-        messageContext.setProperty(SavanConstants.MESSAGE_TYPE, new Integer(type));
+        messageContext.setProperty(SavanConstants.MESSAGE_TYPE, type);
     }
 
     public int getMessageType() {
         Integer typeInt = (Integer)messageContext.getProperty(SavanConstants.MESSAGE_TYPE);
         if (typeInt == null) {
-            typeInt = new Integer(SavanConstants.MessageTypes.UNKNOWN);
+            typeInt = SavanConstants.MessageTypes.UNKNOWN;
             messageContext.setProperty(SavanConstants.MESSAGE_TYPE, typeInt);
         }
 
-        return typeInt.intValue();
+        return typeInt;
     }
 
     public ConfigurationContext getConfigurationContext() {

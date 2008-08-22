@@ -21,7 +21,7 @@ import org.apache.axis2.context.MessageContext;
 import org.apache.savan.SavanConstants;
 import org.apache.savan.SavanMessageContext;
 import org.apache.savan.eventing.subscribers.EventingSubscriber;
-import org.apache.savan.messagereceiver.MessageReceiverDeligater;
+import org.apache.savan.messagereceiver.MessageReceiverDelegator;
 import org.apache.savan.subscribers.Subscriber;
 import org.apache.savan.subscription.SubscriptionProcessor;
 import org.apache.savan.util.UtilFactory;
@@ -62,8 +62,8 @@ public class EventingUtilFactory implements UtilFactory {
         return new EventingSubscriptionProcessor();
     }
 
-    public MessageReceiverDeligater createMessageReceiverDeligater() {
-        return new EventingMessageReceiverDeligater();
+    public MessageReceiverDelegator createMessageReceiverDelegator() {
+        return new EventingMessageReceiverDelegator();
     }
 
     public Subscriber createSubscriber() {

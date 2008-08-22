@@ -18,7 +18,7 @@
 package org.apache.savan.util;
 
 import org.apache.savan.SavanMessageContext;
-import org.apache.savan.messagereceiver.MessageReceiverDeligater;
+import org.apache.savan.messagereceiver.MessageReceiverDelegator;
 import org.apache.savan.subscription.SubscriptionProcessor;
 
 /**
@@ -31,6 +31,6 @@ public interface UtilFactory {
 
     public abstract SubscriptionProcessor createSubscriptionProcessor();
 
-    public abstract MessageReceiverDeligater createMessageReceiverDeligater();
+    public abstract MessageReceiverDelegator createMessageReceiverDelegator();
 
 }

@@ -20,7 +20,7 @@ package org.apache.savan.atom;
 import org.apache.axis2.context.MessageContext;
 import org.apache.savan.SavanConstants;
 import org.apache.savan.SavanMessageContext;
-import org.apache.savan.messagereceiver.MessageReceiverDeligater;
+import org.apache.savan.messagereceiver.MessageReceiverDelegator;
 import org.apache.savan.subscribers.Subscriber;
 import org.apache.savan.subscription.SubscriptionProcessor;
 import org.apache.savan.util.UtilFactory;
@@ -62,8 +62,8 @@ public class AtomUtilFactory implements UtilFactory {
         return new AtomSubscriptionProcessor();
     }
 
-    public MessageReceiverDeligater createMessageReceiverDeligater() {
-        return new AtomMessageReceiverDeligater();
+    public MessageReceiverDelegator createMessageReceiverDelegator() {
+        return new AtomMessageReceiverDelegator();
     }
 
     public Subscriber createSubscriber() {

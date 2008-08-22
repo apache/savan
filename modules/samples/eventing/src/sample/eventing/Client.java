@@ -16,10 +16,6 @@
 
 package sample.eventing;
 
-import org.apache.axiom.om.OMAbstractFactory;
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMFactory;
-import org.apache.axiom.om.OMNamespace;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
@@ -30,13 +26,13 @@ import org.apache.savan.eventing.client.EventingClient;
 import org.apache.savan.eventing.client.EventingClientBean;
 import org.apache.savan.eventing.client.SubscriptionStatus;
 
-import javax.xml.namespace.QName;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Client {
+
+    boolean done = false;
 
     BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
@@ -46,16 +42,14 @@ public class Client {
     private final String SUBSCRIBER_1_ID = "subscriber1";
     private final String SUBSCRIBER_2_ID = "subscriber2";
 
-    private ServiceClient serviceClient = null;
-    private Options options = null;
     private EventingClient eventingClient = null;
 
     private String toAddressPart = "/axis2/services/PublisherService";
     private String listener1AddressPart = "/axis2/services/ListenerService1";
     private String listener2AddressPart = "/axis2/services/ListenerService2";
 
-    private final String applicationNamespaceName = "http://tempuri.org/";
-    private final String dummyMethod = "dummyMethod";
+//    private final String applicationNamespaceName = "http://tempuri.org/";
+//    private final String dummyMethod = "dummyMethod";
 
     private static String repo = null;
     private static int port = 8080;
@@ -67,8 +61,8 @@ public class Client {
 
     public static void main(String[] args) throws Exception {
 
-        for (int i = 0; i < args.length; i++) {
-            if (helpParam.equalsIgnoreCase(args[i])) {
+        for (String arg : args) {
+            if (helpParam.equalsIgnoreCase(arg)) {
                 displayHelp();
                 System.exit(0);
             }
@@ -140,14 +134,13 @@ public class Client {
 
         //TODO publish
 
-        System.out.println("Press enter to initialize the publisher service.");
-        reader.readLine();
+//        System.out.println("Press enter to initialize the publisher service.");
+//        reader.readLine();
+//
+//        options.setAction("uuid:DummyMethodAction");
+//        serviceClient.fireAndForget(getDummyMethodRequestElement());
 
-        options.setAction("uuid:DummyMethodAction");
-        serviceClient.fireAndForget(getDummyMethodRequestElement());
-
-        while (true) {
-
+        while (!done) {
             validOptionSelected = false;
             selectedOption = -1;
             while (!validOptionSelected) {
@@ -187,24 +180,21 @@ public class Client {
     }
 
     private void initClient() throws AxisFault {
-
         String CLIENT_REPO = null;
-        String AXIS2_XML = null;
 
         if (repo != null) {
             CLIENT_REPO = repo;
-            AXIS2_XML = repo + File.separator + "axis2.xml";
         } else {
 //			throw new AxisFault ("Please specify the client repository as a program argument.Use '-h' for help.");
         }
 
         ConfigurationContext configContext = ConfigurationContextFactory
                 .createConfigurationContextFromFileSystem(CLIENT_REPO, null);
-        serviceClient = new ServiceClient(configContext, null); //TODO give a repo
+        ServiceClient serviceClient = new ServiceClient(configContext, null);
 
-        options = new Options();
+        Options options = new Options();
         serviceClient.setOptions(options);
-        serviceClient.engageModule(new QName("addressing"));
+        serviceClient.engageModule("addressing");
 
         eventingClient = new EventingClient(serviceClient);
 
@@ -242,7 +232,7 @@ public class Client {
                 doGetStatus(SUBSCRIBER_2_ID);
                 break;
             case 9:
-                System.exit(0);
+                done = true;
                 break;
             default:
                 break;
@@ -283,10 +273,10 @@ public class Client {
         System.out.println("Status of the subscriber '" + ID + "' is" + statusValue);
     }
 
-    private OMElement getDummyMethodRequestElement() {
-        OMFactory fac = OMAbstractFactory.getOMFactory();
-        OMNamespace namespace = fac.createOMNamespace(applicationNamespaceName, "ns1");
-        return fac.createOMElement(dummyMethod, namespace);
-    }
+//    private OMElement getDummyMethodRequestElement() {
+//        OMFactory fac = OMAbstractFactory.getOMFactory();
+//        OMNamespace namespace = fac.createOMNamespace(applicationNamespaceName, "ns1");
+//        return fac.createOMElement(dummyMethod, namespace);
+//    }
 
 }

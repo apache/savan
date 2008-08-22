@@ -31,7 +31,7 @@ import org.apache.savan.subscription.SubscriptionProcessor;
 import org.apache.savan.util.UtilFactory;
 
 /** Provide abstract functions that may be done by protocols at the MessageReceiver level. */
-public abstract class MessageReceiverDeligater {
+public abstract class MessageReceiverDelegator {
 
 
     public void processMessage(SavanMessageContext smc) throws SavanException {
@@ -56,7 +56,6 @@ public abstract class MessageReceiverDeligater {
         Parameter parameter = axisService.getParameter(SavanConstants.SUBSCRIBER_STORE);
         if (parameter == null) {
             setSubscriberStore(smc);
-            parameter = axisService.getParameter(SavanConstants.SUBSCRIBER_STORE);
         }
 
         UtilFactory utilFactory = smc.getProtocol().getUtilFactory();
@@ -66,14 +65,22 @@ public abstract class MessageReceiverDeligater {
 
         SubscriptionProcessor processor = utilFactory.createSubscriptionProcessor();
         processor.init(smc);
-        if (messageType == SavanConstants.MessageTypes.SUBSCRIPTION_MESSAGE) {
-            processor.subscribe(smc);
-        } else if (messageType == SavanConstants.MessageTypes.UNSUBSCRIPTION_MESSAGE) {
-            processor.unsubscribe(smc);
-        } else if (messageType == SavanConstants.MessageTypes.RENEW_MESSAGE) {
-            processor.renewSubscription(smc);
-        } else if (messageType == SavanConstants.MessageTypes.PUBLISH) {
-            processor.publish(smc);
+        switch (messageType) {
+            case SavanConstants.MessageTypes.SUBSCRIPTION_MESSAGE:
+                processor.subscribe(smc);
+                break;
+            case SavanConstants.MessageTypes.UNSUBSCRIPTION_MESSAGE:
+                processor.unsubscribe(smc);
+                break;
+            case SavanConstants.MessageTypes.RENEW_MESSAGE:
+                processor.renewSubscription(smc);
+                break;
+            case SavanConstants.MessageTypes.PUBLISH:
+                processor.publish(smc);
+                break;
+            case SavanConstants.MessageTypes.GET_STATUS_MESSAGE:
+                processor.getStatus(smc);
+                break;
         }
     }
 
