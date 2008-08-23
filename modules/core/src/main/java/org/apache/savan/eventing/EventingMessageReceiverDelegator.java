@@ -40,7 +40,6 @@ import javax.xml.namespace.QName;
 import java.util.Calendar;
 import java.util.Date;
 
-
 public class EventingMessageReceiverDelegator extends MessageReceiverDelegator {
 
     public void doProtocolSpecificProcessing(SavanMessageContext inSavanMessage,
@@ -61,13 +60,12 @@ public class EventingMessageReceiverDelegator extends MessageReceiverDelegator {
                                            MessageContext outMessage) throws SavanException {
 
         if (outMessage == null)
-            throw new SavanException(
-                    "Eventing protocol need to sent the SubscriptionResponseMessage. But the outMessage is null");
+            throw new SavanException("Missing outMessage for Subscribe");
 
         MessageContext subscriptionMsgCtx = subscriptionMessage.getMessageContext();
 
         SOAPEnvelope outMessageEnvelope = outMessage.getEnvelope();
-        SOAPFactory factory = null;
+        SOAPFactory factory;
 
         if (outMessageEnvelope != null) {
             factory = (SOAPFactory)outMessageEnvelope.getOMFactory();
@@ -94,23 +92,25 @@ public class EventingMessageReceiverDelegator extends MessageReceiverDelegator {
         if (id == null)
             throw new SavanException("Subscription UUID is not set");
 
-        subscriptionManagerEPR.addReferenceParameter(new QName(EventingConstants.EVENTING_NAMESPACE,
-                                                               EventingConstants.ElementNames.Identifier,
-                                                               EventingConstants.EVENTING_PREFIX),
-                                                     id);
+        subscriptionManagerEPR.addReferenceParameter(
+                new QName(EventingConstants.EVENTING_NAMESPACE,
+                          EventingConstants.ElementNames.Identifier,
+                          EventingConstants.EVENTING_PREFIX),
+                id);
 
         OMNamespace ens = factory.createOMNamespace(EventingConstants.EVENTING_NAMESPACE,
                                                     EventingConstants.EVENTING_PREFIX);
         OMElement subscribeResponseElement =
                 factory.createOMElement(EventingConstants.ElementNames.SubscribeResponse, ens);
-        OMElement subscriptionManagerElement = null;
+        OMElement subscriptionManagerElement;
         try {
             subscriptionManagerElement = EndpointReferenceHelper.toOM(
-                    subscribeResponseElement.getOMFactory(), subscriptionManagerEPR, new QName(
-                    EventingConstants.EVENTING_NAMESPACE,
-                    EventingConstants.ElementNames.SubscriptionManager,
-                    EventingConstants.EVENTING_PREFIX),
-                                                                                     AddressingConstants.Submission.WSA_NAMESPACE);
+                    subscribeResponseElement.getOMFactory(),
+                    subscriptionManagerEPR,
+                    new QName(EventingConstants.EVENTING_NAMESPACE,
+                              EventingConstants.ElementNames.SubscriptionManager,
+                              EventingConstants.EVENTING_PREFIX),
+                    AddressingConstants.Submission.WSA_NAMESPACE);
         } catch (AxisFault e) {
             throw new SavanException(e);
         }
@@ -121,8 +121,8 @@ public class EventingMessageReceiverDelegator extends MessageReceiverDelegator {
         outMessageEnvelope.getBody().addChild(subscribeResponseElement);
 
         //setting the message type
-        outMessage.setProperty(SavanConstants.MESSAGE_TYPE, new Integer(
-                SavanConstants.MessageTypes.SUBSCRIPTION_RESPONSE_MESSAGE));
+        outMessage.setProperty(SavanConstants.MESSAGE_TYPE,
+                               SavanConstants.MessageTypes.SUBSCRIPTION_RESPONSE_MESSAGE);
 
     }
 
@@ -130,13 +130,12 @@ public class EventingMessageReceiverDelegator extends MessageReceiverDelegator {
             throws SavanException {
 
         if (outMessage == null)
-            throw new SavanException(
-                    "Eventing protocol need to sent the SubscriptionResponseMessage. But the outMessage is null");
+            throw new SavanException("Missing outMessage for Renew");
 
         MessageContext subscriptionMsgCtx = renewMessage.getMessageContext();
 
         SOAPEnvelope outMessageEnvelope = outMessage.getEnvelope();
-        SOAPFactory factory = null;
+        SOAPFactory factory;
 
         if (outMessageEnvelope != null) {
             factory = (SOAPFactory)outMessageEnvelope.getOMFactory();
@@ -192,15 +191,14 @@ public class EventingMessageReceiverDelegator extends MessageReceiverDelegator {
 
         //setting the message type
         outMessage.setProperty(SavanConstants.MESSAGE_TYPE,
-                               new Integer(SavanConstants.MessageTypes.RENEW_RESPONSE_MESSAGE));
+                               SavanConstants.MessageTypes.RENEW_RESPONSE_MESSAGE);
     }
 
     private void handleEndSubscriptionRequest(SavanMessageContext renewMessage,
                                               MessageContext outMessage) throws SavanException {
 
         if (outMessage == null)
-            throw new SavanException(
-                    "Eventing protocol need to sent the SubscriptionResponseMessage. But the outMessage is null");
+            throw new SavanException("Missing outMessage for EndSubscription");
 
         MessageContext subscriptionMsgCtx = renewMessage.getMessageContext();
 
@@ -208,11 +206,9 @@ public class EventingMessageReceiverDelegator extends MessageReceiverDelegator {
         outMessage.getOptions().setAction(EventingConstants.Actions.UnsubscribeResponse);
 
         SOAPEnvelope outMessageEnvelope = outMessage.getEnvelope();
-        SOAPFactory factory = null;
 
-        if (outMessageEnvelope != null) {
-            factory = (SOAPFactory)outMessageEnvelope.getOMFactory();
-        } else {
+        if (outMessageEnvelope == null) {
+            SOAPFactory factory;
             factory = (SOAPFactory)subscriptionMsgCtx.getEnvelope().getOMFactory();
             outMessageEnvelope = factory.getDefaultEnvelope();
 
@@ -224,36 +220,34 @@ public class EventingMessageReceiverDelegator extends MessageReceiverDelegator {
         }
 
         //setting the message type
-        outMessage.setProperty(SavanConstants.MESSAGE_TYPE, new Integer(
-                SavanConstants.MessageTypes.UNSUBSCRIPTION_RESPONSE_MESSAGE));
+        outMessage.setProperty(SavanConstants.MESSAGE_TYPE,
+                               SavanConstants.MessageTypes.UNSUBSCRIPTION_RESPONSE_MESSAGE);
     }
 
     public void handleGetStatusRequest(SavanMessageContext getStatusMessage,
                                        MessageContext outMessage) throws SavanException {
 
         if (outMessage == null)
-            throw new SavanException(
-                    "Eventing protocol need to sent the SubscriptionResponseMessage. But the outMessage is null");
+            throw new SavanException("Missing outMessage for getStatus!");
 
-        MessageContext subscriptionMsgCtx = getStatusMessage.getMessageContext();
+        MessageContext getStatusContext = getStatusMessage.getMessageContext();
 
         String id = (String)getStatusMessage
                 .getProperty(EventingConstants.TransferedProperties.SUBSCRIBER_UUID);
         if (id == null)
-            throw new SavanException("Cannot fulfil request. AbstractSubscriber ID not found");
+            throw new SavanException("Subscriber ID not found");
 
         //setting the action
-        outMessage.getOptions().setAction(EventingConstants.Actions.UnsubscribeResponse);
+        outMessage.getOptions().setAction(EventingConstants.Actions.GetStatusResponse);
 
         SOAPEnvelope outMessageEnvelope = outMessage.getEnvelope();
-        SOAPFactory factory = null;
+        SOAPFactory factory;
 
         if (outMessageEnvelope != null) {
             factory = (SOAPFactory)outMessageEnvelope.getOMFactory();
         } else {
-            factory = (SOAPFactory)subscriptionMsgCtx.getEnvelope().getOMFactory();
+            factory = (SOAPFactory)getStatusContext.getEnvelope().getOMFactory();
             outMessageEnvelope = factory.getDefaultEnvelope();
-
             try {
                 outMessage.setEnvelope(outMessageEnvelope);
             } catch (AxisFault e) {
@@ -263,7 +257,6 @@ public class EventingMessageReceiverDelegator extends MessageReceiverDelegator {
 
         SubscriberStore store = CommonUtil
                 .getSubscriberStore(getStatusMessage.getMessageContext().getAxisService());
-
 
         if (store == null) {
             throw new SavanException("AbstractSubscriber Store was not found");
@@ -293,8 +286,8 @@ public class EventingMessageReceiverDelegator extends MessageReceiverDelegator {
         outMessageEnvelope.getBody().addChild(getStatusResponseElement);
 
         //setting the message type
-        outMessage.setProperty(SavanConstants.MESSAGE_TYPE, new Integer(
-                SavanConstants.MessageTypes.GET_STATUS_RESPONSE_MESSAGE));
+        outMessage.setProperty(SavanConstants.MESSAGE_TYPE,
+                               SavanConstants.MessageTypes.GET_STATUS_RESPONSE_MESSAGE);
     }
 
     public void doProtocolSpecificProcessing(SavanMessageContext inSavanMessage)

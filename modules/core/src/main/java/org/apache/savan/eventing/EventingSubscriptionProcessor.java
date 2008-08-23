@@ -159,8 +159,8 @@ public class EventingSubscriptionProcessor extends SubscriptionProcessor {
 
         eventingSubscriber.setDelivery(delivery);
 
-        OMElement expiresElement = subscribeElement.getFirstChildWithName(new QName(
-                EventingConstants.EVENTING_NAMESPACE, EventingConstants.ElementNames.Expires));
+        OMElement expiresElement =
+                subscribeElement.getFirstChildWithName(EventingConstants.EXPIRES_QNAME);
         if (expiresElement != null) {
             String expiresText = expiresElement.getText();
 
@@ -180,13 +180,19 @@ public class EventingSubscriptionProcessor extends SubscriptionProcessor {
             } else
                 expiration = expirationBean.getDateValue();
 
-
             if (expiration == null) {
                 String message = "Cannot understand the given date-time value for the Expiration";
                 throw new SavanException(message);
             }
 
             eventingSubscriber.setSubscriptionEndingTime(expiration);
+        } else {
+            // They didn't specify an expiration, so default to an hour.
+            Calendar calendar = Calendar.getInstance();
+            Duration duration = new Duration();
+            duration.setHours(1);
+            CommonUtil.addDurationToCalendar(calendar, duration);
+            eventingSubscriber.setSubscriptionEndingTime(calendar.getTime());
         }
 
         OMElement filterElement = subscribeElement.getFirstChildWithName(new QName(

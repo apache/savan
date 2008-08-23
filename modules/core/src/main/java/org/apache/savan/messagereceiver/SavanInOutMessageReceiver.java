@@ -49,7 +49,5 @@ public class SavanInOutMessageReceiver extends AbstractInOutSyncMessageReceiver 
 
         delegator.processMessage(savanInMessage);
         delegator.doProtocolSpecificProcessing(savanInMessage, outMessage);
-
     }
-
 }

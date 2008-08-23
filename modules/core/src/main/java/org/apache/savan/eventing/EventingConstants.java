@@ -17,6 +17,8 @@
 
 package org.apache.savan.eventing;
 
+import javax.xml.namespace.QName;
+
 public interface EventingConstants {
 
     String EVENTING_NAMESPACE = "http://schemas.xmlsoap.org/ws/2004/08/eventing";
@@ -26,6 +28,8 @@ public interface EventingConstants {
             "http://schemas.xmlsoap.org/ws/2004/08/eventing/DeliveryModes/Push";
     String DEFAULT_FILTER_IDENTIFIER = FilterDialects.XPath;
 
+    QName EXPIRES_QNAME = new QName(
+            EventingConstants.EVENTING_NAMESPACE, EventingConstants.ElementNames.Expires);
 
     interface TransferedProperties {
         String SUBSCRIBER_UUID = "SAVAN_EVENTING_SUBSCRIBER_UUID";

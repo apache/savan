@@ -36,8 +36,6 @@ import java.util.Date;
 
 /** Defines methods common to all eventing subscribers. */
 public class EventingSubscriber implements Subscriber {
-
-
     private URI id;
     private Filter filter = null;
     private EndpointReference endToEPr;
@@ -46,7 +44,6 @@ public class EventingSubscriber implements Subscriber {
 
     /** The time at which further notification of messages should be avaoded to this subscriber. */
     private Date subscriptionEndingTime = null;
-
 
     public Filter getFilter() {
         return filter;
@@ -100,12 +97,11 @@ public class EventingSubscriber implements Subscriber {
     }
 
     /**
-     * This method first checks weather the passed message complies with the current filter. If so
-     * message is sent, and the subscriberID is added to the PublicationReport. Else message is
-     * ignored.
+     * This method first checks whether the passed message complies with the current filter.
+     * If so the message is sent, and the subscriberID is added to the PublicationReport.
+     * Otherwise the message is ignored.
      *
-     * @param smc
-     * @param report
+     * @param eventData an OMElement containing the SOAP Envelope
      * @throws SavanException
      */
     public void sendEventData(OMElement eventData) throws SavanException {
@@ -126,10 +122,7 @@ public class EventingSubscriber implements Subscriber {
     }
 
     private boolean doesEventDataBelongToTheFilter(OMElement eventData) throws SavanException {
-        if (filter != null) {
-            return filter.checkCompliance(eventData);
-        } else
-            return true;
+        return filter == null || filter.checkCompliance(eventData);
     }
 
     private void sendThePublication(OMElement eventData) throws SavanException {
