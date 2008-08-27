@@ -17,6 +17,10 @@
 package sample.eventing;
 
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.description.AxisService;
+import org.apache.axis2.transport.http.SimpleHTTPServer;
+import org.apache.axis2.engine.AxisServer;
+import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
@@ -47,9 +51,6 @@ public class Client {
     private String toAddressPart = "/axis2/services/PublisherService";
     private String listener1AddressPart = "/axis2/services/ListenerService1";
     private String listener2AddressPart = "/axis2/services/ListenerService2";
-
-//    private final String applicationNamespaceName = "http://tempuri.org/";
-//    private final String dummyMethod = "dummyMethod";
 
     private static String repo = null;
     private static int port = 8080;
@@ -91,6 +92,20 @@ public class Client {
         System.out.println("Set the server port using the parameter -p");
     }
 
+    static void foo() throws Exception {
+        ConfigurationContext ctx = ConfigurationContextFactory.createDefaultConfigurationContext();
+        SimpleHTTPServer server = new SimpleHTTPServer(ctx, 7071);
+        AxisConfiguration axisConfig = ctx.getAxisConfiguration();
+
+//        AxisService service = new AxisService("ListenerService1");
+//        svc.addParameter("ServiceClass", ListenerService1.class.getName());
+
+        AxisService service = AxisService.createService(ListenerService1.class.getName(),
+                                                        axisConfig);
+        axisConfig.addService(service);
+        server.start();
+    }
+
     /**
      * This will check the given parameter in the array and will return, if available
      *
@@ -118,6 +133,8 @@ public class Client {
         System.out.println("Welcome to Axis2 Eventing Sample");
         System.out.println("================================\n");
 
+        foo();
+        
         boolean validOptionSelected = false;
         int selectedOption = -1;
         while (!validOptionSelected) {
@@ -244,7 +261,7 @@ public class Client {
 
         String subscribingAddress = null;
         if (SUBSCRIBER_1_ID.equals(ID)) {
-            subscribingAddress = "http://" + serverIP + ":" + port + listener1AddressPart;
+            subscribingAddress = "http://" + serverIP + ":" + 7070 + listener1AddressPart;
         } else if (SUBSCRIBER_2_ID.equals(ID)) {
             subscribingAddress = "http://" + serverIP + ":" + port + listener2AddressPart;
         }

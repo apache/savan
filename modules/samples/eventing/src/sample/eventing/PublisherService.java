@@ -41,13 +41,14 @@ public class PublisherService {
     }
 
     public void dummyMethod(OMElement param) throws Exception {
-        System.out.println("Eventing Service dummy method called");
+        System.out.println("Eventing Service dummy method called, woo!");
     }
 
     private class PublisherThread extends Thread {
 
         String Publication = "Publication";
-        String publicationNamespaceValue = "http://tempuri/publication/";
+//        String publicationNamespaceValue = "http://tempuri/publication/";
+        String publicationNamespaceValue = "http://eventing.sample";
         Random r = new Random();
 
         public void run() {
@@ -57,18 +58,17 @@ public class PublisherService {
                     Thread.sleep(5000);
 
                     //publishing
-                    System.out.println("Publishing next publication...");
 
                     SubscriberStore store =
                             CommonUtil.getSubscriberStore(serviceContext.getAxisService());
-                    if (store == null)
-                        throw new Exception("Cant find the Savan subscriber store");
-
-                    OMElement data = getNextPublicationData();
-
-                    PublicationClient publicationClient =
-                            new PublicationClient(serviceContext.getConfigurationContext());
-                    publicationClient.sendPublication(data, serviceContext.getAxisService(), null);
+                    if (store != null) {
+                        System.out.println("Publishing next publication...");
+                        OMElement data = getNextPublicationData();
+                        PublicationClient publicationClient =
+                                new PublicationClient(serviceContext.getConfigurationContext());
+                        publicationClient.sendPublication(data, serviceContext.getAxisService(),
+                                                          null);
+                    }
                 }
             } catch (Exception e) {
                 // TODO Auto-generated catch block

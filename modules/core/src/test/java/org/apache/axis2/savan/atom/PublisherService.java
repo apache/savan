@@ -53,7 +53,8 @@ public class PublisherService {
     private class PublisherThread extends Thread {
 
         String Publication = "Publication";
-        String publicationNamespaceValue = "http://tempuri/publication/";
+//        String publicationNamespaceValue = "http://tempuri/publication/";
+        String publicationNamespaceValue = "http://eventing.sample";
         Random r = new Random();
 
         public void run() {
@@ -65,14 +66,13 @@ public class PublisherService {
 
                     SubscriberStore store =
                             CommonUtil.getSubscriberStore(serviceContext.getAxisService());
-                    if (store == null)
-                        throw new Exception("Cant find the Savan subscriber store");
-
-                    OMElement envelope = getNextPublicationEvent();
-                    PublicationClient client =
-                            new PublicationClient(serviceContext.getConfigurationContext());
-                    client.sendPublication(envelope, serviceContext.getAxisService(), null);
-                    Thread.sleep(10000);
+                    if (store != null) {
+                        OMElement envelope = getNextPublicationEvent();
+                        PublicationClient client =
+                                new PublicationClient(serviceContext.getConfigurationContext());
+                        client.sendPublication(envelope, serviceContext.getAxisService(), null);
+                        Thread.sleep(10000);
+                    }
                 }
 
             } catch (Exception e) {

@@ -1,4 +1,4 @@
-<service name="PublisherService">
+<service name="PublisherService" scope="application">
 
   <parameter name="ServiceClass" locked="xsd:false">sample.eventing.PublisherService</parameter>
 
