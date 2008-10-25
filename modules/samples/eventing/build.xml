@@ -9,7 +9,7 @@
   </fail>
   <echo message="${env.AXIS2_HOME}"/>
 
-  <target name="build.sample">
+  <target name="build.sample" depends="clean">
     <property name="eventing.temp.dir" value="build/temp"/>
     <property name="listener1.temp.dir" value="${eventing.temp.dir}/listener1"/>
     <property name="listener2.temp.dir" value="${eventing.temp.dir}/listener2"/>
@@ -95,7 +95,7 @@
     <delete dir="build"/>
   </target>
 
-  <target name="deploy">
+  <target name="deploy" depends="build.sample">
     <!-- deploy savan module to axis2 -->
     <copy todir="${env.AXIS2_HOME}/repository/modules">
       <fileset dir="../../mar/target" includes="savan-*.mar"/>
