@@ -101,10 +101,7 @@ public class AtomMessageReceiver implements MessageReceiver {
                 outMsgContext.getOperationContext().addMessageContext(outMsgContext);
                 outMsgContext.setEnvelope(envelope);
 
-                AxisEngine engine =
-                        new AxisEngine(
-                                outMsgContext.getConfigurationContext());
-                engine.send(outMsgContext);
+                AxisEngine.send(outMsgContext);
 
             } else if (HTTPConstants.HEADER_POST.equals(request.getMethod())) {
                 SOAPEnvelope envlope = messageCtx.getEnvelope();

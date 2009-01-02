@@ -56,4 +56,21 @@
     </plugins>
   </build>
 
+  <profiles>
+    <profile>
+      <activation>
+        <property>
+          <name>axis2.version</name>
+          <value>SNAPSHOT</value>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.apache.axis2</groupId>
+          <artifactId>axis2-transport-http</artifactId>
+          <version>${axis2.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
 </project>
